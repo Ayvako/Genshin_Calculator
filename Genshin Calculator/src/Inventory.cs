@@ -56,9 +56,9 @@ namespace Genshin.src
         }
         public static void CalcAlchemistMaterials(Material requiredMaterial, Character c,  List<Material> remainingMaterials)
         {
-            string greenMaterial = "";
-            string blueMaterial = "";
-            string violetMaterial = "";
+            string greenMaterial;
+            string blueMaterial;
+            string violetMaterial;
             string orangeMaterial ="";
 
             switch (requiredMaterial.Type)

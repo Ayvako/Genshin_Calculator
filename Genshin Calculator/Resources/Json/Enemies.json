@@ -1,0 +1,13 @@
+{
+	"SlimeCondensate": ["SlimeCondensate", "SlimeSecretions", "SlimeConcentrate"],
+	"DamagedMask": ["DamagedMask", "StainedMask", "OminousMask"],
+	"DiviningScroll": ["DiviningScroll", "SealedScroll", "ForbiddenCurseScroll"],
+	"FirmArrowhead": ["FirmArrowhead", "SharpArrowhead", "WeatheredArrowhead"],
+	"Recruit'sInsignia": ["Recruit'sInsignia", "Sergeant'sInsignia", "Lieutenant'sInsignia"],
+	"TreasureHoarderInsignia": ["TreasureHoarderInsignia", "SilverRavenInsignia", "GoldenRavenInsignia"],
+	"WhopperflowerNectar": ["WhopperflowerNectar", "ShimmeringNectar", "EnergyNectar"],
+	"OldHandguard": ["OldHandguard", "KageuchiHandguard", "FamedHandguard"],
+	"SpectralHusk": ["SpectralHusk", "SpectralHeart", "SpectralNucleus"],
+	"FungalSpores": ["FungalSpores", "LuminescentPollen", "CrystallineCystDust"],
+	"FadedRedSatin": ["FadedRedSatin", "TrimmedRedSilk", "RichRedBrocade"]
+}

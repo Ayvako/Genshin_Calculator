@@ -6,7 +6,7 @@ namespace Genshin.src.LevelingResources
     public static class Gem
     {
 
-        private static readonly Dictionary<string, string[]> Gems = DataIO.GetMaterials("Data/Gems.json");
+        private static readonly Dictionary<string, string[]> Gems = DataIO.GetMaterials("Gems");
 
         public static string GetMaterial(Character character, string rarity) => rarity switch
         {

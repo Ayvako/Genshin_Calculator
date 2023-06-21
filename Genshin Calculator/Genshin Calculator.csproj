@@ -9,11 +9,160 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Image\Albedo.png" />
+    <None Remove="Resources\Image\Alhatham.png" />
+    <None Remove="Resources\Image\Aloy.png" />
+    <None Remove="Resources\Image\Amber.png" />
+    <None Remove="Resources\Image\Baizhu.png" />
+    <None Remove="Resources\Image\Barbara.png" />
+    <None Remove="Resources\Image\Beidou.png" />
+    <None Remove="Resources\Image\Bennett.png" />
+    <None Remove="Resources\Image\Candace.png" />
+    <None Remove="Resources\Image\Chongyun.png" />
+    <None Remove="Resources\Image\Collei.png" />
+    <None Remove="Resources\Image\Cyno.png" />
+    <None Remove="Resources\Image\Dehya.png" />
+    <None Remove="Resources\Image\Diluc.png" />
+    <None Remove="Resources\Image\Diona.png" />
+    <None Remove="Resources\Image\Dori.png" />
+    <None Remove="Resources\Image\Eula.png" />
+    <None Remove="Resources\Image\Faruzan.png" />
+    <None Remove="Resources\Image\Fischl.png" />
+    <None Remove="Resources\Image\Ganyu.png" />
+    <None Remove="Resources\Image\Gorou.png" />
+    <None Remove="Resources\Image\Hu Tao.png" />
+    <None Remove="Resources\Image\Itto.png" />
+    <None Remove="Resources\Image\Jean.png" />
+    <None Remove="Resources\Image\Kaedehara Kazuha.png" />
+    <None Remove="Resources\Image\Kaeya.png" />
+    <None Remove="Resources\Image\Kamisato Ayaka.png" />
+    <None Remove="Resources\Image\Kamisato Ayato.png" />
+    <None Remove="Resources\Image\Kaveh.png" />
+    <None Remove="Resources\Image\Keqing.png" />
+    <None Remove="Resources\Image\Kirara.png" />
+    <None Remove="Resources\Image\Klee.png" />
+    <None Remove="Resources\Image\Kujou Sara.png" />
+    <None Remove="Resources\Image\Kuki Shinobu.png" />
+    <None Remove="Resources\Image\Layla.png" />
+    <None Remove="Resources\Image\Lisa.png" />
+    <None Remove="Resources\Image\Mika.png" />
+    <None Remove="Resources\Image\Mona.png" />
+    <None Remove="Resources\Image\Nahida.png" />
+    <None Remove="Resources\Image\Nilou.png" />
+    <None Remove="Resources\Image\Ningguang.png" />
+    <None Remove="Resources\Image\Noelle.png" />
+    <None Remove="Resources\Image\Qiqi.png" />
+    <None Remove="Resources\Image\Raiden Shogun.png" />
+    <None Remove="Resources\Image\Razor.png" />
+    <None Remove="Resources\Image\Rosaria.png" />
+    <None Remove="Resources\Image\Sangonomiya Kokomi.png" />
+    <None Remove="Resources\Image\Sayu.png" />
+    <None Remove="Resources\Image\Shenhe.png" />
+    <None Remove="Resources\Image\Shikanoin Heizou.png" />
+    <None Remove="Resources\Image\Sucrose.png" />
+    <None Remove="Resources\Image\Tartaglia.png" />
+    <None Remove="Resources\Image\Thoma.png" />
+    <None Remove="Resources\Image\Tighnari.png" />
+    <None Remove="Resources\Image\Venti.png" />
+    <None Remove="Resources\Image\Wanderer.png" />
+    <None Remove="Resources\Image\Xiangling.png" />
+    <None Remove="Resources\Image\Xiao.png" />
+    <None Remove="Resources\Image\Xingqiu.png" />
+    <None Remove="Resources\Image\Xinyan.png" />
+    <None Remove="Resources\Image\Yae Miko.png" />
+    <None Remove="Resources\Image\Yanfei.png" />
+    <None Remove="Resources\Image\Yaoyao.png" />
+    <None Remove="Resources\Image\Yelan.png" />
+    <None Remove="Resources\Image\Yoimiya.png" />
+    <None Remove="Resources\Image\Yun Jin.png" />
+    <None Remove="Resources\Image\Zhongli.png" />
+    <None Remove="Resources\Json\Books.json" />
+    <None Remove="Resources\Json\Enemies.json" />
+    <None Remove="Resources\Json\Gems.json" />
+    <None Remove="Resources\Json\Initializations.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Image\Albedo.png" />
+    <Resource Include="Resources\Image\Alhatham.png" />
+    <Resource Include="Resources\Image\Aloy.png" />
+    <Resource Include="Resources\Image\Amber.png" />
+    <Resource Include="Resources\Image\Baizhu.png" />
+    <Resource Include="Resources\Image\Barbara.png" />
+    <Resource Include="Resources\Image\Beidou.png" />
+    <Resource Include="Resources\Image\Bennett.png" />
+    <Resource Include="Resources\Image\Candace.png" />
+    <Resource Include="Resources\Image\Chongyun.png" />
+    <Resource Include="Resources\Image\Collei.png" />
+    <Resource Include="Resources\Image\Cyno.png" />
+    <Resource Include="Resources\Image\Dehya.png" />
+    <Resource Include="Resources\Image\Diluc.png" />
+    <Resource Include="Resources\Image\Diona.png" />
+    <Resource Include="Resources\Image\Dori.png" />
+    <Resource Include="Resources\Image\Eula.png" />
+    <Resource Include="Resources\Image\Faruzan.png" />
+    <Resource Include="Resources\Image\Fischl.png" />
+    <Resource Include="Resources\Image\Ganyu.png" />
+    <Resource Include="Resources\Image\Gorou.png" />
+    <Resource Include="Resources\Image\Hu Tao.png" />
+    <Resource Include="Resources\Image\Itto.png" />
+    <Resource Include="Resources\Image\Jean.png" />
+    <Resource Include="Resources\Image\Kaedehara Kazuha.png" />
+    <Resource Include="Resources\Image\Kaeya.png" />
+    <Resource Include="Resources\Image\Kamisato Ayaka.png" />
+    <Resource Include="Resources\Image\Kamisato Ayato.png" />
+    <Resource Include="Resources\Image\Kaveh.png" />
+    <Resource Include="Resources\Image\Keqing.png" />
+    <Resource Include="Resources\Image\Kirara.png" />
+    <Resource Include="Resources\Image\Klee.png" />
+    <Resource Include="Resources\Image\Kujou Sara.png" />
+    <Resource Include="Resources\Image\Kuki Shinobu.png" />
+    <Resource Include="Resources\Image\Layla.png" />
+    <Resource Include="Resources\Image\Lisa.png" />
+    <Resource Include="Resources\Image\Mika.png" />
+    <Resource Include="Resources\Image\Mona.png" />
+    <Resource Include="Resources\Image\Nahida.png" />
+    <Resource Include="Resources\Image\Nilou.png" />
+    <Resource Include="Resources\Image\Ningguang.png" />
+    <Resource Include="Resources\Image\Noelle.png" />
+    <Resource Include="Resources\Image\Qiqi.png" />
+    <Resource Include="Resources\Image\Raiden Shogun.png" />
+    <Resource Include="Resources\Image\Razor.png" />
+    <Resource Include="Resources\Image\Rosaria.png" />
+    <Resource Include="Resources\Image\Sangonomiya Kokomi.png" />
+    <Resource Include="Resources\Image\Sayu.png" />
+    <Resource Include="Resources\Image\Shenhe.png" />
+    <Resource Include="Resources\Image\Shikanoin Heizou.png" />
+    <Resource Include="Resources\Image\Sucrose.png" />
+    <Resource Include="Resources\Image\Tartaglia.png" />
+    <Resource Include="Resources\Image\Thoma.png" />
+    <Resource Include="Resources\Image\Tighnari.png" />
+    <Resource Include="Resources\Image\Venti.png" />
+    <Resource Include="Resources\Image\Wanderer.png" />
+    <Resource Include="Resources\Image\Xiangling.png" />
+    <Resource Include="Resources\Image\Xiao.png" />
+    <Resource Include="Resources\Image\Xingqiu.png" />
+    <Resource Include="Resources\Image\Xinyan.png" />
+    <Resource Include="Resources\Image\Yae Miko.png" />
+    <Resource Include="Resources\Image\Yanfei.png" />
+    <Resource Include="Resources\Image\Yaoyao.png" />
+    <Resource Include="Resources\Image\Yelan.png" />
+    <Resource Include="Resources\Image\Yoimiya.png" />
+    <Resource Include="Resources\Image\Yun Jin.png" />
+    <Resource Include="Resources\Image\Zhongli.png" />
+    <Resource Include="Resources\Json\Books.json" />
+    <Resource Include="Resources\Json\Enemies.json" />
+    <Resource Include="Resources\Json\Gems.json" />
+    <Resource Include="Resources\Json\Initializations.json" />
   </ItemGroup>
 
 </Project>

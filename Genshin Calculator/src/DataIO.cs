@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
+using System.Windows.Resources;
+using System.Windows;
 
 namespace Genshin.src
 {
@@ -14,7 +17,12 @@ namespace Genshin.src
 
         public static void Export()
         {
-            var materialsJson = JsonConvert.SerializeObject(Inventory.MyInventory, Formatting.Indented);
+
+
+            var exportInventory = Inventory.CopyDictionary(Inventory.MyInventory);
+            //exportInventory = exportInventory.Where(pair => pair.Value > 0).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            var materialsJson = JsonConvert.SerializeObject(exportInventory, Formatting.Indented);
             var charactersJson = JsonConvert.SerializeObject(Inventory.Characters, Formatting.Indented);
 
             var exportJson = new JObject
@@ -30,11 +38,21 @@ namespace Genshin.src
         }
         public static void Import()
         {
+            Uri resourceUri = new ("pack://application:,,,/Genshin Calculator;component/Resources/Json/Initializations.json");
+            StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri);
 
-            if (File.Exists("Data/Initializations.json"))
+
+
+            if (resourceInfo != null)
             {
-                var initJson = JObject.Parse(File.ReadAllText("Data/Initializations.json"));
+                using StreamReader reader = new(resourceInfo.Stream);
+                string jsonContent = reader.ReadToEnd();
+                var initJson = JObject.Parse(jsonContent);
+
+                // Остальной код для обработки JSON-данных
+
                 var materials = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(initJson["Materials"].ToString());
+
                 Inventory.MyInventory = MergDictionaries(materials["LocalSpecialty"], materials["BookType"], materials["Gem"],
                     materials["Enemy"], materials["MiniBoss"], materials["WeeklyBoss"], materials["Other"]);
 
@@ -44,12 +62,10 @@ namespace Genshin.src
                 {
                     Inventory.Characters.Add(new Character(asset.Name, asset));
                 }
-
-
             }
             else
             {
-                throw new Exception("File Initializations.json no exists");
+                throw new Exception("Resource Initializations.json not found");
             }
 
             if (File.Exists("Data/Export.json"))
@@ -97,9 +113,14 @@ namespace Genshin.src
         }
 
 
-        public static Dictionary<string, string[]> GetMaterials(string path)
+        public static Dictionary<string, string[]> GetMaterials(string materials)
         {
-          return  JsonConvert.DeserializeObject<Dictionary<string, string[]>>(File.ReadAllText(path));
+            Uri resourceUri = new($"pack://application:,,,/Genshin Calculator;component/Resources/Json/{materials}.json");
+            StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri);
+            using StreamReader reader = new(resourceInfo.Stream);
+            string jsonContent = reader.ReadToEnd();
+
+            return JsonConvert.DeserializeObject<Dictionary<string, string[]>>(jsonContent);
 
         }
 

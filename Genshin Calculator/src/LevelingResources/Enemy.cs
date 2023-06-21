@@ -5,7 +5,7 @@ namespace Genshin.src.LevelingResources
 {
     public static class Enemy
     {
-        private static readonly Dictionary<string, string[]> Enemies = DataIO.GetMaterials("Data/Enemies.json");
+        private static readonly Dictionary<string, string[]> Enemies = DataIO.GetMaterials("Enemies");
 
         public static string GetMaterial(Character character, string rarity) => rarity switch
         {

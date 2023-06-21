@@ -1,0 +1,14 @@
+{
+	"Freedom": ["TeachingsOfFreedom", "GuideToFreedom", "PhilosophiesOfFreedom"],
+	"Resistance": ["TeachingsOfResistance", "GuideToResistance", "PhilosophiesOfResistance"],
+	"Ballad": ["TeachingsOfBallad", "GuideToBallad", "PhilosophiesOfBallad"],
+	"Prosperity": ["TeachingsOfProsperity", "GuideToProsperity", "PhilosophiesOfProsperity"],
+	"Diligence": ["TeachingsOfDiligence", "GuideToDiligence", "PhilosophiesOfDiligence"],
+	"Gold": ["TeachingsOfGold", "GuideToGold", "PhilosophiesOfGold"],
+	"Transience": ["TeachingsOfTransience", "GuideToTransience", "PhilosophiesOfTransience"],
+	"Elegance": ["TeachingsOfElegance", "GuideToElegance", "PhilosophiesOfElegance"],
+	"Light": ["TeachingsOfLight", "GuideToLight", "PhilosophiesOfLight"],
+	"Admonition": ["TeachingsOfAdmonition", "GuideToAdmonition", "PhilosophiesOfAdmonition"],
+	"Ingenuity": ["TeachingsOfIngenuity", "GuideToIngenuity", "PhilosophiesOfIngenuity"],
+	"Praxis": ["TeachingsOfPraxis", "GuideToPraxis", "PhilosophiesOfPraxis"]
+}

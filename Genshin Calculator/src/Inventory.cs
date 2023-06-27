@@ -91,12 +91,12 @@ namespace Genshin.src
 
                     if (green < requiredMaterial.Amount)//Ресурса не хваватает
                     {
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Amount - green));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - green));
                         InventoryCopy[requiredMaterial.Name] = 0;
                     }
                     else//Ресурса хваватает
                     {
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                         InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
                     }
                 }
@@ -110,13 +110,13 @@ namespace Genshin.src
 
                         if (blue_alchemist + blue < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                         {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Amount - (blue_alchemist + blue)));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (blue_alchemist + blue)));
                             InventoryCopy[greenMaterial] -= (blue_alchemist) * 3;
                             InventoryCopy[requiredMaterial.Name] = 0;
                         }
                         else//Ресурса хваватает с алхимией
                         {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                             InventoryCopy[greenMaterial] -= (requiredMaterial.Amount - blue) * 3;
                             InventoryCopy[requiredMaterial.Name] -= blue;
                         }
@@ -124,7 +124,7 @@ namespace Genshin.src
                     else//Ресурса хваватает
                     {
 
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                         InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
                     }
                 }
@@ -140,14 +140,14 @@ namespace Genshin.src
                         int violetAlchemist = (blueAlchemist + blue) / 3;
                         if (violetAlchemist + violet < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                         {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Amount - (violetAlchemist + violet)));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (violetAlchemist + violet)));
                             InventoryCopy[greenMaterial] -= (blueAlchemist - blueAlchemist % 3) * 3;
                             InventoryCopy[blueMaterial] -= (blue - blue % 3);
                             InventoryCopy[requiredMaterial.Name] = 0;
                         }
                         else //Ресурса хваватает с алхимией
                         {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                             int blueToViolet = (requiredMaterial.Amount - violet) * 3 - blue;
                             int violetToViolet = (requiredMaterial.Amount - violet);
 
@@ -158,7 +158,7 @@ namespace Genshin.src
                     }
                     else//Ресурса хваватает
                     {
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                         InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
                     }
 
@@ -180,7 +180,7 @@ namespace Genshin.src
                         if (orangeAlchemist + orange < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                         {
                             
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Amount - (orangeAlchemist + orange)));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (orangeAlchemist + orange)));
                             InventoryCopy[greenMaterial] -= green - green % 27;
                             InventoryCopy[blueMaterial] -= blue - blue % 9;
                             InventoryCopy[violetMaterial] -= violet - violet % 3;
@@ -201,7 +201,7 @@ namespace Genshin.src
                         }
                         else //Ресурса хваватает с алхимией
                         {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                            
                             int blueToOrange = ((requiredMaterial.Amount - orange) * 3 - violet) * 3 - blue;
                             int violetToOrange = (requiredMaterial.Amount - orange) * 3 - violet;
@@ -217,7 +217,7 @@ namespace Genshin.src
                     }
                     else//Ресурса хваватает
                     {
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                         InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
 
                     }
@@ -229,12 +229,12 @@ namespace Genshin.src
         {
             if (requiredMaterial.Name == "WanderersAdvice" && exp < requiredMaterial.Amount)
             {
-                inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Amount - exp));
+                inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - exp));
                 exp = 0;
             }
             else
             {
-                inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, 0));
+                inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
                 exp -= requiredMaterial.Amount;
             }
             return exp;
@@ -244,12 +244,12 @@ namespace Genshin.src
         {
             if (InventoryCopy[m.Name] < m.Amount)
             {
-                remainingMaterials.Add(new Material(m.Name, m.Type, m.Amount - InventoryCopy[m.Name]));
+                remainingMaterials.Add(new Material(m.Name, m.Type, m.Rarity, m.Amount - InventoryCopy[m.Name]));
                 InventoryCopy[m.Name] = 0;
             }
             else
             {
-                remainingMaterials.Add(new Material(m.Name, m.Type, 0));
+                remainingMaterials.Add(new Material(m.Name, m.Type, m.Rarity, 0));
                 InventoryCopy[m.Name] -= m.Amount;
             }
         }
@@ -357,7 +357,7 @@ namespace Genshin.src
                 merged = merged.Concat(dictionaries[i]);
 
             var groupedMaterials = merged.GroupBy(m => new { m.Name})
-                .Select(g => new Material(g.Key.Name, g.First().Type, g.Sum(m => m.Amount)))
+                .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
                 .ToList();
 
             return groupedMaterials;

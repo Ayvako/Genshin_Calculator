@@ -5,13 +5,14 @@
         public string Name { get; set; }
         public int Amount { get; set; }
         public string Type { get; set; }
+        public int Rarity { get; set; }
 
-        public Material(string name, string type, int amount = 0)
+        public Material(string name, string type, int rarity, int amount )
         {
             Name = name;
             Type = type;
             Amount = amount;
-
+            Rarity = rarity;
         }
         public override bool Equals(object? obj)
         {

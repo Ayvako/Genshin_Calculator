@@ -20,7 +20,6 @@ namespace Genshin.src
 
 
             var exportInventory = Inventory.CopyDictionary(Inventory.MyInventory);
-            //exportInventory = exportInventory.Where(pair => pair.Value > 0).ToDictionary(pair => pair.Key, pair => pair.Value);
 
             var materialsJson = JsonConvert.SerializeObject(exportInventory, Formatting.Indented);
             var charactersJson = JsonConvert.SerializeObject(Inventory.Characters, Formatting.Indented);
@@ -49,7 +48,6 @@ namespace Genshin.src
                 string jsonContent = reader.ReadToEnd();
                 var initJson = JObject.Parse(jsonContent);
 
-                // Остальной код для обработки JSON-данных
 
                 var materials = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(initJson["Materials"].ToString());
 

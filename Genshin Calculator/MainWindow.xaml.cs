@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -11,12 +12,11 @@ using System.Windows.Media.Imaging;
 
 namespace Genshin_Calculator
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public List<Character> CharactersList;
+        private static List<Character> CharactersList;
+        private static Dictionary<string, ImageSource> imageDictionary;
+        private static Dictionary<string, ImageSource> imageDictionaryMaterial;
 
         public MainWindow()
         {
@@ -24,22 +24,26 @@ namespace Genshin_Calculator
 
             DataIO.Import();
 
-            LinearGradientBrush gradientBrush = new LinearGradientBrush();
-            gradientBrush.StartPoint = new Point(0, 0);
-            gradientBrush.EndPoint = new Point(1, 1);
 
-            gradientBrush.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#31394E"), 0));
-            gradientBrush.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#1D212D"), 0.2));
-            gradientBrush.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#191E33"), 0.4));
-            gradientBrush.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#141829"), 0.6));
-            gradientBrush.GradientStops.Add(new GradientStop((Color)ColorConverter.ConvertFromString("#101321"), 1));
+            Background = new LinearGradientBrush()
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 1),
+                GradientStops =
+                {
+                    new GradientStop((Color)ColorConverter.ConvertFromString("#31394E"), 0),
+                    new GradientStop((Color)ColorConverter.ConvertFromString("#1D212D"), 0.2),
+                    new GradientStop((Color)ColorConverter.ConvertFromString("#191E33"), 0.4),
+                    new GradientStop((Color)ColorConverter.ConvertFromString("#141829"), 0.6),
+                    new GradientStop((Color)ColorConverter.ConvertFromString("#101321"), 1)
+                }
+            };
 
-            Background = gradientBrush;
+            CharactersList = Inventory.GetActiveCharacters();
+            imageDictionary = LoadCharacterImages(CharactersList);
+            imageDictionaryMaterial = LoadMaterialImages(Inventory.MyInventory);
 
-            CharactersList = Inventory.GetDeletedCharacters();
-            Dictionary<string, ImageSource> imageDictionary = LoadCharacterImages(CharactersList);
-
-            WrapPanel charactersPanel = new ();
+  /*          WrapPanel charactersPanel = new ();
 
             foreach (var c in CharactersList)
             {
@@ -51,12 +55,7 @@ namespace Genshin_Calculator
                     Stretch = Stretch.None
                 };
 
-                Button button = new ()
-                {
-                    Content = image,
-                    Margin = new Thickness(5)
-                };
-                button.Click += ButtonClick;
+
 
                 TextBlock textBlock = new ()
                 {
@@ -64,35 +63,268 @@ namespace Genshin_Calculator
                     HorizontalAlignment = HorizontalAlignment.Center
                 };
 
-                stackPanel.Children.Add(button);
+                stackPanel.Children.Add(image);
                 stackPanel.Children.Add(textBlock);
-                stackPanel.MouseLeftButtonUp += ButtonClick;
 
                 charactersPanel.Children.Add(stackPanel);
-            }
+            }*/
 
 
-            Content = InitInvenoryPanel(charactersPanel);
+            Content = MainPanel();
+
+        }
+
+        private static StackPanel MainPanel()
+        {
+            
+            return new StackPanel()
+            {
+                Orientation = Orientation.Vertical,
+                Children =
+                    {
+                        CreateToolsPanel(),
+                        CreateRequiredMaterialsPanel(CharactersList)
+                    }
+            };
+
         }
 
 
-        private static WrapPanel InitInvenoryPanel(WrapPanel charactersPanel)
+
+
+
+        private static ScrollViewer CreateRequiredMaterialsPanel(List<Character> characters)
+        {
+            WrapPanel wrapPanel = new WrapPanel();
+            var mat = Inventory.CalcRequiredMaterials();
+
+            foreach (var c in characters)
+            {
+                TextBlock nameTextBlock = new TextBlock()
+                {
+                    Text = c.Name,
+                    FontSize = 18,
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
+                    TextAlignment = TextAlignment.Center,
+                    Background = new LinearGradientBrush()
+                    {
+                        StartPoint = new Point(0, 0),
+                        EndPoint = new Point(1, 1),
+                        GradientStops = 
+                        {
+                            new GradientStop(Color.FromArgb(144, 105, 84, 83), 0),
+                            new GradientStop(Color.FromArgb(144, 161, 112, 78), 0.39),
+                            new GradientStop(Color.FromArgb(144, 228, 171, 82), 1)
+
+
+                        }
+                    }
+
+                };
+
+                Image avatar = new()
+                {
+                    Width = 128,
+                    Height = 128,
+                    Source = imageDictionary[c.Name],
+                };
+                WrapPanel avatarPanel = new WrapPanel()
+                {
+                    Children = { avatar },
+                    
+                    Background = new LinearGradientBrush()
+                    {
+                        StartPoint = new Point(0, 0),
+                        EndPoint = new Point(1, 1),
+                        GradientStops =
+                        {
+                            new GradientStop(Color.FromArgb(144, 105, 84, 83), 0),
+                            new GradientStop(Color.FromArgb(144, 161, 112, 78), 0.39),
+                            new GradientStop(Color.FromArgb(144, 228, 171, 82), 1)
+                        }
+                    }
+                };
+
+                Border avatarBorder = new Border()
+                {
+                    Width = 128,
+                    Height = 128,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(2),
+                    Child = avatarPanel
+                    
+                };
+
+
+                TextBlock levelTextBlock = new TextBlock()
+                {
+                    Text = "Levels",
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
+                    FontSize = 14,
+                    FontWeight = FontWeights.Bold,
+                    TextAlignment = TextAlignment.Center,
+
+
+                };
+                TextBlock levelUpTextBlock = new TextBlock()
+                {
+                    Text = $"{c.CurrentLevel} -> {c.DesiredLevel}",
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
+                    FontWeight = FontWeights.Bold,
+                    TextAlignment = TextAlignment.Center,
+                    FontSize = 14,
+
+                };
+
+                StackPanel levelPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    Children =
+                    {
+                        levelTextBlock,
+                        levelUpTextBlock
+                    }
+                };
+
+                TextBlock talentTextBlock = new TextBlock()
+                {
+                    Text = "Talents",
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
+                    FontSize = 14,
+                    FontWeight = FontWeights.Bold,
+                    TextAlignment = TextAlignment.Center,
+
+                };
+                TextBlock talentsLevelUpTextBlock = new TextBlock()
+                {
+                    Text =
+                    $"{c.AutoAttack.CurrentLevel} -> {c.AutoAttack.DesiredLevel}\n" +
+                    $"{c.Elemental.CurrentLevel} -> {c.Elemental.DesiredLevel}\n" +
+                    $"{c.Burst.CurrentLevel} -> {c.Burst.DesiredLevel}",
+                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
+                    FontWeight = FontWeights.Bold,
+                    TextAlignment = TextAlignment.Center,
+                    FontSize = 14,
+
+                };
+
+
+                StackPanel talentsPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    Children =
+                    {
+                        talentTextBlock,
+                        talentsLevelUpTextBlock
+                    }
+                };
+
+                StackPanel statsPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    Children = 
+                    {
+                        levelPanel,
+                        talentsPanel
+                    }
+                };
+
+
+                Grid.SetColumnSpan(avatarBorder, 2);
+                Grid.SetColumn(statsPanel, 2);
+
+                Grid infoGrid = new () 
+                {
+
+                    ColumnDefinitions = 
+                    {
+                        new ColumnDefinition(),
+                        new ColumnDefinition(),
+                        new ColumnDefinition()
+                        {
+                            Width = new GridLength(1, GridUnitType.Star)
+                        }   
+                    },
+                    Children =
+                    {
+                        avatarBorder,
+                        statsPanel
+                    }
+
+                };
+
+
+                WrapPanel resourcesPanel = new WrapPanel();
+
+
+                foreach (var m in mat[c])
+                {
+
+                    Image materialImage = new()
+                    {
+                        Source = imageDictionaryMaterial[m.Name],
+                        Stretch = Stretch.None,
+
+
+                    };
+                    Debug.WriteLine(m.Name);
+                    resourcesPanel.Children.Add(materialImage);
+                }
+
+
+                StackPanel characterPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical,
+                    Children =
+                    {
+                        nameTextBlock,
+                        infoGrid,
+                        resourcesPanel
+                    }
+
+                };
+
+                Border characterBorder = new Border()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Child = characterPanel,
+                    MaxWidth = 712,
+                    MinWidth = 350
+
+                };
+
+
+                wrapPanel.Children.Add(characterBorder);
+            }
+
+            return new ScrollViewer()
+            {
+                Content = wrapPanel
+            };
+        }
+
+        private static WrapPanel CreateToolsPanel()
         {
             WrapPanel panel = new()
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
             };
-            ScrollViewer scrollViewer = new()
-            {
-                Content = charactersPanel
-            };
-            Popup popup = new()
-            {
-                Child = scrollViewer,
-                Placement = PlacementMode.Center,
-                Width = 400,
-                Height = 200
-            };
+            //ScrollViewer scrollViewer = new()
+            //{
+            //    Content = charactersPanel
+            //};
+            //Popup popup = new()
+            //{
+            //    Child = scrollViewer,
+            //    Placement = PlacementMode.Center,
+            //    Width = 400,
+            //    Height = 200
+            //};
 
             Button addCharacterButton = new()
             {
@@ -103,19 +335,19 @@ namespace Genshin_Calculator
                 {
                     Setters =
                     {
-                         new Setter(TemplateProperty, CreateButtonTemplate())
+                         new Setter(TemplateProperty, ButtonTemplate())
                     }
                 }
             };
             
 
-            addCharacterButton.Click += (sender, e) =>
-            {
-                
-               popup.PlacementTarget = addCharacterButton;
-               popup.IsOpen = !popup.IsOpen;
-                
-            };
+            //addCharacterButton.Click += (sender, e) =>
+            //{
+            //    
+            //   popup.PlacementTarget = addCharacterButton;
+            //   popup.IsOpen = !popup.IsOpen;
+            //    
+            //};
 
             Button manageInventoryButton = new()
             {
@@ -127,7 +359,7 @@ namespace Genshin_Calculator
                 {
                     Setters =
                     {
-                         new Setter(TemplateProperty, CreateButtonTemplate())
+                         new Setter(TemplateProperty, ButtonTemplate())
                     }
                 }
             };
@@ -138,13 +370,11 @@ namespace Genshin_Calculator
                 Content = "Manage Priority",
                 Width = 150,
                 Height = 30,
-                //Margin = new Thickness(10, 0, 10, 0),
-
                 Style = new Style(typeof(Button))
                 {
                     Setters =
                     {
-                         new Setter(TemplateProperty, CreateButtonTemplate())
+                         new Setter(TemplateProperty, ButtonTemplate())
                     }
 
                 }
@@ -157,7 +387,7 @@ namespace Genshin_Calculator
             return panel;
         }
 
-        static ControlTemplate CreateButtonTemplate()
+        private static ControlTemplate ButtonTemplate()
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
 
@@ -168,7 +398,7 @@ namespace Genshin_Calculator
             border.SetValue(Border.BorderBrushProperty, Brushes.Black);
             border.SetValue(MarginProperty, new Thickness(2, 2, 2, 2));
 
-            FrameworkElementFactory contentPresenter = new (typeof(ContentPresenter));
+            FrameworkElementFactory contentPresenter = new(typeof(ContentPresenter));
             contentPresenter.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
             contentPresenter.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
 
@@ -179,26 +409,17 @@ namespace Genshin_Calculator
             return template;
         }
 
-        private void ButtonClick(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("Click");
-            //Button button = (Button)sender;
-        }
-
         private static Dictionary<string, ImageSource> LoadCharacterImages(List<Character> characters)
         {
             Dictionary<string, ImageSource> imageDictionary = new ();
 
             foreach (var character in characters)
             {
-                // Проверяем, загружена ли картинка для данного персонажа
                 if (!imageDictionary.ContainsKey(character.Name))
                 {
-                    // Если картинка не загружена, то загружаем ее и добавляем в словарь
                     BitmapImage bitmapImage = new BitmapImage();
                     bitmapImage.BeginInit();
-                    bitmapImage.UriSource = new Uri($"/Resources/Image/{character.Name}.png", UriKind.Relative);
-                    bitmapImage.DecodePixelWidth = 64;
+                    bitmapImage.UriSource = new Uri($"/Resources/Image/Characters/{character.Name}.png", UriKind.Relative);
                     bitmapImage.EndInit();
 
                     imageDictionary[character.Name] = bitmapImage;
@@ -208,6 +429,25 @@ namespace Genshin_Calculator
             return imageDictionary;
         }
 
+        private static Dictionary<string, ImageSource> LoadMaterialImages(Dictionary<string,int> dict)
+        {
+            Dictionary<string, ImageSource> imageDictionary = new();
 
+            foreach (var material in dict.Keys)
+            {
+                if (!imageDictionary.ContainsKey(material))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.UriSource = new Uri($"/Resources/Image/Materials/{material}.png", UriKind.Relative);
+                    bitmapImage.DecodePixelWidth = 64;
+                    bitmapImage.EndInit();
+
+                    imageDictionary[material] = bitmapImage;
+                }
+            }
+
+            return imageDictionary;
+        }
     }
 }

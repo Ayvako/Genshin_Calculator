@@ -212,7 +212,8 @@
 		"BookType": 		"Ballad",
 		"Enemy": 			"DiviningScroll",	
 		"MiniBoss": 		"BasaltPillar",
-		"WeeklyBoss": 		"TuskOfMonocerosCaeli"
+		"WeeklyBoss": 		"TuskOfMonocerosCaeli",
+		"Rarity":			5
 	  },
 	  {
 		"Name": 			"Aloy",
@@ -222,7 +223,8 @@
 		"BookType": 		"Freedom",
 		"Enemy": 			"SpectralHusk",
 		"MiniBoss": 		"CrystallineBloom",
-		"WeeklyBoss": 		"MoltenMoment"
+		"WeeklyBoss": 		"MoltenMoment",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Amber",
@@ -232,7 +234,8 @@
 		"BookType": "Freedom",
 		"Enemy": "FirmArrowhead",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "DvalinsSigh"
+		"WeeklyBoss": "DvalinsSigh",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Arataki Itto",
@@ -242,7 +245,8 @@
 		"BookType": "Elegance",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "RiftbornRegalia",
-		"WeeklyBoss": "AshenHeart"
+		"WeeklyBoss": "AshenHeart",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Barbara",
@@ -252,7 +256,8 @@
 		"BookType": "Freedom",
 		"Enemy": "DiviningScroll",
 		"MiniBoss": "CleansingHeart",
-		"WeeklyBoss": "RingOfBoreas"
+		"WeeklyBoss": "RingOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Beidou",
@@ -262,7 +267,8 @@
 		"BookType": "Gold",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "LightningPrism",
-		"WeeklyBoss": "DvalinsSigh"
+		"WeeklyBoss": "DvalinsSigh",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Bennett",
@@ -272,7 +278,8 @@
 		"BookType": "Resistance",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "DvalinsPlume"
+		"WeeklyBoss": "DvalinsPlume",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Chongyun",
@@ -282,7 +289,8 @@
 		"BookType": "Diligence",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "DvalinsSigh"
+		"WeeklyBoss": "DvalinsSigh",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Collei",
@@ -292,7 +300,8 @@
 		"BookType": "Praxis",
 		"Enemy": "FirmArrowhead",
 		"MiniBoss": "MajesticHookedBeak",
-		"WeeklyBoss": "TearsOfTheCalamitousGod"
+		"WeeklyBoss": "TearsOfTheCalamitousGod",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Diluc",
@@ -302,7 +311,8 @@
 		"BookType": "Resistance",
 		"Enemy": "RecruitsInsignia",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "DvalinsPlume"
+		"WeeklyBoss": "DvalinsPlume",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Diona",
@@ -312,7 +322,8 @@
 		"BookType": "Freedom",
 		"Enemy": "FirmArrowhead",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "ShardOfAFourlLegacy"
+		"WeeklyBoss": "ShardOfAFourlLegacy",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Dori",
@@ -322,7 +333,8 @@
 		"BookType": "Ingenuity",
 		"Enemy": "FadedRedSatin",
 		"MiniBoss": "ThunderclapFruitcore",
-		"WeeklyBoss": "BloodjadeBranch"
+		"WeeklyBoss": "BloodjadeBranch",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Eula",
@@ -332,7 +344,8 @@
 		"BookType": "Resistance",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "CrystallineBloom",
-		"WeeklyBoss": "DragonLordsCrown"
+		"WeeklyBoss": "DragonLordsCrown",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Fischl",
@@ -342,7 +355,8 @@
 		"BookType": "Ballad",
 		"Enemy": "FirmArrowhead",
 		"MiniBoss": "LightningPrism",
-		"WeeklyBoss": "SpiritLocketOfBoreas"
+		"WeeklyBoss": "SpiritLocketOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Ganyu",
@@ -352,7 +366,8 @@
 		"BookType": "Diligence",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "ShadowOfTheWarrior"
+		"WeeklyBoss": "ShadowOfTheWarrior",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Gorou",
@@ -362,7 +377,8 @@
 		"BookType": "Light",
 		"Enemy": "SpectralHusk",
 		"MiniBoss": "PerpetualHeart",
-		"WeeklyBoss": "MoltenMoment"
+		"WeeklyBoss": "MoltenMoment",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Hu Tao",
@@ -372,7 +388,8 @@
 		"BookType": "Diligence",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "JuvenileJade",
-		"WeeklyBoss": "ShardOfAFourlLegacy"
+		"WeeklyBoss": "ShardOfAFourlLegacy",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Jean",
@@ -382,7 +399,8 @@
 		"BookType": "Resistance",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "HurricaneSeed",
-		"WeeklyBoss": "DvalinsPlume"
+		"WeeklyBoss": "DvalinsPlume",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Kaedehara Kazuha",
@@ -392,7 +410,8 @@
 		"BookType": "Diligence",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "MarionetteCore",
-		"WeeklyBoss": "GildedScale"
+		"WeeklyBoss": "GildedScale",
+		"Rarity":			5
 	  },
       {
 		"Name": "Kamisato Ayaka",
@@ -402,7 +421,8 @@
 		"BookType": "Elegance",
 		"Enemy": "OldHandguard",
 		"MiniBoss": "PerpetualHeart",
-		"WeeklyBoss": "BloodjadeBranch"
+		"WeeklyBoss": "BloodjadeBranch",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Kamisato Ayato",
@@ -412,7 +432,8 @@
 		"BookType": "Elegance",
 		"Enemy": "OldHandguard",
 		"MiniBoss": "DewOfrepudiation",
-		"WeeklyBoss": "MudraOfTheMaleficGeneral"
+		"WeeklyBoss": "MudraOfTheMaleficGeneral",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Kaeya",
@@ -422,7 +443,8 @@
 		"BookType": "Ballad",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "SpiritLocketOfBoreas"
+		"WeeklyBoss": "SpiritLocketOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Keqing",
@@ -432,7 +454,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "LightningPrism",
-		"WeeklyBoss": "RingOfBoreas"
+		"WeeklyBoss": "RingOfBoreas",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Klee",
@@ -442,7 +465,8 @@
 		"BookType": "Freedom",
 		"Enemy": "DiviningScroll",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "RingOfBoreas"
+		"WeeklyBoss": "RingOfBoreas",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Kujou Sara",
@@ -452,7 +476,8 @@
 		"BookType": "Elegance",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "StormBeads",
-		"WeeklyBoss": "AshenHeart"
+		"WeeklyBoss": "AshenHeart",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Kuki Shinobu",
@@ -462,7 +487,8 @@
 		"BookType": "Elegance",
 		"Enemy": "SpectralHusk",
 		"MiniBoss": "RunicFang",
-		"WeeklyBoss": "TearsOfTheCalamitousGod"
+		"WeeklyBoss": "TearsOfTheCalamitousGod",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Lisa",
@@ -472,7 +498,8 @@
 		"BookType": "Ballad",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "LightningPrism",
-		"WeeklyBoss": "DvalinsClaw"
+		"WeeklyBoss": "DvalinsClaw",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Mona",
@@ -482,7 +509,8 @@
 		"BookType": "Resistance",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "CleansingHeart",
-		"WeeklyBoss": "RingOfBoreas"
+		"WeeklyBoss": "RingOfBoreas",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Ningguang",
@@ -492,7 +520,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "RecruitsInsignia",
 		"MiniBoss": "BasaltPillar",
-		"WeeklyBoss": "SpiritLocketOfBoreas"
+		"WeeklyBoss": "SpiritLocketOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Noelle",
@@ -502,7 +531,8 @@
 		"BookType": "Resistance",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "BasaltPillar",
-		"WeeklyBoss": "DvalinsClaw"
+		"WeeklyBoss": "DvalinsClaw",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Qiqi",
@@ -512,7 +542,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "DiviningScroll",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "TailOfBoreas"
+		"WeeklyBoss": "TailOfBoreas",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Raiden Shogun",
@@ -522,7 +553,8 @@
 		"BookType": "Light",
 		"Enemy": "OldHandguard",
 		"MiniBoss": "StormBeads",
-		"WeeklyBoss": "MoltenMoment"
+		"WeeklyBoss": "MoltenMoment",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Razor",
@@ -532,7 +564,8 @@
 		"BookType": "Resistance",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "LightningPrism",
-		"WeeklyBoss": "DvalinsClaw"
+		"WeeklyBoss": "DvalinsClaw",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Rosaria",
@@ -542,7 +575,8 @@
 		"BookType": "Ballad",
 		"Enemy": "RecruitsInsignia",
 		"MiniBoss": "HoarfrostCore",
-		"WeeklyBoss": "ShadowOfTheWarrior"
+		"WeeklyBoss": "ShadowOfTheWarrior",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Sangonomiya Kokomi",
@@ -552,7 +586,8 @@
 		"BookType": "Transience",
 		"Enemy": "SpectralHusk",
 		"MiniBoss": "DewOfrepudiation",
-		"WeeklyBoss": "HellfireButterfly"
+		"WeeklyBoss": "HellfireButterfly",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Sayu",
@@ -562,7 +597,8 @@
 		"BookType": "Light",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "MarionetteCore",
-		"WeeklyBoss": "GildedScale"
+		"WeeklyBoss": "GildedScale",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Shenhe",
@@ -572,7 +608,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "DragonheirsFalseFin",
-		"WeeklyBoss": "HellfireButterfly"
+		"WeeklyBoss": "HellfireButterfly",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Shikanoin Heizou",
@@ -582,7 +619,8 @@
 		"BookType": "Transience",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "RunicFang",
-		"WeeklyBoss": "TheMeaningOfAeons"
+		"WeeklyBoss": "TheMeaningOfAeons",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Sucrose",
@@ -592,7 +630,8 @@
 		"BookType": "Freedom",
 		"Enemy": "WhopperflowerNectar",
 		"MiniBoss": "HurricaneSeed",
-		"WeeklyBoss": "SpiritLocketOfBoreas"
+		"WeeklyBoss": "SpiritLocketOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Tartaglia",
@@ -602,7 +641,8 @@
 		"BookType": "Freedom",
 		"Enemy": "RecruitsInsignia",
 		"MiniBoss": "CleansingHeart",
-		"WeeklyBoss": "ShardOfAFourlLegacy"
+		"WeeklyBoss": "ShardOfAFourlLegacy",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Thoma",
@@ -612,7 +652,8 @@
 		"BookType": "Transience",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "SmolderingPearl",
-		"WeeklyBoss": "HellfireButterfly"
+		"WeeklyBoss": "HellfireButterfly",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Tighnari",
@@ -622,7 +663,8 @@
 		"BookType": "Admonition",
 		"Enemy": "FungalSpores",
 		"MiniBoss": "MajesticHookedBeak",
-		"WeeklyBoss": "TheMeaningOfAeons"
+		"WeeklyBoss": "TheMeaningOfAeons",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Venti",
@@ -632,7 +674,8 @@
 		"BookType": "Ballad",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "HurricaneSeed",
-		"WeeklyBoss": "TailOfBoreas"
+		"WeeklyBoss": "TailOfBoreas",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Xiangling",
@@ -642,7 +685,8 @@
 		"BookType": "Diligence",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "DvalinsClaw"
+		"WeeklyBoss": "DvalinsClaw",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Xiao",
@@ -652,7 +696,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "JuvenileJade",
-		"WeeklyBoss": "ShadowOfTheWarrior"
+		"WeeklyBoss": "ShadowOfTheWarrior",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Xingqiu",
@@ -662,7 +707,8 @@
 		"BookType": "Gold",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "CleansingHear",
-		"WeeklyBoss": "TailOfBoreas"
+		"WeeklyBoss": "TailOfBoreas",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Xinyan",
@@ -672,7 +718,8 @@
 		"BookType": "Gold",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "EverflameSeed",
-		"WeeklyBoss": "TuskOfMonocerosCaeli"
+		"WeeklyBoss": "TuskOfMonocerosCaeli",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Yae Miko",
@@ -682,7 +729,8 @@
 		"BookType": "Light",
 		"Enemy": "OldHandguard",
 		"MiniBoss": "DragonheirsFalseFin",
-		"WeeklyBoss": "TheMeaningOfAeons"
+		"WeeklyBoss": "TheMeaningOfAeons",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Yanfei",
@@ -692,7 +740,8 @@
 		"BookType": "Gold",
 		"Enemy": "TreasureHoarderInsignia",
 		"MiniBoss": "JuvenileJade",
-		"WeeklyBoss": "BloodjadeBranch"
+		"WeeklyBoss": "BloodjadeBranch",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Yelan",
@@ -702,7 +751,8 @@
 		"BookType": "Prosperity",
 		"Enemy": "RecruitsInsignia",
 		"MiniBoss": "RunicFang",
-		"WeeklyBoss": "GildedScale"
+		"WeeklyBoss": "GildedScale",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Yoimiya",
@@ -712,7 +762,8 @@
 		"BookType": "Transience",
 		"Enemy": "DiviningScroll",
 		"MiniBoss": "SmolderingPearl",
-		"WeeklyBoss": "DragonLordsCrown"
+		"WeeklyBoss": "DragonLordsCrown",
+		"Rarity":			5
 	  },
 	  {
 		"Name": "Yun Jin",
@@ -722,7 +773,8 @@
 		"BookType": "Diligence",
 		"Enemy": "DamagedMask",
 		"MiniBoss": "RiftbornRegalia",
-		"WeeklyBoss": "AshenHeart"
+		"WeeklyBoss": "AshenHeart",
+		"Rarity":			4
 	  },
 	  {
 		"Name": "Zhongli",
@@ -732,7 +784,8 @@
 		"BookType": "Gold",
 		"Enemy": "SlimeCondensate",
 		"MiniBoss": "BasaltPillar",
-		"WeeklyBoss": "TuskOfMonocerosCaeli"
+		"WeeklyBoss": "TuskOfMonocerosCaeli",
+		"Rarity":			5
 	  }
    ]
 }

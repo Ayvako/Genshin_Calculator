@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Genshin.src.LevelingResources;
+using Newtonsoft.Json;
 
 namespace Genshin.src
 {
@@ -53,7 +54,6 @@ namespace Genshin.src
     public class Assets
     {
         public string Name { get; set; }
-
         public string LocalSpecialty { get;  set; }
         public string Element { get; set; }
         public string Weapon { get; set; }
@@ -61,8 +61,9 @@ namespace Genshin.src
         public string MiniBoss { get; set; }
         public string WeeklyBoss { get; set; }
         public string BookType { get; set; }
+        public int Rarity { get; set; }
 
-        public Assets(string name, string weapon, string element, string localSpecialty, string bookType, string enemy, string miniBoss, string weeklyBoss)
+        public Assets(string name, string weapon, string element, string localSpecialty, string bookType, string enemy, string miniBoss, string weeklyBoss, int rarity)
         {
             Name = name;
             LocalSpecialty = localSpecialty;
@@ -72,7 +73,7 @@ namespace Genshin.src
             Enemy = enemy;
             MiniBoss = miniBoss;
             WeeklyBoss = weeklyBoss;
-
+            Rarity = rarity;
         }
         public override string ToString()
         {

@@ -48,11 +48,12 @@ namespace Genshin.src
                 string jsonContent = reader.ReadToEnd();
                 var initJson = JObject.Parse(jsonContent);
 
+                var materials = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(initJson["Materials"].ToString());
 
-                var materials = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(initJson["Materials"].ToString());
-
-                Inventory.MyInventory = MergDictionaries(materials["LocalSpecialty"], materials["BookType"], materials["Gem"],
+                var merged = MergList(materials["LocalSpecialty"], materials["BookType"], materials["Gem"],
                     materials["Enemy"], materials["MiniBoss"], materials["WeeklyBoss"], materials["Other"]);
+
+                merged.ForEach(m => Inventory.MyInventory[m] = 0);
 
                 List<Assets> assets = JsonConvert.DeserializeObject<List<Assets>>((initJson["Characters"].ToString()));
 
@@ -110,6 +111,17 @@ namespace Genshin.src
             return result;
         }
 
+        private static List<string> MergList(params List<string>[] lists)
+        {
+            List<string> result = new();
+
+            foreach (var list in lists)
+            {
+                result.AddRange(list);
+            }
+
+            return result; 
+        }
 
         public static Dictionary<string, string[]> GetMaterials(string materials)
         {

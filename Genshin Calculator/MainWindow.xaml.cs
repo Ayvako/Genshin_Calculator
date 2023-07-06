@@ -2,32 +2,29 @@
 using Genshin.src.LevelingResources;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-
+using System.Windows.Markup;
 
 namespace Genshin_Calculator
 {
     public partial class MainWindow : Window
     {
         private static List<Character> CharactersList;
-        private static Dictionary<string, ImageSource> imageDictionary;
-        private static Dictionary<string, ImageSource> imageDictionaryMaterial;
-
+        private static Dictionary<string, ImageSource> ImageDictionaryCharacter;
+        private static Dictionary<string, ImageSource> ImageDictionaryMaterial;
         public MainWindow()
         {
             InitializeComponent();
 
             DataIO.Import();
-
-
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            MinHeight = 500;
+            MinWidth = 500;
             Background = new LinearGradientBrush()
             {
                 StartPoint = new Point(0, 0),
@@ -43,58 +40,46 @@ namespace Genshin_Calculator
             };
 
             CharactersList = Inventory.GetActiveCharacters();
-            imageDictionary = LoadCharacterImages(CharactersList);
-            imageDictionaryMaterial = LoadMaterialImages(Inventory.MyInventory);
-
-  /*          WrapPanel charactersPanel = new ();
-
-            foreach (var c in CharactersList)
-            {
-                StackPanel stackPanel = new ();
-
-                Image image = new ()
-                {
-                    Source = imageDictionary[c.Name],
-                    Stretch = Stretch.None
-                };
-
-
-
-                TextBlock textBlock = new ()
-                {
-                    Text = c.Name,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                };
-
-                stackPanel.Children.Add(image);
-                stackPanel.Children.Add(textBlock);
-
-                charactersPanel.Children.Add(stackPanel);
-            }*/
+            ImageDictionaryCharacter = LoadCharacterImages(CharactersList);
+            ImageDictionaryMaterial = LoadMaterialImages(Inventory.MyInventory);
 
 
             Content = MainPanel();
 
         }
 
-        private static StackPanel MainPanel()
+        private static ScrollViewer MainPanel()
         {
-            
-            return new StackPanel()
+
+            StackPanel amountPanel = new StackPanel()
             {
                 Orientation = Orientation.Vertical,
-                Children =
-                    {
-                        CreateToolsPanel(),
-                        CreateFarmPanel(CharactersList)
-                    }
+                HorizontalAlignment = HorizontalAlignment.Center
             };
 
+            amountPanel.Children.Add(CreateToolsPanel());
+            amountPanel.Children.Add(CreateFarmPanel(CharactersList));
+
+            ScrollViewer scrollViewer = new ScrollViewer()
+            {
+
+                Content = amountPanel,
+
+                Resources = new ResourceDictionary()
+                {
+                    {
+                        typeof(ScrollBar),
+                        ScrollStyle()
+                    },
+
+
+                },
+
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+            };
+            return scrollViewer;
         }
-
-
-
-
 
 
 
@@ -137,7 +122,7 @@ namespace Genshin_Calculator
 
                 Image materialImage = new()
                 {
-                    Source = imageDictionaryMaterial[m.Name],
+                    Source = ImageDictionaryMaterial[m.Name],
                     Stretch = Stretch.None,
 
                 };
@@ -165,126 +150,17 @@ namespace Genshin_Calculator
             return resourcesPanel;
         }
 
-        private static ScrollViewer CreateFarmPanel(List<Character> characters)
+        private static StackPanel CreateFarmPanel(List<Character> characters)
         {
-            WrapPanel wrapPanel = new ();
+            WrapPanel wrapPanel = new();
             var mat = Inventory.CalcRequiredMaterials();
             foreach (var c in characters)
             {
                 Grid tableContents = CreateTableContentsPanel(c);
-
-                Image avatar = new()
-                {
-                    Width = 128,
-                    Height = 128,
-                    Source = imageDictionary[c.Name],
-                };
-                WrapPanel avatarPanel = new ()
-                {
-                    Children = { avatar },
-                    Background = SetBackgroundRarity(c.Assets.Rarity)
-                };
-                Border avatarBorder = new ()
-                {
-                    Width = 128,
-                    Height = 128,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(2),
-                    Child = avatarPanel
-
-                };
-                TextBlock levelTextBlock = new ()
-                {
-                    Text = "Levels",
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
-                    FontSize = 14,
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-                };
-                TextBlock levelUpTextBlock = new ()
-                {
-                    Text = $"{c.CurrentLevel} -> {c.DesiredLevel}",
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-                    FontSize = 14,
-
-                };
-                StackPanel levelPanel = new ()
-                {
-                    Orientation = Orientation.Vertical,
-                    Children =
-                    {
-                        levelTextBlock,
-                        levelUpTextBlock
-                    }
-                };
-                TextBlock talentTextBlock = new ()
-                {
-                    Text = "Talents",
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
-                    FontSize = 14,
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-
-                };
-                TextBlock talentsLevelUpTextBlock = new ()
-                {
-                    Text =
-                    $"{c.AutoAttack.CurrentLevel} -> {c.AutoAttack.DesiredLevel}\n" +
-                    $"{c.Elemental.CurrentLevel} -> {c.Elemental.DesiredLevel}\n" +
-                    $"{c.Burst.CurrentLevel} -> {c.Burst.DesiredLevel}",
-                    Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
-                    FontWeight = FontWeights.Bold,
-                    TextAlignment = TextAlignment.Center,
-                    FontSize = 14,
-
-                };
-                StackPanel talentsPanel = new ()
-                {
-                    Orientation = Orientation.Vertical,
-                    Children =
-                    {
-                        talentTextBlock,
-                        talentsLevelUpTextBlock
-                    }
-                };
-                StackPanel statsPanel = new ()
-                {
-                    Orientation = Orientation.Vertical,
-                    Children =
-                    {
-                        levelPanel,
-                        talentsPanel
-                    }
-                };
-                Grid.SetColumnSpan(avatarBorder, 2);
-                Grid.SetColumn(statsPanel, 2);
-                Grid infoGrid = new()
-                {
-
-                    ColumnDefinitions =
-                    {
-                        new ColumnDefinition(),
-                        new ColumnDefinition(),
-                        new ColumnDefinition()
-                        {
-                            Width = new GridLength(1, GridUnitType.Star)
-                        }
-                    },
-                    Children =
-                    {
-                        avatarBorder,
-                        statsPanel
-                    }
-
-                };
-
+                Grid infoGrid = CreateInfoPanel(c);
                 WrapPanel resourcesPanel = CreateResourcesPanel(mat[c]);
 
-                StackPanel characterPanel = new ()
+                StackPanel characterPanel = new()
                 {
 
                     Orientation = Orientation.Vertical,
@@ -297,7 +173,7 @@ namespace Genshin_Calculator
 
                 };
 
-                Border characterBorder = new ()
+                Border characterBorder = new()
                 {
                     HorizontalAlignment = HorizontalAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center,
@@ -334,13 +210,133 @@ namespace Genshin_Calculator
                 wrapPanel.Children.Add(characterBorder);
             }
 
-            return new ScrollViewer()
+            return new StackPanel()
             {
-                VerticalScrollBarVisibility = ScrollBarVisibility.Hidden,
+                Orientation = Orientation.Vertical,
+
                 Margin = new Thickness(5),
-                Content = wrapPanel
+                Children = { wrapPanel }
             };
         }
+
+        private static Grid CreateInfoPanel(Character c)
+        {
+
+            Image avatar = new()
+            {
+                Width = 128,
+                Height = 128,
+                Source = ImageDictionaryCharacter[c.Name],
+            };
+            WrapPanel avatarPanel = new()
+            {
+                Children = { avatar },
+                Background = SetBackgroundRarity(c.Assets.Rarity)
+            };
+            Border avatarBorder = new()
+            {
+                Width = 128,
+                Height = 128,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                BorderBrush = Brushes.Black,
+                BorderThickness = new Thickness(2),
+                Child = avatarPanel
+
+            };
+            TextBlock levelTextBlock = new()
+            {
+                Text = "Levels",
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+            };
+            TextBlock levelUpTextBlock = new()
+            {
+                Text = $"{c.CurrentLevel} -> {c.DesiredLevel}",
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                FontSize = 14,
+
+            };
+            StackPanel levelPanel = new()
+            {
+                Orientation = Orientation.Vertical,
+                Children =
+                    {
+                        levelTextBlock,
+                        levelUpTextBlock
+                    }
+            };
+            TextBlock talentTextBlock = new()
+            {
+                Text = "Talents",
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")),
+                FontSize = 14,
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+
+            };
+            TextBlock talentsLevelUpTextBlock = new()
+            {
+                Text =
+                $"{c.AutoAttack.CurrentLevel} -> {c.AutoAttack.DesiredLevel}\n" +
+                $"{c.Elemental.CurrentLevel} -> {c.Elemental.DesiredLevel}\n" +
+                $"{c.Burst.CurrentLevel} -> {c.Burst.DesiredLevel}",
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCCCC")),
+                FontWeight = FontWeights.Bold,
+                TextAlignment = TextAlignment.Center,
+                FontSize = 14,
+
+            };
+            StackPanel talentsPanel = new()
+            {
+                Orientation = Orientation.Vertical,
+                Children =
+                    {
+                        talentTextBlock,
+                        talentsLevelUpTextBlock
+                    }
+            };
+            StackPanel statsPanel = new()
+            {
+                Orientation = Orientation.Vertical,
+                Children =
+                    {
+                        levelPanel,
+                        talentsPanel
+                    }
+            };
+            Grid.SetColumnSpan(avatarBorder, 2);
+            Grid.SetColumn(statsPanel, 2);
+
+
+            Grid infoGrid = new()
+            {
+
+                ColumnDefinitions =
+                    {
+                        new ColumnDefinition(),
+                        new ColumnDefinition(),
+                        new ColumnDefinition()
+                        {
+                            Width = new GridLength(1, GridUnitType.Star)
+                        }
+                    },
+                Children =
+                    {
+                        avatarBorder,
+                        statsPanel
+                    }
+
+            };
+
+
+            return infoGrid;
+        }
+
 
         private static Grid CreateTableContentsPanel(Character c)
         {
@@ -365,8 +361,8 @@ namespace Genshin_Calculator
 
             };
 
-            StackPanel buttonPanel = new() 
-            { 
+            StackPanel buttonPanel = new()
+            {
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
@@ -375,15 +371,15 @@ namespace Genshin_Calculator
                 }
             };
 
-            StackPanel textPanel = new () 
+            StackPanel textPanel = new()
             {
                 Orientation = Orientation.Horizontal,
-                HorizontalAlignment= HorizontalAlignment.Center,
-                VerticalAlignment=VerticalAlignment.Center,
-                Children = {nameTextBlock}
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Children = { nameTextBlock }
             };
-            StackPanel buttonPanel2 = new () 
-            { 
+            StackPanel buttonPanel2 = new()
+            {
                 Orientation = Orientation.Horizontal,
                 Children =
                 {
@@ -404,7 +400,6 @@ namespace Genshin_Calculator
 
             return grid;
         }
-
 
         private static WrapPanel CreateToolsPanel()
         {
@@ -437,7 +432,7 @@ namespace Genshin_Calculator
                     }
                 }
             };
-            
+
 
             //addCharacterButton.Click += (sender, e) =>
             //{
@@ -489,7 +484,7 @@ namespace Genshin_Calculator
         {
             ControlTemplate template = new ControlTemplate(typeof(Button));
 
-            FrameworkElementFactory border = new (typeof(Border));
+            FrameworkElementFactory border = new(typeof(Border));
             border.SetValue(Border.CornerRadiusProperty, new CornerRadius(10));
             border.SetValue(Border.BorderThicknessProperty, new Thickness(1));
             border.SetValue(Border.BackgroundProperty, new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFECE5D8")));
@@ -506,6 +501,8 @@ namespace Genshin_Calculator
 
             return template;
         }
+
+
         private static LinearGradientBrush SetBackgroundRarity(int rarity)
         {
             var gradient = new LinearGradientBrush
@@ -552,13 +549,13 @@ namespace Genshin_Calculator
 
         private static Dictionary<string, ImageSource> LoadCharacterImages(List<Character> characters)
         {
-            Dictionary<string, ImageSource> imageDictionary = new ();
+            Dictionary<string, ImageSource> imageDictionary = new();
 
             foreach (var character in characters)
             {
                 if (!imageDictionary.ContainsKey(character.Name))
                 {
-                    BitmapImage bitmapImage = new ();
+                    BitmapImage bitmapImage = new();
                     bitmapImage.BeginInit();
                     bitmapImage.UriSource = new Uri($"/Resources/Image/Characters/{character.Name}.png", UriKind.Relative);
                     bitmapImage.EndInit();
@@ -570,7 +567,7 @@ namespace Genshin_Calculator
             return imageDictionary;
         }
 
-        private static Dictionary<string, ImageSource> LoadMaterialImages(Dictionary<string,int> dict)
+        private static Dictionary<string, ImageSource> LoadMaterialImages(Dictionary<string, int> dict)
         {
             Dictionary<string, ImageSource> imageDictionary = new();
 
@@ -590,5 +587,89 @@ namespace Genshin_Calculator
 
             return imageDictionary;
         }
+
+        private static Style ScrollStyle()
+        {
+            Style style = new (typeof(ScrollBar));
+
+
+            Trigger trigger = new ()
+            {
+                Property = ScrollBar.OrientationProperty,
+                Value = Orientation.Vertical,
+
+                Setters =
+                {
+                    new Setter   {
+                        Property = WidthProperty,
+                        Value = 20.0
+                    },
+
+
+                    new Setter   {
+                        Property = TemplateProperty,
+                        Value = ScrollBarTemplate()
+
+                    },
+                },
+
+            };
+            
+
+            style.Triggers.Add(trigger);
+            return style;
+        }
+
+        private static ControlTemplate ScrollBarTemplate()
+        {
+            string xamlCode = @"
+<ControlTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+                xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml""
+                xmlns:d=""http://schemas.microsoft.com/expression/blend/2008""
+                xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
+                xmlns:local=""clr-namespace:Genshin_Calculator""
+                x:Key=""VerticalScrollBar"" TargetType=""ScrollBar"">
+    <ControlTemplate.Resources>
+        <ImageBrush x:Key=""ThumbIcon_Default"" ImageSource=""Resources/Assets/Thumb_Icon_Default.png""/>
+        <ImageBrush x:Key=""ThumbIcon_MouseOver"" ImageSource=""Resources/Assets/Thumb_Icon_MouseOver.png""/>
+    </ControlTemplate.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height=""*""/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row=""1"" Width=""10"" Background=""#0f0f1e""></Border>
+        <Track Name=""PART_Track"" Grid.Row=""1"" IsDirectionReversed=""True"">
+            <Track.Thumb>
+                <Thumb>
+                    <Thumb.Style>
+                        <Style x:Key=""ScrollBar_Thumb"" TargetType=""Thumb"">
+                            <Setter Property=""SnapsToDevicePixels"" Value=""True""/>
+                            <Setter Property=""OverridesDefaultStyle"" Value=""True""/>
+                            <Setter Property=""Width"" Value=""10""/>
+                            <Setter Property=""Template"">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType=""Thumb"">
+                                        <Border x:Name=""border"" Background=""{StaticResource ThumbIcon_Default}"" SnapsToDevicePixels=""True""></Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property=""IsMouseOver"" Value=""True"">
+                                                <Setter Property=""Background"" TargetName=""border"" Value=""{StaticResource ThumbIcon_MouseOver}""/>
+                                                <Setter Property=""BorderBrush"" TargetName=""border"" Value=""{StaticResource ThumbIcon_MouseOver}""/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Thumb.Style>
+                </Thumb>
+            </Track.Thumb>
+        </Track>
+    </Grid>
+</ControlTemplate>";
+
+            return (ControlTemplate)XamlReader.Parse(xamlCode);
+        }
+
+
     }
 }

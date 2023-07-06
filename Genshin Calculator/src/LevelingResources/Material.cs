@@ -7,7 +7,7 @@
         public string Type { get; set; }
         public int Rarity { get; set; }
 
-        public Material(string name, string type, int rarity, int amount = 0 )
+        public Material(string name, string type, int rarity, int amount)
         {
             Name = name;
             Type = type;

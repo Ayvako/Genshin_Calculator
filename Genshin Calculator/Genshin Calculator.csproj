@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Assets\Thumb_Icon_Default.png" />
+    <None Remove="Resources\Assets\Thumb_Icon_MouseOver.png" />
     <None Remove="Resources\Image\Albedo.png" />
     <None Remove="Resources\Image\Alhatham.png" />
     <None Remove="Resources\Image\Aloy.png" />
@@ -435,7 +437,6 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -443,6 +444,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Assets\Thumb_Icon_Default.png" />
+    <Resource Include="Resources\Assets\Thumb_Icon_MouseOver.png" />
     <Resource Include="Resources\Image\Characters\Albedo.png" />
     <Resource Include="Resources\Image\Characters\Alhatham.png" />
     <Resource Include="Resources\Image\Characters\Aloy.png" />

@@ -9,6 +9,14 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Markup;
+using System.Windows.Media.Media3D;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Diagnostics;
+using System.Collections;
+using System.Resources;
+using System.Windows.Data;
 
 namespace Genshin_Calculator
 {
@@ -17,6 +25,8 @@ namespace Genshin_Calculator
         private static List<Character> CharactersList;
         private static Dictionary<string, ImageSource> ImageDictionaryCharacter;
         private static Dictionary<string, ImageSource> ImageDictionaryMaterial;
+        private static Dictionary<string, ImageSource> ImageDictionaryTools;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,49 +52,42 @@ namespace Genshin_Calculator
             CharactersList = Inventory.GetActiveCharacters();
             ImageDictionaryCharacter = LoadCharacterImages(CharactersList);
             ImageDictionaryMaterial = LoadMaterialImages(Inventory.MyInventory);
-
+            ImageDictionaryTools = LoadToolsImages();
 
             Content = MainPanel();
 
         }
 
+
+
         private static ScrollViewer MainPanel()
         {
 
-            StackPanel amountPanel = new StackPanel()
+            StackPanel panel = new()
             {
                 Orientation = Orientation.Vertical,
                 HorizontalAlignment = HorizontalAlignment.Center
             };
 
-            amountPanel.Children.Add(CreateToolsPanel());
-            amountPanel.Children.Add(CreateFarmPanel(CharactersList));
+            panel.Children.Add(CreateToolsPanel());
+            panel.Children.Add(CreateFarmPanel(CharactersList));
 
-            ScrollViewer scrollViewer = new ScrollViewer()
+            ScrollViewer scrollViewer = new ()
             {
-
-                Content = amountPanel,
+                Content = panel,
 
                 Resources = new ResourceDictionary()
                 {
-                    {
-                        typeof(ScrollBar),
-                        ScrollStyle()
-                    },
-
-
+                    { typeof(ScrollBar), ScrollStyle() },
                 },
-
+                
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             };
             return scrollViewer;
         }
 
-
-
-
-        private static WrapPanel CreateResourcesPanel(List<Material> materials)
+        private static WrapPanel CreateResourcesPanel(List<Genshin.src.LevelingResources.Material> materials)
         {
             WrapPanel resourcesPanel = new()
             {
@@ -337,21 +340,22 @@ namespace Genshin_Calculator
             return infoGrid;
         }
 
-
         private static Grid CreateTableContentsPanel(Character c)
         {
             Grid grid = new() { Background = SetBackgroundRarity(c.Assets.Rarity) };
 
-            // Определение столбцов с нужными ширинами
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) }); // Левый столбец
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) }); // Центральный столбец
-            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) }); // Правый столбец
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
 
             // Создание Button и TextBlock
-            Button editButton = new() { Content = "B1" };
-            Button ascendButton = new() { Content = "B2" };
-            Button activeButton = new() { Content = "B3" };
-            Button removeButton = new() { Content = "B4" };
+
+            Image editButton   = CreateImage("edit_icon_default.png", "edit_icon_mouseover.png", 40, 40);
+            Image ascendButton = CreateImage("acsend_icon_default.png", "acsend_icon_mouseover.png", 40, 40);
+            Image activeButton = CreateImage("active_icon_default.png", "active_icon_mouseover.png", 40, 40);
+            Image removeButton = CreateImage("remove_icon_default.png", "remove_icon_mouseover.png", 40, 40);
+
+            
             TextBlock nameTextBlock = new()
             {
                 Text = c.Name,
@@ -388,18 +392,42 @@ namespace Genshin_Calculator
                 }
             };
 
-            // Размещение элементов в сетке
-            Grid.SetColumn(buttonPanel, 0); // Левый столбец
-            Grid.SetColumn(textPanel, 1); // Центральный столбец
-            Grid.SetColumn(buttonPanel2, 2); // Правый столбец
+            Grid.SetColumn(buttonPanel, 0); 
+            Grid.SetColumn(textPanel, 1); 
+            Grid.SetColumn(buttonPanel2, 2); 
 
-            // Добавление элементов в сетку
             grid.Children.Add(buttonPanel);
             grid.Children.Add(textPanel);
             grid.Children.Add(buttonPanel2);
 
             return grid;
         }
+
+        private static Image CreateImage(string def, string mouseOver, int width, int height)
+        {
+            Image i = new ()
+            {
+                Width = width,
+                Height = height,
+                Source = ImageDictionaryTools[def],
+                
+            };
+
+            i.MouseEnter += (sender, e) =>
+            {
+                Image b = (Image)sender;
+                b.Source = ImageDictionaryTools[mouseOver];
+            };
+
+            i.MouseLeave += (sender, e) =>
+            {
+                Image b = (Image)sender;
+                b.Source = ImageDictionaryTools[def];
+            };
+
+            return i;
+        }
+
 
         private static WrapPanel CreateToolsPanel()
         {
@@ -482,7 +510,7 @@ namespace Genshin_Calculator
 
         private static ControlTemplate ButtonTemplate()
         {
-            ControlTemplate template = new ControlTemplate(typeof(Button));
+            ControlTemplate template = new (typeof(Button));
 
             FrameworkElementFactory border = new(typeof(Border));
             border.SetValue(Border.CornerRadiusProperty, new CornerRadius(10));
@@ -501,7 +529,6 @@ namespace Genshin_Calculator
 
             return template;
         }
-
 
         private static LinearGradientBrush SetBackgroundRarity(int rarity)
         {
@@ -557,6 +584,8 @@ namespace Genshin_Calculator
                 {
                     BitmapImage bitmapImage = new();
                     bitmapImage.BeginInit();
+                    bitmapImage.DecodePixelWidth = 128;
+                    bitmapImage.DecodePixelHeight = 128;
                     bitmapImage.UriSource = new Uri($"/Resources/Image/Characters/{character.Name}.png", UriKind.Relative);
                     bitmapImage.EndInit();
 
@@ -579,6 +608,8 @@ namespace Genshin_Calculator
                     bitmapImage.BeginInit();
                     bitmapImage.UriSource = new Uri($"/Resources/Image/Materials/{material}.png", UriKind.Relative);
                     bitmapImage.DecodePixelWidth = 64;
+                    bitmapImage.DecodePixelHeight = 64;
+
                     bitmapImage.EndInit();
 
                     imageDictionary[material] = bitmapImage;
@@ -586,6 +617,47 @@ namespace Genshin_Calculator
             }
 
             return imageDictionary;
+        }
+        
+        private Dictionary<string, ImageSource> LoadToolsImages()
+        {
+
+            var fileNames = GetResourcesUnder("Resources/Image/Tools");
+
+            Dictionary<string, ImageSource> imageDictionary = new();
+
+            foreach(var f in fileNames)
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.DecodePixelHeight = 40;
+                bitmapImage.DecodePixelWidth = 40;
+
+                bitmapImage.UriSource = new Uri($"pack://application:,,,/Resources/Image/Tools/{f}");
+                bitmapImage.EndInit();
+
+                imageDictionary[f] = bitmapImage;
+            }
+
+            return imageDictionary;
+        }
+
+        private static string[] GetResourcesUnder(string folder)
+        {
+            folder = folder.ToLower() + "/";
+
+            var assembly = Assembly.GetCallingAssembly();
+            var resourcesName = assembly.GetName().Name + ".g.resources";
+            var stream = assembly.GetManifestResourceStream(resourcesName);
+            var resourceReader = new ResourceReader(stream);
+
+            var resources =
+                from p in resourceReader.OfType<DictionaryEntry>()
+                let theme = (string)p.Key
+                where theme.StartsWith(folder)
+                select theme.Substring(folder.Length);
+
+            return resources.ToArray();
         }
 
         private static Style ScrollStyle()
@@ -597,20 +669,14 @@ namespace Genshin_Calculator
             {
                 Property = ScrollBar.OrientationProperty,
                 Value = Orientation.Vertical,
-
+                
                 Setters =
                 {
-                    new Setter   {
-                        Property = WidthProperty,
-                        Value = 20.0
-                    },
+                    new Setter (WidthProperty, 20.0),
+                    new Setter (TemplateProperty, ScrollBarTemplate()),
 
 
-                    new Setter   {
-                        Property = TemplateProperty,
-                        Value = ScrollBarTemplate()
 
-                    },
                 },
 
             };
@@ -629,15 +695,11 @@ namespace Genshin_Calculator
                 xmlns:mc=""http://schemas.openxmlformats.org/markup-compatibility/2006""
                 xmlns:local=""clr-namespace:Genshin_Calculator""
                 x:Key=""VerticalScrollBar"" TargetType=""ScrollBar"">
-    <ControlTemplate.Resources>
-        <ImageBrush x:Key=""ThumbIcon_Default"" ImageSource=""Resources/Assets/Thumb_Icon_Default.png""/>
-        <ImageBrush x:Key=""ThumbIcon_MouseOver"" ImageSource=""Resources/Assets/Thumb_Icon_MouseOver.png""/>
-    </ControlTemplate.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height=""*""/>
         </Grid.RowDefinitions>
-        <Border Grid.Row=""1"" Width=""10"" Background=""#0f0f1e""></Border>
+        <Border Grid.Row=""1"" Width=""10.0"" Background=""#0f0f1e""></Border>
         <Track Name=""PART_Track"" Grid.Row=""1"" IsDirectionReversed=""True"">
             <Track.Thumb>
                 <Thumb>
@@ -645,15 +707,15 @@ namespace Genshin_Calculator
                         <Style x:Key=""ScrollBar_Thumb"" TargetType=""Thumb"">
                             <Setter Property=""SnapsToDevicePixels"" Value=""True""/>
                             <Setter Property=""OverridesDefaultStyle"" Value=""True""/>
-                            <Setter Property=""Width"" Value=""10""/>
+                            <Setter Property=""Width"" Value=""10.0""/>
                             <Setter Property=""Template"">
                                 <Setter.Value>
                                     <ControlTemplate TargetType=""Thumb"">
-                                        <Border x:Name=""border"" Background=""{StaticResource ThumbIcon_Default}"" SnapsToDevicePixels=""True""></Border>
+                                        <Border x:Name=""border"" Background=""#0272c8"" SnapsToDevicePixels=""True""></Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property=""IsMouseOver"" Value=""True"">
-                                                <Setter Property=""Background"" TargetName=""border"" Value=""{StaticResource ThumbIcon_MouseOver}""/>
-                                                <Setter Property=""BorderBrush"" TargetName=""border"" Value=""{StaticResource ThumbIcon_MouseOver}""/>
+                                                <Setter Property=""Background"" TargetName=""border"" Value=""#0a0c33""/>
+                                                <Setter Property=""BorderBrush"" TargetName=""border"" Value=""#0a0c33""/>
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>

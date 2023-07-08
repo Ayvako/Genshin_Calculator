@@ -9,8 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Assets\Thumb_Icon_Default.png" />
-    <None Remove="Resources\Assets\Thumb_Icon_MouseOver.png" />
+    <None Remove="Resources\Image\Tools\acsend_icon_default.png" />
+    <None Remove="Resources\Image\Tools\Acsend_Icon_MouseOver.png" />
+    <None Remove="Resources\Image\Tools\acsend_icon_mouseover1.png" />
+    <None Remove="Resources\Image\Tools\active_icon_default.png" />
+    <None Remove="Resources\Image\Tools\active_icon_mouseover.png" />
+    <None Remove="Resources\Image\Tools\edit_icon_default.png" />
+    <None Remove="Resources\Image\Tools\edit_icon_mouseover.png" />
+    <None Remove="Resources\Image\Tools\remove_icon_default.png" />
+    <None Remove="Resources\Image\Tools\remove_icon_mouseover.png" />
+    <None Remove="Resources\Image\Tools\Thumb_Icon_Default.png" />
+    <None Remove="Resources\Image\Tools\Thumb_Icon_MouseOver.png" />
     <None Remove="Resources\Image\Albedo.png" />
     <None Remove="Resources\Image\Alhatham.png" />
     <None Remove="Resources\Image\Aloy.png" />
@@ -444,8 +453,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Assets\Thumb_Icon_Default.png" />
-    <Resource Include="Resources\Assets\Thumb_Icon_MouseOver.png" />
+    <Resource Include="Resources\Image\Tools\acsend_icon_default.png" />
+    <Resource Include="Resources\Image\Tools\acsend_icon_mouseover.png" />
+    <Resource Include="Resources\Image\Tools\active_icon_default.png" />
+    <Resource Include="Resources\Image\Tools\active_icon_mouseover.png" />
+    <Resource Include="Resources\Image\Tools\edit_icon_default.png" />
+    <Resource Include="Resources\Image\Tools\edit_icon_mouseover.png" />
+    <Resource Include="Resources\Image\Tools\remove_icon_default.png" />
+    <Resource Include="Resources\Image\Tools\remove_icon_mouseover.png" />
     <Resource Include="Resources\Image\Characters\Albedo.png" />
     <Resource Include="Resources\Image\Characters\Alhatham.png" />
     <Resource Include="Resources\Image\Characters\Aloy.png" />

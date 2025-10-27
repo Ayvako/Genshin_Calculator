@@ -19,34 +19,37 @@ namespace Genshin.src
         public static Dictionary<Character, List<Material>> CalcRequiredMaterials()
         {
             List<Character> activeCharacters = GetActiveCharacters();
+            List<Character> dCharacters = GetNotDeletedCharacters();
+
             Dictionary<Character, List<Material>> materialsForCharacters = new();
             List<Material> remainingMaterials = new();
 
 
             int exp = (InventoryCopy["HerosWit"] * 20 + InventoryCopy["AdventurersExperience"] * 5 + InventoryCopy["WanderersAdvice"] * 1);
-            foreach (var character in activeCharacters)
+            foreach (var character in dCharacters)
             {
-
-                foreach (var m in TotalCost(character).OrderBy(m => m.Type).ToList())
-                {
-
-                    switch (m.Type)
+                if (character.Activated)
+                    foreach (var m in TotalCost(character).OrderBy(m => m.Type).ToList())
                     {
 
-                        case MaterailTypes.EXP:
-                            exp = CalcExp(m, remainingMaterials, exp);
-                            break;
-                        case MaterailTypes.BOOK:
-                        case MaterailTypes.GEM:
-                        case MaterailTypes.ENEMY:
-                            CalcAlchemistMaterials(m, character, remainingMaterials);
-                            break;
-                        default:
-                            CalcMaterials(m, remainingMaterials);
-                            break;
+                        switch (m.Type)
+                        {
+
+                            case MaterailTypes.EXP:
+                                exp = CalcExp(m, remainingMaterials, exp);
+                                break;
+                            case MaterailTypes.BOOK:
+                            case MaterailTypes.GEM:
+                            case MaterailTypes.ENEMY:
+                                CalcAlchemistMaterials(m, character, remainingMaterials);
+                                break;
+                            default:
+                                CalcMaterials(m, remainingMaterials);
+                                break;
+                        }
+
                     }
-                    
-                }
+                else remainingMaterials.AddRange(TotalCost(character));
 
                 materialsForCharacters.Add(character, new List<Material>(remainingMaterials));
 
@@ -54,12 +57,12 @@ namespace Genshin.src
             }
             return materialsForCharacters;
         }
-        public static void CalcAlchemistMaterials(Material requiredMaterial, Character c,  List<Material> remainingMaterials)
+        public static void CalcAlchemistMaterials(Material requiredMaterial, Character c, List<Material> remainingMaterials)
         {
             string greenMaterial;
             string blueMaterial;
             string violetMaterial;
-            string orangeMaterial ="";
+            string orangeMaterial = "";
 
             switch (requiredMaterial.Type)
             {
@@ -85,144 +88,144 @@ namespace Genshin.src
 
 
 
-                if (requiredMaterial.Name == greenMaterial)
-                {
-                    int green = InventoryCopy[requiredMaterial.Name];
+            if (requiredMaterial.Name == greenMaterial)
+            {
+                int green = InventoryCopy[requiredMaterial.Name];
 
-                    if (green < requiredMaterial.Amount)//Ресурса не хваватает
+                if (green < requiredMaterial.Amount)//Ресурса не хваватает
+                {
+                    remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - green));
+                    InventoryCopy[requiredMaterial.Name] = 0;
+                }
+                else//Ресурса хваватает
+                {
+                    remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
+                    InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
+                }
+            }
+            else if (requiredMaterial.Name == blueMaterial)
+            {
+                int blue = InventoryCopy[requiredMaterial.Name];
+                if (blue < requiredMaterial.Amount)//Ресурса не хваватает
+                {
+                    int green = InventoryCopy[greenMaterial];
+                    int blue_alchemist = green / 3;
+
+                    if (blue_alchemist + blue < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                     {
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - green));
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (blue_alchemist + blue)));
+                        InventoryCopy[greenMaterial] -= (blue_alchemist) * 3;
                         InventoryCopy[requiredMaterial.Name] = 0;
                     }
-                    else//Ресурса хваватает
+                    else//Ресурса хваватает с алхимией
                     {
                         remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                        InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
+                        InventoryCopy[greenMaterial] -= (requiredMaterial.Amount - blue) * 3;
+                        InventoryCopy[requiredMaterial.Name] -= blue;
                     }
                 }
-                else if (requiredMaterial.Name == blueMaterial)
+                else//Ресурса хваватает
                 {
-                    int blue = InventoryCopy[requiredMaterial.Name];
-                    if (blue < requiredMaterial.Amount)//Ресурса не хваватает
-                    {
-                        int green = InventoryCopy[greenMaterial];
-                        int blue_alchemist = green / 3;
 
-                        if (blue_alchemist + blue < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
-                        {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (blue_alchemist + blue)));
-                            InventoryCopy[greenMaterial] -= (blue_alchemist) * 3;
-                            InventoryCopy[requiredMaterial.Name] = 0;
-                        }
-                        else//Ресурса хваватает с алхимией
-                        {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                            InventoryCopy[greenMaterial] -= (requiredMaterial.Amount - blue) * 3;
-                            InventoryCopy[requiredMaterial.Name] -= blue;
-                        }
-                    }
-                    else//Ресурса хваватает
-                    {
-
-                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                        InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
-                    }
+                    remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
+                    InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
                 }
-                else if (requiredMaterial.Name == violetMaterial)
+            }
+            else if (requiredMaterial.Name == violetMaterial)
+            {
+                int violet = InventoryCopy[requiredMaterial.Name];
+
+                if (violet < requiredMaterial.Amount)//Ресурса не хваватает
                 {
-                    int violet = InventoryCopy[requiredMaterial.Name];
-
-                    if (violet < requiredMaterial.Amount)//Ресурса не хваватает
+                    int green = InventoryCopy[greenMaterial];
+                    int blue = InventoryCopy[blueMaterial];
+                    int blueAlchemist = green / 3;
+                    int violetAlchemist = (blueAlchemist + blue) / 3;
+                    if (violetAlchemist + violet < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                     {
-                        int green = InventoryCopy[greenMaterial];
-                        int blue = InventoryCopy[blueMaterial];
-                        int blueAlchemist = green / 3;
-                        int violetAlchemist = (blueAlchemist + blue) / 3;
-                        if (violetAlchemist + violet < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
-                        {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (violetAlchemist + violet)));
-                            InventoryCopy[greenMaterial] -= (blueAlchemist - blueAlchemist % 3) * 3;
-                            InventoryCopy[blueMaterial] -= (blue - blue % 3);
-                            InventoryCopy[requiredMaterial.Name] = 0;
-                        }
-                        else //Ресурса хваватает с алхимией
-                        {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                            int blueToViolet = (requiredMaterial.Amount - violet) * 3 - blue;
-                            int violetToViolet = (requiredMaterial.Amount - violet);
-
-                            InventoryCopy[greenMaterial] -= blueToViolet <= 0 ? 0 : blueToViolet * 3;
-                            InventoryCopy[blueMaterial] -= blueToViolet <= 0 ? violetToViolet * 3 : blue;
-                            InventoryCopy[requiredMaterial.Name] -= violet;
-                        }
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (violetAlchemist + violet)));
+                        InventoryCopy[greenMaterial] -= (blueAlchemist - blueAlchemist % 3) * 3;
+                        InventoryCopy[blueMaterial] -= (blue - blue % 3);
+                        InventoryCopy[requiredMaterial.Name] = 0;
                     }
-                    else//Ресурса хваватает
+                    else //Ресурса хваватает с алхимией
                     {
                         remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                        InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
-                    }
+                        int blueToViolet = (requiredMaterial.Amount - violet) * 3 - blue;
+                        int violetToViolet = (requiredMaterial.Amount - violet);
 
+                        InventoryCopy[greenMaterial] -= blueToViolet <= 0 ? 0 : blueToViolet * 3;
+                        InventoryCopy[blueMaterial] -= blueToViolet <= 0 ? violetToViolet * 3 : blue;
+                        InventoryCopy[requiredMaterial.Name] -= violet;
+                    }
                 }
-                else if (requiredMaterial.Name == orangeMaterial)
+                else//Ресурса хваватает
                 {
-                    int orange = InventoryCopy[requiredMaterial.Name];
+                    remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
+                    InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
+                }
 
-                    if (orange < requiredMaterial.Amount)//Ресурса не хваватает
+            }
+            else if (requiredMaterial.Name == orangeMaterial)
+            {
+                int orange = InventoryCopy[requiredMaterial.Name];
+
+                if (orange < requiredMaterial.Amount)//Ресурса не хваватает
+                {
+
+                    int green = InventoryCopy[greenMaterial];
+                    int blue = InventoryCopy[blueMaterial];
+                    int violet = InventoryCopy[violetMaterial];
+                    int blueAlchemist = green / 3;
+                    int violetAlchemist = (blue + blueAlchemist) / 3;
+                    int orangeAlchemist = (violet + violetAlchemist) / 3;
+
+                    if (orangeAlchemist + orange < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
                     {
 
-                        int green = InventoryCopy[greenMaterial];
-                        int blue = InventoryCopy[blueMaterial];
-                        int violet = InventoryCopy[violetMaterial];
-                        int blueAlchemist = green / 3;
-                        int violetAlchemist = (blue + blueAlchemist) / 3;
-                        int orangeAlchemist = (violet + violetAlchemist) / 3;
+                        remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (orangeAlchemist + orange)));
+                        InventoryCopy[greenMaterial] -= green - green % 27;
+                        InventoryCopy[blueMaterial] -= blue - blue % 9;
+                        InventoryCopy[violetMaterial] -= violet - violet % 3;
 
-                        if (orangeAlchemist + orange < requiredMaterial.Amount)//Ресурса не хваватает с алхимией
-                        {
-                            
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - (orangeAlchemist + orange)));
-                            InventoryCopy[greenMaterial] -= green - green % 27;
-                            InventoryCopy[blueMaterial] -= blue - blue % 9;
-                            InventoryCopy[violetMaterial] -= violet - violet % 3;
+                        green = InventoryCopy[greenMaterial];
+                        blue = InventoryCopy[blueMaterial];
+                        violet = InventoryCopy[violetMaterial];
 
-                            green = InventoryCopy[greenMaterial];
-                            blue = InventoryCopy[blueMaterial];
-                            violet = InventoryCopy[violetMaterial];
+                        bool isOrange = ((green / 3 + blue) / 3 + violet) / 3 >= 1;
 
-                            bool isOrange = ((green / 3 + blue) / 3 + violet) / 3 >= 1;
+                        InventoryCopy[greenMaterial] -= isOrange ? ((3 - violet) * 3 - blue) * 3 : 0;
+                        InventoryCopy[blueMaterial] -= isOrange ? blue : 0;
+                        InventoryCopy[violetMaterial] -= isOrange ? violet : 0;
 
-                            InventoryCopy[greenMaterial] -= isOrange ? ((3 - violet) * 3 - blue) * 3 : 0;
-                            InventoryCopy[blueMaterial] -= isOrange ? blue : 0;
-                            InventoryCopy[violetMaterial] -= isOrange ?  violet : 0;
-
-                            InventoryCopy[requiredMaterial.Name] = 0;
+                        InventoryCopy[requiredMaterial.Name] = 0;
 
 
-                        }
-                        else //Ресурса хваватает с алхимией
-                        {
-                            remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                           
-                            int blueToOrange = ((requiredMaterial.Amount - orange) * 3 - violet) * 3 - blue;
-                            int violetToOrange = (requiredMaterial.Amount - orange) * 3 - violet;
-                            int orangeToToOrange = requiredMaterial.Amount - orange;
-
-                            InventoryCopy[greenMaterial] -= blueToOrange <= 0 ? 0 : blueToOrange * 3;
-                            InventoryCopy[blueMaterial] -= blueToOrange <= 0 ? violetToOrange <= 0 ? 0 : violetToOrange * 3 : blue;
-                            InventoryCopy[violetMaterial] -= violetToOrange <= 0 ? orangeToToOrange * 3 : violet;
-
-                            InventoryCopy[requiredMaterial.Name] -= orange;
-
-                        }
                     }
-                    else//Ресурса хваватает
+                    else //Ресурса хваватает с алхимией
                     {
                         remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-                        InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
+
+                        int blueToOrange = ((requiredMaterial.Amount - orange) * 3 - violet) * 3 - blue;
+                        int violetToOrange = (requiredMaterial.Amount - orange) * 3 - violet;
+                        int orangeToToOrange = requiredMaterial.Amount - orange;
+
+                        InventoryCopy[greenMaterial] -= blueToOrange <= 0 ? 0 : blueToOrange * 3;
+                        InventoryCopy[blueMaterial] -= blueToOrange <= 0 ? violetToOrange <= 0 ? 0 : violetToOrange * 3 : blue;
+                        InventoryCopy[violetMaterial] -= violetToOrange <= 0 ? orangeToToOrange * 3 : violet;
+
+                        InventoryCopy[requiredMaterial.Name] -= orange;
 
                     }
+                }
+                else//Ресурса хваватает
+                {
+                    remainingMaterials.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
+                    InventoryCopy[requiredMaterial.Name] -= requiredMaterial.Amount;
 
                 }
+
+            }
 
         }
         public static int CalcExp(Material requiredMaterial, List<Material> inventory, int exp)
@@ -333,7 +336,7 @@ namespace Genshin.src
             return CharacterUpgrade.GetCost(character, character.CurrentLevel, character.DesiredLevel);
         }
 
-        private static List<Material> TotalCost(Character character)
+        public static List<Material> TotalCost(Character character)
         {
             return MergeDictionaries(CharacterCost(character), SkillsCost(character));
         }
@@ -356,7 +359,7 @@ namespace Genshin.src
             for (int i = 1; i < dictionaries.Length; i++)
                 merged = merged.Concat(dictionaries[i]);
 
-            var groupedMaterials = merged.GroupBy(m => new { m.Name})
+            var groupedMaterials = merged.GroupBy(m => new { m.Name })
                 .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
                 .ToList();
 

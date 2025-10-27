@@ -11,7 +11,7 @@ namespace Genshin.src.LevelingResources
         {
             "white" => Enemies[character.Assets.Enemy][0],
             "green" => Enemies[character.Assets.Enemy][1],
-            "blue"  => Enemies[character.Assets.Enemy][2],
+            "blue" => Enemies[character.Assets.Enemy][2],
             _ => throw new Exception("Unknown Property Name"),
         };
     }

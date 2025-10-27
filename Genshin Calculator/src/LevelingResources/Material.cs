@@ -30,17 +30,17 @@
         }
         public override string ToString()
         {
-            return $"Material: {Name,-25} Amount: {Amount, -10} Type: {Type}";
+            return $"Material: {Name,-25} Amount: {Amount,-10} Type: {Type}";
         }
 
     }
 
     static class MaterailTypes
     {
-        public const string GEM   = "Gem";
+        public const string GEM = "Gem";
         public const string ENEMY = "Enemy";
-        public const string BOOK  = "Book";
-        public const string EXP   = "Exp";
+        public const string BOOK = "Book";
+        public const string EXP = "Exp";
         public const string OTHER = "Other";
     }
 

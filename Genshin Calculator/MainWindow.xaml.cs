@@ -1,22 +1,19 @@
 ﻿using Genshin.src;
-using Genshin.src.LevelingResources;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Resources;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using System.Windows.Markup;
-using System.Windows.Media.Media3D;
-using System.IO;
-using System.Reflection;
-using System.Linq;
-using System.Diagnostics;
-using System.Collections;
-using System.Resources;
-using System.Windows.Data;
 
 namespace Genshin_Calculator
 {
@@ -26,6 +23,8 @@ namespace Genshin_Calculator
         private static Dictionary<string, ImageSource> ImageDictionaryCharacter;
         private static Dictionary<string, ImageSource> ImageDictionaryMaterial;
         private static Dictionary<string, ImageSource> ImageDictionaryTools;
+
+        private static ObservableCollection<Character> charactersList;
 
         public MainWindow()
         {
@@ -49,16 +48,14 @@ namespace Genshin_Calculator
                 }
             };
 
-            CharactersList = Inventory.GetActiveCharacters();
+            CharactersList = Inventory.GetNotDeletedCharacters();
+            charactersList = new ObservableCollection<Character>(CharactersList);
             ImageDictionaryCharacter = LoadCharacterImages(CharactersList);
             ImageDictionaryMaterial = LoadMaterialImages(Inventory.MyInventory);
             ImageDictionaryTools = LoadToolsImages();
-
             Content = MainPanel();
 
         }
-
-
 
         private static ScrollViewer MainPanel()
         {
@@ -66,13 +63,17 @@ namespace Genshin_Calculator
             StackPanel panel = new()
             {
                 Orientation = Orientation.Vertical,
-                HorizontalAlignment = HorizontalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Children =
+                {
+                    CreateToolsPanel(),
+                    CreateFarmPanel(charactersList)
+                }
             };
 
-            panel.Children.Add(CreateToolsPanel());
-            panel.Children.Add(CreateFarmPanel(CharactersList));
 
-            ScrollViewer scrollViewer = new ()
+
+            ScrollViewer scrollViewer = new()
             {
                 Content = panel,
 
@@ -80,88 +81,24 @@ namespace Genshin_Calculator
                 {
                     { typeof(ScrollBar), ScrollStyle() },
                 },
-                
+
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             };
             return scrollViewer;
         }
 
-        private static WrapPanel CreateResourcesPanel(List<Genshin.src.LevelingResources.Material> materials)
+
+        private static StackPanel CreateFarmPanel(ObservableCollection<Character> characters)
         {
-            WrapPanel resourcesPanel = new()
-            {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Orientation = Orientation.Horizontal,
-                Margin = new Thickness(5),
 
-            };
+            WrapPanel wrapPanel = new WrapPanel();
 
 
-            foreach (var m in materials)
-            {
-                StackPanel amountPanel = new StackPanel()
-                {
-                    Orientation = Orientation.Vertical,
-                };
-
-                TextBlock amountText = new TextBlock()
-                {
-                    Foreground = Brushes.White,
-                    Text = m.Amount.ToString(),
-                    TextAlignment = TextAlignment.Center,
-                };
-
-
-                Border amountBorder = new Border()
-                {
-                    Child = amountText,
-                    Background = Brushes.Black,
-                    CornerRadius = new CornerRadius(10, 10, 0, 0),
-
-                };
-
-
-                Image materialImage = new()
-                {
-                    Source = ImageDictionaryMaterial[m.Name],
-                    Stretch = Stretch.None,
-
-                };
-                amountPanel.Children.Add(amountBorder);
-                amountPanel.Children.Add(materialImage);
-
-                Border materialBorder = new Border()
-                {
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(5),
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1),
-                    Child = amountPanel,
-                    CornerRadius = new CornerRadius(10),
-
-                    Background = SetBackgroundRarity(m.Rarity)
-
-
-                };
-
-                resourcesPanel.Children.Add(materialBorder);
-            }
-
-            return resourcesPanel;
-        }
-
-        private static StackPanel CreateFarmPanel(List<Character> characters)
-        {
-            WrapPanel wrapPanel = new();
-            var mat = Inventory.CalcRequiredMaterials();
             foreach (var c in characters)
             {
-                Grid tableContents = CreateTableContentsPanel(c);
-                Grid infoGrid = CreateInfoPanel(c);
-                WrapPanel resourcesPanel = CreateResourcesPanel(mat[c]);
+
+
 
                 StackPanel characterPanel = new()
                 {
@@ -169,9 +106,9 @@ namespace Genshin_Calculator
                     Orientation = Orientation.Vertical,
                     Children =
                     {
-                        tableContents,
-                        infoGrid,
-                        resourcesPanel
+                        CreateTableContentsPanel(c),
+                        CreateInfoPanel(c),
+                        CreateResourcesPanel(c)
                     }
 
                 };
@@ -187,6 +124,7 @@ namespace Genshin_Calculator
                     MaxWidth = 712,
                     MinWidth = 350,
                     CornerRadius = new CornerRadius(10),
+
                     Background = new LinearGradientBrush()
                     {
                         StartPoint = new Point(0, 0),
@@ -210,8 +148,20 @@ namespace Genshin_Calculator
                     }
                 };
 
+                c.PropertyChanged += (sender, e) =>
+                {
+                    if (e.PropertyName == nameof(Character.Activated))
+                    {
+                        characterBorder.Opacity = c.Activated ? 1 : 0.2;
+                        characterBorder.OpacityMask = Brushes.Black;
+                        characterPanel.UpdateLayout();
+                    }
+                };
+
                 wrapPanel.Children.Add(characterBorder);
             }
+
+
 
             return new StackPanel()
             {
@@ -220,6 +170,83 @@ namespace Genshin_Calculator
                 Margin = new Thickness(5),
                 Children = { wrapPanel }
             };
+        }
+        
+        private static WrapPanel CreateResourcesPanel(Character c)
+        {
+
+
+            var materials = Inventory.CalcRequiredMaterials();
+
+            WrapPanel resourcesPanel = new()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Orientation = Orientation.Horizontal,
+                Margin = new Thickness(5),
+
+            };
+
+
+
+
+            foreach (var m in materials[c])
+            {
+
+
+
+                StackPanel amountPanel = new()
+                {
+                    Orientation = Orientation.Vertical,
+                };
+
+                TextBlock amountText = new()
+                {
+                    Foreground = Brushes.White,
+                    Text = m.Amount.ToString(),
+                    TextAlignment = TextAlignment.Center,
+                };
+
+
+                Border amountBorder = new()
+                {
+                    Child = amountText,
+                    Background = Brushes.Black,
+                    CornerRadius = new CornerRadius(10, 10, 0, 0),
+
+                };
+
+
+                Image materialImage = new()
+                {
+                    Source = ImageDictionaryMaterial[m.Name],
+                    Stretch = Stretch.None,
+
+                };
+                amountPanel.Children.Add(amountBorder);
+                amountPanel.Children.Add(materialImage);
+
+                Border materialBorder = new()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Margin = new Thickness(5),
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    Child = amountPanel,
+                    CornerRadius = new CornerRadius(10),
+
+                    Background = SetBackgroundRarity(m.Rarity)
+
+
+                };
+
+
+
+                resourcesPanel.Children.Add(materialBorder);
+            }
+
+            return resourcesPanel;
         }
 
         private static Grid CreateInfoPanel(Character c)
@@ -348,14 +375,15 @@ namespace Genshin_Calculator
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) });
 
-            // Создание Button и TextBlock
 
-            Image editButton   = CreateImage("edit_icon_default.png", "edit_icon_mouseover.png", 40, 40);
-            Image ascendButton = CreateImage("acsend_icon_default.png", "acsend_icon_mouseover.png", 40, 40);
-            Image activeButton = CreateImage("active_icon_default.png", "active_icon_mouseover.png", 40, 40);
-            Image removeButton = CreateImage("remove_icon_default.png", "remove_icon_mouseover.png", 40, 40);
+            Image editButton = CreateImage("edit_icon_default.png", "edit_icon_mouseover.png", 30, 30);
+            Image ascendButton = CreateImage("acsend_icon_default.png", "acsend_icon_mouseover.png", 30, 30);
+            Image activeButton = CreateImage("active_icon_default.png", "active_icon_mouseover.png", 30, 30);
+            Image removeButton = CreateImage("remove_icon_default.png", "remove_icon_mouseover.png", 30, 30);
 
-            
+            removeButton.MouseLeftButtonUp += RemoveAction(c);
+            activeButton.MouseLeftButtonUp += ActiveAction(c);
+
             TextBlock nameTextBlock = new()
             {
                 Text = c.Name,
@@ -392,9 +420,9 @@ namespace Genshin_Calculator
                 }
             };
 
-            Grid.SetColumn(buttonPanel, 0); 
-            Grid.SetColumn(textPanel, 1); 
-            Grid.SetColumn(buttonPanel2, 2); 
+            Grid.SetColumn(buttonPanel, 0);
+            Grid.SetColumn(textPanel, 1);
+            Grid.SetColumn(buttonPanel2, 2);
 
             grid.Children.Add(buttonPanel);
             grid.Children.Add(textPanel);
@@ -403,14 +431,33 @@ namespace Genshin_Calculator
             return grid;
         }
 
+        private static MouseButtonEventHandler RemoveAction(Character c)
+        {
+            MouseButtonEventHandler handler = (sender, e) =>
+            {
+                c.Deleted = true;
+                c.Activated = false;
+            };
+            return handler;
+        }
+        
+        private static MouseButtonEventHandler ActiveAction(Character c)
+        {
+            MouseButtonEventHandler handler = (sender, e) =>
+            {
+                c.Activated = !c.Activated;
+            };
+            return handler;
+        }
+
         private static Image CreateImage(string def, string mouseOver, int width, int height)
         {
-            Image i = new ()
+            Image i = new()
             {
                 Width = width,
                 Height = height,
                 Source = ImageDictionaryTools[def],
-                
+
             };
 
             i.MouseEnter += (sender, e) =>
@@ -425,9 +472,16 @@ namespace Genshin_Calculator
                 b.Source = ImageDictionaryTools[def];
             };
 
+
+
             return i;
         }
-
+        
+        protected override void OnClosed(EventArgs e)
+        {
+            DataIO.Export();
+            base.OnClosed(e);
+        }
 
         private static WrapPanel CreateToolsPanel()
         {
@@ -510,7 +564,7 @@ namespace Genshin_Calculator
 
         private static ControlTemplate ButtonTemplate()
         {
-            ControlTemplate template = new (typeof(Button));
+            ControlTemplate template = new(typeof(Button));
 
             FrameworkElementFactory border = new(typeof(Border));
             border.SetValue(Border.CornerRadiusProperty, new CornerRadius(10));
@@ -618,7 +672,7 @@ namespace Genshin_Calculator
 
             return imageDictionary;
         }
-        
+
         private Dictionary<string, ImageSource> LoadToolsImages()
         {
 
@@ -626,12 +680,12 @@ namespace Genshin_Calculator
 
             Dictionary<string, ImageSource> imageDictionary = new();
 
-            foreach(var f in fileNames)
+            foreach (var f in fileNames)
             {
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();
-                bitmapImage.DecodePixelHeight = 40;
-                bitmapImage.DecodePixelWidth = 40;
+                bitmapImage.DecodePixelHeight = 30;
+                bitmapImage.DecodePixelWidth = 30;
 
                 bitmapImage.UriSource = new Uri($"pack://application:,,,/Resources/Image/Tools/{f}");
                 bitmapImage.EndInit();
@@ -662,14 +716,14 @@ namespace Genshin_Calculator
 
         private static Style ScrollStyle()
         {
-            Style style = new (typeof(ScrollBar));
+            Style style = new(typeof(ScrollBar));
 
 
-            Trigger trigger = new ()
+            Trigger trigger = new()
             {
                 Property = ScrollBar.OrientationProperty,
                 Value = Orientation.Vertical,
-                
+
                 Setters =
                 {
                     new Setter (WidthProperty, 20.0),
@@ -680,7 +734,7 @@ namespace Genshin_Calculator
                 },
 
             };
-            
+
 
             style.Triggers.Add(trigger);
             return style;

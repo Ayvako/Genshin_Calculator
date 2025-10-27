@@ -1,14 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Reflection;
-using System.Windows.Resources;
+using System.Linq;
 using System.Windows;
+using System.Windows.Resources;
 
 namespace Genshin.src
 {
@@ -37,7 +34,7 @@ namespace Genshin.src
         }
         public static void Import()
         {
-            Uri resourceUri = new ("pack://application:,,,/Genshin Calculator;component/Resources/Json/Initializations.json");
+            Uri resourceUri = new("pack://application:,,,/Genshin Calculator;component/Resources/Json/Initializations.json");
             StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri);
 
 
@@ -120,7 +117,7 @@ namespace Genshin.src
                 result.AddRange(list);
             }
 
-            return result; 
+            return result;
         }
 
         public static Dictionary<string, string[]> GetMaterials(string materials)

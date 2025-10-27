@@ -1,9 +1,9 @@
-﻿using Genshin.src.LevelingResources;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace Genshin.src
 {
-    public class Character
+    public class Character : INotifyPropertyChanged
     {
 
         public string Name { get; set; }
@@ -13,7 +13,20 @@ namespace Genshin.src
         public Skill Elemental { get; set; }
         public Skill Burst { get; set; }
         public bool Deleted { get; set; } = true;
-        public bool Activated { get; set; } = false;
+        private bool activated;
+
+        public bool Activated
+        {
+            get { return activated; }
+            set
+            {
+                if (activated != value)
+                {
+                    activated = value;
+                    OnPropertyChanged(nameof(Activated));
+                }
+            }
+        }
         public int Priority { get; set; }
         [JsonIgnore]
         public Assets Assets { get; set; }
@@ -21,7 +34,7 @@ namespace Genshin.src
         private static int Count { get; set; }
 
 
-        public Character(string name ,Assets assets)
+        public Character(string name, Assets assets)
         {
 
             Name = name;
@@ -38,6 +51,19 @@ namespace Genshin.src
             return $"Name: {Name,-25} Assets: {Assets,-50}";
         }
 
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+
     }
 
     public class Skill
@@ -51,10 +77,16 @@ namespace Genshin.src
         }
     }
 
+
+
+
+
+
+
     public class Assets
     {
         public string Name { get; set; }
-        public string LocalSpecialty { get;  set; }
+        public string LocalSpecialty { get; set; }
         public string Element { get; set; }
         public string Weapon { get; set; }
         public string Enemy { get; set; }
@@ -81,22 +113,22 @@ namespace Genshin.src
         }
     }
 
-    public class Element
+    public class Element//enum?
     {
-        public const string ANEMO   = "Anemo";
-        public const string HYDRO   = "Hydro";
-        public const string GEO     = "Geo";
-        public const string PYRO    = "Pyro";
-        public const string CRYO    = "Cryo";
+        public const string ANEMO = "Anemo";
+        public const string HYDRO = "Hydro";
+        public const string GEO = "Geo";
+        public const string PYRO = "Pyro";
+        public const string CRYO = "Cryo";
         public const string ELECTRO = "Electro";
-        public const string DENDRO  = "Dendro";
+        public const string DENDRO = "Dendro";
     }
-    public class Weapon
+    public class Weapon //enum?
     {
-        public const string BOW      = "Bow";
-        public const string SWORD    = "Sword";
+        public const string BOW = "Bow";
+        public const string SWORD = "Sword";
         public const string CLAYMORE = "Claymore";
         public const string CATALYST = "Catalyst";
-        public const string POLEARM  = "Polearm";
+        public const string POLEARM = "Polearm";
     }
 }

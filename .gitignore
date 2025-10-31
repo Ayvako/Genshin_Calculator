@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Genshin Calculator/ProjectRoot/Resources/Images
+/Genshin Calculator/ProjectRoot/Resources/Json

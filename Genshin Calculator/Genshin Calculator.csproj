@@ -5,20 +5,89 @@
     <RootNamespace>Genshin_Calculator</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="ProjectRoot\Resources\Images\Tools\acsend_icon_default.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\acsend_icon_mouseover.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\active_icon_default.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\active_icon_mouseover.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\edit_icon_default.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\edit_icon_mouseover.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\remove_icon_default.png" />
-    <None Remove="ProjectRoot\Resources\Images\Tools\remove_icon_mouseover.png" />
-    <None Remove="ProjectRoot\Resources\Json\Books.json" />
-    <None Remove="ProjectRoot\Resources\Json\Enemies.json" />
-    <None Remove="ProjectRoot\Resources\Json\Gems.json" />
-    <None Remove="ProjectRoot\Resources\Json\Initializations.json" />
+    <None Remove="appsettings.json" />
+    <None Remove="Resources\Images\Characters\Albedo.png" />
+    <None Remove="Resources\Images\Characters\Alhatham.png" />
+    <None Remove="Resources\Images\Characters\Aloy.png" />
+    <None Remove="Resources\Images\Characters\Amber.png" />
+    <None Remove="Resources\Images\Characters\Arataki Itto.png" />
+    <None Remove="Resources\Images\Characters\Baizhu.png" />
+    <None Remove="Resources\Images\Characters\Barbara.png" />
+    <None Remove="Resources\Images\Characters\Beidou.png" />
+    <None Remove="Resources\Images\Characters\Bennett.png" />
+    <None Remove="Resources\Images\Characters\Candace.png" />
+    <None Remove="Resources\Images\Characters\Chongyun.png" />
+    <None Remove="Resources\Images\Characters\Collei.png" />
+    <None Remove="Resources\Images\Characters\Cyno.png" />
+    <None Remove="Resources\Images\Characters\Dehya.png" />
+    <None Remove="Resources\Images\Characters\Diluc.png" />
+    <None Remove="Resources\Images\Characters\Diona.png" />
+    <None Remove="Resources\Images\Characters\Dori.png" />
+    <None Remove="Resources\Images\Characters\Eula.png" />
+    <None Remove="Resources\Images\Characters\Faruzan.png" />
+    <None Remove="Resources\Images\Characters\Fischl.png" />
+    <None Remove="Resources\Images\Characters\Ganyu.png" />
+    <None Remove="Resources\Images\Characters\Gorou.png" />
+    <None Remove="Resources\Images\Characters\Hu Tao.png" />
+    <None Remove="Resources\Images\Characters\Jean.png" />
+    <None Remove="Resources\Images\Characters\Kaedehara Kazuha.png" />
+    <None Remove="Resources\Images\Characters\Kaeya.png" />
+    <None Remove="Resources\Images\Characters\Kamisato Ayaka.png" />
+    <None Remove="Resources\Images\Characters\Kamisato Ayato.png" />
+    <None Remove="Resources\Images\Characters\Kaveh.png" />
+    <None Remove="Resources\Images\Characters\Keqing.png" />
+    <None Remove="Resources\Images\Characters\Kirara.png" />
+    <None Remove="Resources\Images\Characters\Klee.png" />
+    <None Remove="Resources\Images\Characters\Kujou Sara.png" />
+    <None Remove="Resources\Images\Characters\Kuki Shinobu.png" />
+    <None Remove="Resources\Images\Characters\Layla.png" />
+    <None Remove="Resources\Images\Characters\Lisa.png" />
+    <None Remove="Resources\Images\Characters\Mika.png" />
+    <None Remove="Resources\Images\Characters\Mona.png" />
+    <None Remove="Resources\Images\Characters\Nahida.png" />
+    <None Remove="Resources\Images\Characters\Nilou.png" />
+    <None Remove="Resources\Images\Characters\Ningguang.png" />
+    <None Remove="Resources\Images\Characters\Noelle.png" />
+    <None Remove="Resources\Images\Characters\Qiqi.png" />
+    <None Remove="Resources\Images\Characters\Raiden Shogun.png" />
+    <None Remove="Resources\Images\Characters\Razor.png" />
+    <None Remove="Resources\Images\Characters\Rosaria.png" />
+    <None Remove="Resources\Images\Characters\Sangonomiya Kokomi.png" />
+    <None Remove="Resources\Images\Characters\Sayu.png" />
+    <None Remove="Resources\Images\Characters\Shenhe.png" />
+    <None Remove="Resources\Images\Characters\Shikanoin Heizou.png" />
+    <None Remove="Resources\Images\Characters\Sucrose.png" />
+    <None Remove="Resources\Images\Characters\Tartaglia.png" />
+    <None Remove="Resources\Images\Characters\Thoma.png" />
+    <None Remove="Resources\Images\Characters\Tighnari.png" />
+    <None Remove="Resources\Images\Characters\Venti.png" />
+    <None Remove="Resources\Images\Characters\Wanderer.png" />
+    <None Remove="Resources\Images\Characters\Xiangling.png" />
+    <None Remove="Resources\Images\Characters\Xiao.png" />
+    <None Remove="Resources\Images\Characters\Xingqiu.png" />
+    <None Remove="Resources\Images\Characters\Xinyan.png" />
+    <None Remove="Resources\Images\Characters\Yae Miko.png" />
+    <None Remove="Resources\Images\Characters\Yanfei.png" />
+    <None Remove="Resources\Images\Characters\Yaoyao.png" />
+    <None Remove="Resources\Images\Characters\Yelan.png" />
+    <None Remove="Resources\Images\Characters\Yoimiya.png" />
+    <None Remove="Resources\Images\Characters\Yun Jin.png" />
+    <None Remove="Resources\Images\Characters\Zhongli.png" />
+    <None Remove="Resources\Images\Tools\acsend_icon_default.png" />
+    <None Remove="Resources\Images\Tools\acsend_icon_mouseover.png" />
+    <None Remove="Resources\Images\Tools\active_icon_default.png" />
+    <None Remove="Resources\Images\Tools\active_icon_mouseover.png" />
+    <None Remove="Resources\Images\Tools\edit_icon_default.png" />
+    <None Remove="Resources\Images\Tools\edit_icon_mouseover.png" />
+    <None Remove="Resources\Images\Tools\remove_icon_default.png" />
+    <None Remove="Resources\Images\Tools\remove_icon_mouseover.png" />
+    <None Remove="Resources\Json\Books.json" />
+    <None Remove="Resources\Json\Enemies.json" />
+    <None Remove="Resources\Json\Gems.json" />
+    <None Remove="Resources\Json\Initializations.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
@@ -26,32 +95,112 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.12.0-beta1.25218.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.100">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ProjectRoot\Resources\Images\Tools\acsend_icon_default.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\acsend_icon_mouseover.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\active_icon_default.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\active_icon_mouseover.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\edit_icon_default.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\edit_icon_mouseover.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\remove_icon_default.png" />
-    <Resource Include="ProjectRoot\Resources\Images\Tools\remove_icon_mouseover.png" />
-    <Resource Include="ProjectRoot\Resources\Json\Books.json" />
-    <Resource Include="ProjectRoot\Resources\Json\Enemies.json" />
-    <Resource Include="ProjectRoot\Resources\Json\Gems.json" />
-    <Resource Include="ProjectRoot\Resources\Json\Initializations.json" />
+    <Resource Include="Resources\Images\Characters\Albedo.png" />
+    <Resource Include="Resources\Images\Characters\Alhatham.png" />
+    <Resource Include="Resources\Images\Characters\Aloy.png" />
+    <Resource Include="Resources\Images\Characters\Amber.png" />
+    <Resource Include="Resources\Images\Characters\Arataki Itto.png" />
+    <Resource Include="Resources\Images\Characters\Baizhu.png" />
+    <Resource Include="Resources\Images\Characters\Barbara.png" />
+    <Resource Include="Resources\Images\Characters\Beidou.png" />
+    <Resource Include="Resources\Images\Characters\Bennett.png" />
+    <Resource Include="Resources\Images\Characters\Candace.png" />
+    <Resource Include="Resources\Images\Characters\Chongyun.png" />
+    <Resource Include="Resources\Images\Characters\Collei.png" />
+    <Resource Include="Resources\Images\Characters\Cyno.png" />
+    <Resource Include="Resources\Images\Characters\Dehya.png" />
+    <Resource Include="Resources\Images\Characters\Diluc.png" />
+    <Resource Include="Resources\Images\Characters\Diona.png" />
+    <Resource Include="Resources\Images\Characters\Dori.png" />
+    <Resource Include="Resources\Images\Characters\Eula.png" />
+    <Resource Include="Resources\Images\Characters\Faruzan.png" />
+    <Resource Include="Resources\Images\Characters\Fischl.png" />
+    <Resource Include="Resources\Images\Characters\Ganyu.png" />
+    <Resource Include="Resources\Images\Characters\Gorou.png" />
+    <Resource Include="Resources\Images\Characters\Hu Tao.png" />
+    <Resource Include="Resources\Images\Characters\Jean.png" />
+    <Resource Include="Resources\Images\Characters\Kaedehara Kazuha.png" />
+    <Resource Include="Resources\Images\Characters\Kaeya.png" />
+    <Resource Include="Resources\Images\Characters\Kamisato Ayaka.png" />
+    <Resource Include="Resources\Images\Characters\Kamisato Ayato.png" />
+    <Resource Include="Resources\Images\Characters\Kaveh.png" />
+    <Resource Include="Resources\Images\Characters\Keqing.png" />
+    <Resource Include="Resources\Images\Characters\Kirara.png" />
+    <Resource Include="Resources\Images\Characters\Klee.png" />
+    <Resource Include="Resources\Images\Characters\Kujou Sara.png" />
+    <Resource Include="Resources\Images\Characters\Kuki Shinobu.png" />
+    <Resource Include="Resources\Images\Characters\Layla.png" />
+    <Resource Include="Resources\Images\Characters\Lisa.png" />
+    <Resource Include="Resources\Images\Characters\Mika.png" />
+    <Resource Include="Resources\Images\Characters\Mona.png" />
+    <Resource Include="Resources\Images\Characters\Nahida.png" />
+    <Resource Include="Resources\Images\Characters\Nilou.png" />
+    <Resource Include="Resources\Images\Characters\Ningguang.png" />
+    <Resource Include="Resources\Images\Characters\Noelle.png" />
+    <Resource Include="Resources\Images\Characters\Qiqi.png" />
+    <Resource Include="Resources\Images\Characters\Raiden Shogun.png" />
+    <Resource Include="Resources\Images\Characters\Razor.png" />
+    <Resource Include="Resources\Images\Characters\Rosaria.png" />
+    <Resource Include="Resources\Images\Characters\Sangonomiya Kokomi.png" />
+    <Resource Include="Resources\Images\Characters\Sayu.png" />
+    <Resource Include="Resources\Images\Characters\Shenhe.png" />
+    <Resource Include="Resources\Images\Characters\Shikanoin Heizou.png" />
+    <Resource Include="Resources\Images\Characters\Sucrose.png" />
+    <Resource Include="Resources\Images\Characters\Tartaglia.png" />
+    <Resource Include="Resources\Images\Characters\Thoma.png" />
+    <Resource Include="Resources\Images\Characters\Tighnari.png" />
+    <Resource Include="Resources\Images\Characters\Venti.png" />
+    <Resource Include="Resources\Images\Characters\Wanderer.png" />
+    <Resource Include="Resources\Images\Characters\Xiangling.png" />
+    <Resource Include="Resources\Images\Characters\Xiao.png" />
+    <Resource Include="Resources\Images\Characters\Xingqiu.png" />
+    <Resource Include="Resources\Images\Characters\Xinyan.png" />
+    <Resource Include="Resources\Images\Characters\Yae Miko.png" />
+    <Resource Include="Resources\Images\Characters\Yanfei.png" />
+    <Resource Include="Resources\Images\Characters\Yaoyao.png" />
+    <Resource Include="Resources\Images\Characters\Yelan.png" />
+    <Resource Include="Resources\Images\Characters\Yoimiya.png" />
+    <Resource Include="Resources\Images\Characters\Yun Jin.png" />
+    <Resource Include="Resources\Images\Characters\Zhongli.png" />
+    <Resource Include="Resources\Images\Tools\acsend_icon_default.png" />
+    <Resource Include="Resources\Images\Tools\acsend_icon_mouseover.png" />
+    <Resource Include="Resources\Images\Tools\active_icon_default.png" />
+    <Resource Include="Resources\Images\Tools\active_icon_mouseover.png" />
+    <Resource Include="Resources\Images\Tools\edit_icon_default.png" />
+    <Resource Include="Resources\Images\Tools\edit_icon_mouseover.png" />
+    <Resource Include="Resources\Images\Tools\remove_icon_default.png" />
+    <Resource Include="Resources\Images\Tools\remove_icon_mouseover.png" />
+    <Resource Include="Resources\Json\Books.json" />
+    <Resource Include="Resources\Json\Enemies.json" />
+    <Resource Include="Resources\Json\Gems.json" />
+    <Resource Include="Resources\Json\Initializations.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />
   </ItemGroup>
 </Project>

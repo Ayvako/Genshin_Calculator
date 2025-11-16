@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="Genshin_Calculator.Views.CharacterCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:Genshin_Calculator.ViewModels"
+             xmlns:local="clr-namespace:Genshin_Calculator.Views"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vm:CharacterCardViewModel, IsDesignTimeCreatable=True}"
+             mc:Ignorable="d"
+             Width="350" MinWidth="350" MaxWidth="712" Margin="5">
+
+    <!-- Основная рамка карточки -->
+    <Border CornerRadius="10" BorderBrush="Black" BorderThickness="1" Padding="6" Margin="5">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#31394E" Offset="0" />
+                <GradientStop Color="#1D212D" Offset="0.2" />
+                <GradientStop Color="#191E33" Offset="0.4" />
+                <GradientStop Color="#141829" Offset="0.6" />
+                <GradientStop Color="#101321" Offset="0.8" />
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="11" Opacity="0.75" />
+        </Border.Effect>
+
+        <StackPanel Orientation="Vertical">
+
+            <!-- Верхняя панель: кнопки действий -->
+            <Grid Margin="0,0,0,6" Background="{Binding Character.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Левая панель: редактирование / возвышение -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                    <Button Command="{Binding EditCommand}" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="/Resources/Images/Tools/edit_icon_default.png" Width="24" Height="24" />
+                    </Button>
+                    <Button Command="{Binding AscendCommand}" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="/Resources/Images/Tools/acsend_icon_default.png" Width="24" Height="24" />
+                    </Button>
+                </StackPanel>
+
+                <!-- Имя персонажа -->
+                <TextBlock Grid.Column="1" Text="{Binding Name}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="18" Foreground="#FFCCCCCC" />
+
+                <!-- Правая панель: активировать / удалить -->
+                <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                    <Button Command="{Binding ToggleActiveCommand}" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="/Resources/Images/Tools/active_icon_default.png" Width="24" Height="24" />
+                    </Button>
+                    <Button Command="{Binding RemoveCommand}" Style="{StaticResource IconButtonStyle}">
+                        <Image Source="/Resources/Images/Tools/remove_icon_default.png" Width="24" Height="24" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Панель информации -->
+            <Grid Margin="0,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Аватар -->
+                <Grid Width="128" Height="128">
+                    <Border Background="{Binding Character.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}" CornerRadius="10" />
+
+                    <!-- Аватар поверх -->
+                    <Image Source="{Binding ImagePath, Converter={StaticResource ImageConverter}}"
+                        Width="128" Height="128"
+                        Stretch="UniformToFill" />
+                </Grid>
+
+                <!-- Характеристики -->
+                <StackPanel Grid.Column="1" Margin="8" VerticalAlignment="Center">
+                    <!-- Уровень -->
+                    <StackPanel Orientation="Vertical" Margin="0,0,0,4">
+                        <TextBlock Text="Levels" Foreground="#FFECE5D8" FontWeight="Bold" FontSize="14" TextAlignment="Center" />
+                        <TextBlock Foreground="#FFCCCCCC" FontWeight="Bold" FontSize="14" TextAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} → {1}">
+                                    <Binding Path="CurrentLevel" />
+                                    <Binding Path="DesiredLevel" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- Таланты -->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Talents" Foreground="#FFECE5D8" FontWeight="Bold" FontSize="14" TextAlignment="Center" />
+                        <TextBlock Foreground="#FFCCCCCC" FontWeight="Bold" FontSize="14" TextAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} → {1}&#x0a;{2} → {3}&#x0a;{4} → {5}">
+                                    <Binding Path="AutoAttack.CurrentLevel" />
+                                    <Binding Path="AutoAttack.DesiredLevel" />
+                                    <Binding Path="Elemental.CurrentLevel" />
+                                    <Binding Path="Elemental.DesiredLevel" />
+                                    <Binding Path="Burst.CurrentLevel" />
+                                    <Binding Path="Burst.DesiredLevel" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <!-- Панель ресурсов -->
+            <ItemsControl ItemsSource="{Binding RequiredMaterials}" Margin="0,6,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="4" CornerRadius="10" BorderBrush="Black" BorderThickness="1" Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
+
+                            <StackPanel Orientation="Vertical">
+                                <Border Background="Black" CornerRadius="10,10,0,0">
+                                    <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
+                                </Border>
+                                <Image Source="{Binding Image}" Stretch="None" Margin="4" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </Border>
+</UserControl>

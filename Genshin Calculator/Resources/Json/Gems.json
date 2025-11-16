@@ -1,0 +1,44 @@
+{
+  "Cryo": [
+    "ShivadaJadeSliver",
+    "ShivadaJadeFragment",
+    "ShivadaJadeChunk",
+    "ShivadaJadeGemstone"
+  ],
+  "Electro": [
+    "VajradaAmethystSliver",
+    "VajradaAmethystFragment",
+    "VajradaAmethystChunk",
+    "VajradaAmethystGemstone"
+  ],
+  "Dendro": [
+    "NagadusEmeraldSliver",
+    "NagadusEmeraldFragment",
+    "NagadusEmeraldChunk",
+    "NagadusEmeraldGemstone"
+  ],
+  "Pyro": [
+    "AgnidusAgateSliver",
+    "AgnidusAgateFragment",
+    "AgnidusAgateChunk",
+    "AgnidusAgateGemstone"
+  ],
+  "Geo": [
+    "PrithivaTopazSliver",
+    "PrithivaTopazFragment",
+    "PrithivaTopazChunk",
+    "PrithivaTopazGemstone"
+  ],
+  "Hydro": [
+    "VarunadaLazuriteSliver",
+    "VarunadaLazuriteFragment",
+    "VarunadaLazuriteChunk",
+    "VarunadaLazuriteGemstone"
+  ],
+  "Anemo": [
+    "VayudaTurquoiseSliver",
+    "VayudaTurquoiseFragment",
+    "VayudaTurquoiseChunk",
+    "VayudaTurquoiseGemstone"
+  ]
+}

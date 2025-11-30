@@ -1,9 +1,26 @@
-﻿using Newtonsoft.Json;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Genshin_Calculator.Helpers;
+using Newtonsoft.Json;
 
 namespace Genshin_Calculator.Models
 {
-    public class Character
+    public partial class Character : ObservableObject
     {
+        [ObservableProperty]
+        private string currentLevel = "1";
+
+        [ObservableProperty]
+        private string desiredLevel = "1";
+
+        [ObservableProperty]
+        private Skill autoAttack;
+
+        [ObservableProperty]
+        private Skill elemental;
+
+        [ObservableProperty]
+        private Skill burst;
+
         public Character(string name, Assets assets)
         {
             this.Name = name;
@@ -17,16 +34,6 @@ namespace Genshin_Calculator.Models
 
         public string Name { get; set; }
 
-        public string CurrentLevel { get; set; } = "1";
-
-        public string DesiredLevel { get; set; } = "1";
-
-        public Skill AutoAttack { get; set; }
-
-        public Skill Elemental { get; set; }
-
-        public Skill Burst { get; set; }
-
         public bool Deleted { get; set; } = true;
 
         public bool Activated { get; set; }
@@ -38,6 +45,36 @@ namespace Genshin_Calculator.Models
 
         private static int Count { get; set; }
 
-        public Character Clone() => (Character)this.MemberwiseClone();
+        public Character Clone()
+        {
+            return new Character(this.Name, this.Assets!)
+            {
+                CurrentLevel = this.CurrentLevel,
+                DesiredLevel = this.DesiredLevel,
+                AutoAttack = this.AutoAttack.Clone(),
+                Elemental = this.Elemental.Clone(),
+                Burst = this.Burst.Clone(),
+                Activated = this.Activated,
+                Deleted = this.Deleted,
+                Priority = this.Priority,
+            };
+        }
+
+        partial void OnCurrentLevelChanged(string value)
+        {
+            if (LevelHelper.CompareLevels(value, DesiredLevel) > 0)
+            {
+                DesiredLevel = CurrentLevel;
+            }
+        }
+
+        partial void OnDesiredLevelChanged(string value)
+        {
+            if (LevelHelper.CompareLevels(CurrentLevel, value) > 0)
+            {
+                CurrentLevel = value;
+            }
+        }
+
     }
 }

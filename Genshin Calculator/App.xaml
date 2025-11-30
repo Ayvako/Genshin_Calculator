@@ -10,6 +10,8 @@
             </ResourceDictionary.MergedDictionaries>
             <conv:RarityToBrushConverter x:Key="RarityToBrushConverter" />
             <conv:ImagePathToSourceConverter x:Key="ImageConverter" />
+            <conv:LevelGreaterThanOneConverter x:Key="LevelGreaterThanOneConverter" />
+            <conv:LevelLessThanConverter x:Key="LevelLessThanConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

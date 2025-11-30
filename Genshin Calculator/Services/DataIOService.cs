@@ -21,7 +21,8 @@ public class DataIOService
 
     public static Dictionary<string, string[]>? GetMaterials(string materials)
     {
-        Uri resourceUri = new($"pack://application:,,,/Genshin Calculator;component/Json/{materials}.json");
+        //
+        Uri resourceUri = new($"pack://application:,,,/Genshin Calculator;component/Resources/Json/{materials}.json");
         StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri);
         using StreamReader reader = new(resourceInfo.Stream);
         string jsonContent = reader.ReadToEnd();

@@ -22,15 +22,14 @@ namespace Genshin_Calculator.LevelingResources
                 throw new KeyNotFoundException($"Gem group '{character.Assets.Element}' not found.");
             }
 
-            int index = (int)rarity;
-
-            if (index >= materials.Length)
+            return rarity switch
             {
-                throw new InvalidOperationException(
-                    $"Gem group '{character.Assets.Element}' does not define material for rarity {rarity}.");
-            }
-
-            return materials[index];
+                MaterialRarity.Green => materials[0],
+                MaterialRarity.Blue => materials[1],
+                MaterialRarity.Violet => materials[2],
+                MaterialRarity.Orange => materials[3],
+                _ => throw new Exception($"Unknown rarity '{rarity}' for gem."),
+            };
         }
     }
 }

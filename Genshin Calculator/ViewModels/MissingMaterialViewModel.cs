@@ -7,12 +7,15 @@ namespace Genshin_Calculator.ViewModels;
 
 public class MissingMaterialViewModel
 {
-    public MissingMaterialViewModel(Material m)
+    public MissingMaterialViewModel(Material m, Character character)
     {
         this.Name = m.Name;
         this.Amount = m.Amount;
         this.Rarity = m.Rarity;
+        this.Character = character;
     }
+
+    public Character Character { get; set; }
 
     public string Name { get; }
 

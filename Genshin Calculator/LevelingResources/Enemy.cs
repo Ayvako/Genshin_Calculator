@@ -22,14 +22,12 @@ public static class Enemy
             throw new KeyNotFoundException($"Enemy group '{character.Assets.Enemy}' not found.");
         }
 
-        int index = (int)rarity;
-
-        if (index >= materials.Length)
+        return rarity switch
         {
-            throw new InvalidOperationException(
-                $"Enemy group '{character.Assets.Enemy}' does not define material for rarity {rarity}.");
-        }
-
-        return materials[index];
+            MaterialRarity.White => materials[0],
+            MaterialRarity.Green => materials[1],
+            MaterialRarity.Blue => materials[2],
+            _ => throw new Exception($"Unknown rarity '{rarity}' for gem."),
+        };
     }
 }

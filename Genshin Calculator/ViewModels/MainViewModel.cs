@@ -14,7 +14,6 @@ public class MainViewModel : ObservableObject
         this.inventoryService = inventoryService;
 
         characterService.CharacterAdded += this.OnCharacterAdded;
-
         this.RefreshCharacters();
     }
 
@@ -23,16 +22,35 @@ public class MainViewModel : ObservableObject
     private void RefreshCharacters()
     {
         this.Characters.Clear();
-
         Inventory inventory = this.inventoryService.GetInventory();
+        var missingByCharacter = InventoryService.CalculateMissingMaterials(inventory);
+
         foreach (var character in inventory.ActiveCharacters)
         {
-            this.Characters.Add(new CharacterCardViewModel(character));
+            missingByCharacter.TryGetValue(character, out var materials);
+            var required = materials ?? [];
+
+            var charVm = new CharacterCardViewModel(character, required);
+            charVm.Edited += this.RefreshAllMaterials;
+
+            this.Characters.Add(charVm);
         }
     }
 
     private void OnCharacterAdded(Character character)
     {
-        this.Characters.Add(new CharacterCardViewModel(character));
+        this.RefreshCharacters();
+    }
+
+    private void RefreshAllMaterials()
+    {
+        Inventory inventory = this.inventoryService.GetInventory();
+        var missingByCharacter = InventoryService.CalculateMissingMaterials(inventory);
+
+        foreach (var charVm in this.Characters)
+        {
+            missingByCharacter.TryGetValue(charVm.Character, out var materials);
+            charVm.RequiredMaterials = materials ?? [];
+        }
     }
 }

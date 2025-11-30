@@ -8,7 +8,7 @@ namespace Genshin_Calculator.LevelingResources;
 
 public static class Book
 {
-    private static readonly Dictionary<string, string[]>? Books = DataIOService.GetMaterials("Books");
+    private static readonly Dictionary<string, string[]> Books = DataIOService.GetMaterials("Books")!;
 
     public static string GetMaterial(Character character, MaterialRarity rarity)
     {
@@ -22,14 +22,12 @@ public static class Book
             throw new KeyNotFoundException($"Book group '{character.Assets.BookType}' not found.");
         }
 
-        int index = (int)rarity;
-
-        if (index >= materials.Length)
+        return rarity switch
         {
-            throw new InvalidOperationException(
-                $"Book group '{character.Assets.BookType}' does not define material for rarity {rarity}.");
-        }
-
-        return materials[index];
+            MaterialRarity.Green => materials[0],
+            MaterialRarity.Blue => materials[1],
+            MaterialRarity.Violet => materials[2],
+            _ => throw new Exception($"Unknown rarity '{rarity}' for gem."),
+        };
     }
 }

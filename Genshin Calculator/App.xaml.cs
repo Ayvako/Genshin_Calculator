@@ -28,7 +28,6 @@ public partial class App : Application
 
         services.AddTransient<ToolsPanelViewModel>();
         services.AddTransient<MainViewModel>();
-        services.AddTransient<CharactersViewModel>();
 
         services.AddTransient<MainWindow>();
         services.AddTransient<MainView>();

@@ -45,12 +45,15 @@ public class CharacterService
     public void AddCharacter(Character character)
     {
         character.Deleted = false;
+        character.Activated = true;
         this.CharacterAdded?.Invoke(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
+        character.Activated = false;
+
         this.CharacterDeleted?.Invoke(character);
     }
 

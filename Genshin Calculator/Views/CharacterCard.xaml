@@ -85,7 +85,7 @@
                     <!-- Аватар поверх -->
                     <Border CornerRadius="10">
                         <Border.Background>
-                            <ImageBrush Stretch="Fill" ImageSource="{Binding ImagePath, Converter={StaticResource ImageConverter}}" />
+                            <ImageBrush Stretch="Fill" ImageSource="{Binding Character.Assets.ImagePath}" />
                         </Border.Background>
                     </Border>
                 </Grid>
@@ -139,7 +139,7 @@
                                 <Border Background="Black" CornerRadius="10,10,0,0">
                                     <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
                                 </Border>
-                                <Image Source="{Binding Image}" Stretch="None" Margin="4" />
+                                <Image Source="{Binding ImagePath}" Width="40" Height="40" />
                             </StackPanel>
                         </Border>
                     </DataTemplate>

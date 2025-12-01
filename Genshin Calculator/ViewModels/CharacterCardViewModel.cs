@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Views;
+using System;
+using System.Collections.Generic;
 
 namespace Genshin_Calculator.ViewModels;
 
@@ -17,14 +17,12 @@ public partial class CharacterCardViewModel : ObservableObject
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
-        this.ImagePath = $"Resources/Images/Characters/{character.Name}.png";
-
         this.Character.PropertyChanged += (_, _) => this.OnPropertyChanged(string.Empty);
     }
 
     public CharacterCardViewModel()
     {
-        this.Character = new Character("Keqing", new Assets("Keqing", "Sword", "Anemo", "Wolfhook", "TeachingsOfFreedom", "SlimeCondensate", "HurricaneSeed", "DvalinsPlume", 5))
+        this.Character = new Character("Keqing", new Assets("Keqing", "Sword", "Anemo", "Wolfhook", "TeachingsOfFreedom", "SlimeCondensate", "HurricaneSeed", "DvalinsPlume", MaterialRarity.Orange))
         {
             CurrentLevel = "70",
             DesiredLevel = "90",
@@ -37,14 +35,11 @@ public partial class CharacterCardViewModel : ObservableObject
         this.RequiredMaterials = [];
 
         this.RequiredMaterials.Add(new Material("WanderersAdvice", MaterailTypes.Exp, MaterialRarity.Green, 10));
-        this.ImagePath = $"Resources/Images/Characters/{this.Character.Name}.png";
     }
 
     public event Action Edited = null!;
 
     public Character Character { get; set; }
-
-    public string ImagePath { get; set; }
 
     public string Name => this.Character.Name;
 

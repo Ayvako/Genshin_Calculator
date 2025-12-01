@@ -20,6 +20,9 @@ public class Material
 
     public MaterialRarity Rarity { get; set; }
 
+    public string ImagePath =>
+        $"{App.Configuration["Resources:ImagesBasePath"]}/Materials/{this.Name}.png";
+
     public override bool Equals(object? obj)
     {
         if (obj is not Material item)

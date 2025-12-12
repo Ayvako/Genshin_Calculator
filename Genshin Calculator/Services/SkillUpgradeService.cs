@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
-using Genshin_Calculator.LevelingResources;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Models.LevelingResources;
 
 namespace Genshin_Calculator.Services
 {

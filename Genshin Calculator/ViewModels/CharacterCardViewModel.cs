@@ -1,45 +1,33 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Genshin_Calculator.Helpers.Enums;
-using Genshin_Calculator.Models;
-using Genshin_Calculator.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Genshin_Calculator.Models;
+using Genshin_Calculator.Services;
+using Genshin_Calculator.Views;
 
 namespace Genshin_Calculator.ViewModels;
 
 public partial class CharacterCardViewModel : ObservableObject
 {
+    private readonly CharacterService characterService;
+
     [ObservableProperty]
     private List<Material> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials)
+    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService)
     {
+        this.characterService = characterService;
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
         this.Character.PropertyChanged += (_, _) => this.OnPropertyChanged(string.Empty);
     }
 
-    public CharacterCardViewModel()
-    {
-        this.Character = new Character("Keqing", new Assets("Keqing", "Sword", "Anemo", "Wolfhook", "TeachingsOfFreedom", "SlimeCondensate", "HurricaneSeed", "DvalinsPlume", MaterialRarity.Orange))
-        {
-            CurrentLevel = "70",
-            DesiredLevel = "90",
-            Activated = true,
-            Deleted = false,
-            AutoAttack = new Skill(1, 10),
-            Elemental = new Skill(1, 10),
-            Burst = new Skill(1, 10),
-        };
-        this.RequiredMaterials = [];
-
-        this.RequiredMaterials.Add(new Material("WanderersAdvice", MaterailTypes.Exp, MaterialRarity.Green, 10));
-    }
-
     public event Action Edited = null!;
 
     public Character Character { get; set; }
+
+    public Assets Assets => this.Character.Assets!;
 
     public string Name => this.Character.Name;
 
@@ -84,7 +72,6 @@ public partial class CharacterCardViewModel : ObservableObject
     [RelayCommand]
     private void Remove()
     {
-        this.Character.Deleted = true;
-        this.Character.Activated = false;
+        this.characterService.DeleteCharacter(this.Character);
     }
 }

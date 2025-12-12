@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Resources;
+using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Newtonsoft.Json;
@@ -13,6 +14,8 @@ namespace Genshin_Calculator.Services;
 
 public class DataIOService
 {
+    private const string Characters = "Characters";
+
     private static readonly string ExportFilePath = App.Configuration["Paths:ExportFile"]!;
 
     private static readonly string InitFilePath = App.Configuration["Paths:InitFile"]!;
@@ -21,13 +24,18 @@ public class DataIOService
 
     public static Dictionary<string, string[]>? GetMaterials(string materials)
     {
-        //
-        Uri resourceUri = new($"pack://application:,,,/Genshin Calculator;component/Resources/Json/{materials}.json");
-        StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri);
-        using StreamReader reader = new(resourceInfo.Stream);
-        string jsonContent = reader.ReadToEnd();
+        var uri = ResourcePaths.MaterialsJson(materials);
 
-        return JsonConvert.DeserializeObject<Dictionary<string, string[]>>(jsonContent);
+        StreamResourceInfo? info = Application.GetResourceStream(uri);
+        if (info == null)
+        {
+            return null;
+        }
+
+        using var reader = new StreamReader(info.Stream);
+        var json = reader.ReadToEnd();
+
+        return JsonConvert.DeserializeObject<Dictionary<string, string[]>>(json);
     }
 
     public static void Export(Inventory inventory, List<Character> characters)
@@ -35,7 +43,7 @@ public class DataIOService
         var exportJson = new JObject
         {
             ["Inventory"] = JToken.FromObject(inventory),
-            ["Characters"] = JToken.FromObject(characters),
+            [Characters] = JToken.FromObject(characters),
         };
 
         Directory.CreateDirectory("Data");
@@ -70,7 +78,7 @@ public class DataIOService
 
         this.Inventory.Materials = [.. merged.Select(m => new Material(m, MaterailTypes.Other, 0, 0))];
 
-        var characterAssets = initJson["Characters"]?.ToObject<List<Assets>>()
+        var characterAssets = initJson[Characters]?.ToObject<List<Assets>>()
             ?? throw new InvalidOperationException("Characters section is missing or invalid");
         foreach (var asset in characterAssets)
         {
@@ -88,9 +96,9 @@ public class DataIOService
                 this.Inventory = MergeInventories(this.Inventory, importedInventory);
             }
 
-            if (exportJson["Characters"] is not null)
+            if (exportJson[Characters] is not null)
             {
-                var importedChars = exportJson["Characters"]?.ToObject<List<Character>>()
+                var importedChars = exportJson[Characters]?.ToObject<List<Character>>()
                     ?? [];
 
                 UpdateCharacters(characters, importedChars);

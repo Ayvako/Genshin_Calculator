@@ -6,12 +6,16 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/Controls.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
             <conv:RarityToBrushConverter x:Key="RarityToBrushConverter" />
-            <conv:ImagePathToSourceConverter x:Key="ImageConverter" />
             <conv:LevelGreaterThanOneConverter x:Key="LevelGreaterThanOneConverter" />
             <conv:LevelLessThanConverter x:Key="LevelLessThanConverter" />
+            <conv:ElementToIconConverter x:Key="ElementToIconConverter" />
+            <conv:WeaponToIconConverter x:Key="WeaponToIconConverter" />
+            <conv:ContainsConverter x:Key="ContainsConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

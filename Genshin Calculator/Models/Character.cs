@@ -26,9 +26,10 @@ namespace Genshin_Calculator.Models
             this.Name = name;
             this.Assets = assets;
 
-            this.AutoAttack = new Skill();
-            this.Elemental = new Skill();
-            this.Burst = new Skill();
+            // Later set names based on character data
+            this.AutoAttack = new Skill() { Name = "AutoAttack" };
+            this.Elemental = new Skill() { Name = "Elemental" };
+            this.Burst = new Skill() { Name = "Burst" };
             this.Priority = ++Count;
         }
 
@@ -75,6 +76,5 @@ namespace Genshin_Calculator.Models
                 CurrentLevel = value;
             }
         }
-
     }
 }

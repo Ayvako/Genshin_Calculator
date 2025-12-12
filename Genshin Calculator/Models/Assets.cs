@@ -1,8 +1,10 @@
-﻿using Genshin_Calculator.Helpers.Enums;
+﻿using System;
+using Genshin_Calculator.Helpers;
+using Genshin_Calculator.Helpers.Enums;
 
 namespace Genshin_Calculator.Models
 {
-    public class Assets
+    public record Assets
     {
         public Assets(string name, string weapon, string element, string localSpecialty, string bookType, string enemy, string miniBoss, string weeklyBoss, MaterialRarity rarity)
         {
@@ -19,7 +21,7 @@ namespace Genshin_Calculator.Models
 
         public string Name { get; set; }
 
-        public string ImagePath => $"{App.Configuration["Resources:CharactersBasePath"]}/{this.Name}.png";
+        public Uri ImagePath => ResourcePaths.Character(this.Name);
 
         public string LocalSpecialty { get; set; }
 

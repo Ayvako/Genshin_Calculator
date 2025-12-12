@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -10,13 +11,24 @@ namespace Genshin_Calculator.ViewModels;
 
 public partial class CharacterEditViewModel : ObservableObject
 {
+    private readonly ImmutableArray<string> levels = LevelHelper.Levels;
+
     [ObservableProperty]
     private bool isPopupOpen;
+
+    [ObservableProperty]
+    private Skill[] talents;
 
     public CharacterEditViewModel(Character character)
     {
         this.Character = character;
         this.Editable = character.Clone();
+        this.talents =
+        [
+            this.Editable.AutoAttack!,
+            this.Editable.Elemental!,
+            this.Editable.Burst!,
+        ];
     }
 
     public event Action Saved = null!;
@@ -24,6 +36,7 @@ public partial class CharacterEditViewModel : ObservableObject
     public event Action RequestClose = null!;
 
     public List<string[]> LevelOptionsPairs { get; } =
+
     [
         ["20", "20+"],
         ["40", "40+"],
@@ -36,6 +49,23 @@ public partial class CharacterEditViewModel : ObservableObject
     public Character Character { get; }
 
     public Character Editable { get; }
+
+    private static void CopySkillLevels(Skill? target, Skill? source)
+    {
+        if (target is null || source is null)
+        {
+            return;
+        }
+
+        target.CurrentLevel = source.CurrentLevel;
+        target.DesiredLevel = source.DesiredLevel;
+    }
+
+    [RelayCommand]
+    private static void DragWindow(Window window)
+    {
+        window?.DragMove();
+    }
 
     [RelayCommand]
     private void TogglePopup() => this.IsPopupOpen = !this.IsPopupOpen;
@@ -50,22 +80,22 @@ public partial class CharacterEditViewModel : ObservableObject
     [RelayCommand]
     private void IncreaseCurrentCharacterLevel()
     {
-        var index = LevelHelper.Levels.IndexOf(this.Editable.CurrentLevel);
+        var index = this.levels.IndexOf(this.Editable.CurrentLevel);
 
-        if (index < (LevelHelper.Levels.Length - 1))
+        if (index < (this.levels.Length - 1))
         {
-            this.Editable.CurrentLevel = LevelHelper.Levels[index + 1];
+            this.Editable.CurrentLevel = this.levels[index + 1];
         }
     }
 
     [RelayCommand]
     private void DecreaseCurrentCharacterLevel()
     {
-        var index = LevelHelper.Levels.IndexOf(this.Editable.CurrentLevel);
+        var index = this.levels.IndexOf(this.Editable.CurrentLevel);
 
         if (index > 0)
         {
-            this.Editable.CurrentLevel = LevelHelper.Levels[index - 1];
+            this.Editable.CurrentLevel = this.levels[index - 1];
         }
     }
 
@@ -80,28 +110,59 @@ public partial class CharacterEditViewModel : ObservableObject
         this.Character.CurrentLevel = this.Editable.CurrentLevel;
         this.Character.DesiredLevel = this.Editable.DesiredLevel;
 
-        this.Character.AutoAttack.CurrentLevel = this.Editable.AutoAttack.CurrentLevel;
-        this.Character.AutoAttack.DesiredLevel = this.Editable.AutoAttack.DesiredLevel;
-
-        this.Character.Elemental.CurrentLevel = this.Editable.Elemental.CurrentLevel;
-        this.Character.Elemental.DesiredLevel = this.Editable.Elemental.DesiredLevel;
-
-        this.Character.Burst.CurrentLevel = this.Editable.Burst.CurrentLevel;
-        this.Character.Burst.DesiredLevel = this.Editable.Burst.DesiredLevel;
+        CopySkillLevels(this.Character.AutoAttack, this.Editable.AutoAttack);
+        CopySkillLevels(this.Character.Elemental, this.Editable.Elemental);
+        CopySkillLevels(this.Character.Burst, this.Editable.Burst);
 
         this.Saved?.Invoke();
     }
 
     private bool ValidateLevels()
     {
-        if (int.TryParse(this.Character.CurrentLevel, out var current) &&
-            int.TryParse(this.Character.DesiredLevel, out var desired) && current > desired)
+        var editable = this.Editable;
+
+        var currentIndex = this.levels.IndexOf(editable.CurrentLevel);
+        var desiredIndex = this.levels.IndexOf(editable.DesiredLevel);
+
+        if (currentIndex >= 0 && desiredIndex >= 0)
         {
-            MessageBox.Show("Current Level cannot be greater than Desired Level.");
+            if (currentIndex > desiredIndex)
+            {
+                MessageBox.Show("Current Level cannot be greater than Desired Level.");
+                return false;
+            }
+        }
+        else
+        {
+            if (int.TryParse(editable.CurrentLevel, out var current) &&
+                int.TryParse(editable.DesiredLevel, out var desired) &&
+                current > desired)
+            {
+                MessageBox.Show("Current Level cannot be greater than Desired Level.");
+                return false;
+            }
+        }
+
+        static bool SkillInvalid(Skill? skill) => skill != null && skill.CurrentLevel > skill.DesiredLevel;
+
+        if (SkillInvalid(editable.AutoAttack))
+        {
+            MessageBox.Show("Auto Attack Current Level cannot be greater than Desired Level.");
             return false;
         }
 
-        //добавить проверки для AutoAttack, Elemental, Burst
+        if (SkillInvalid(editable.Elemental))
+        {
+            MessageBox.Show("Elemental Current Level cannot be greater than Desired Level.");
+            return false;
+        }
+
+        if (SkillInvalid(editable.Burst))
+        {
+            MessageBox.Show("Burst Current Level cannot be greater than Desired Level.");
+            return false;
+        }
+
         return true;
     }
 

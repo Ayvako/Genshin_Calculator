@@ -33,7 +33,6 @@ public partial class App : Application
         services.AddTransient<MainView>();
 
         Configuration = builder.Build();
-        ImageService.InitializeFromConfig();
 
         Services = services.BuildServiceProvider();
 

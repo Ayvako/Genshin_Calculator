@@ -1,4 +1,6 @@
-﻿using Genshin_Calculator.Helpers.Enums;
+﻿using System;
+using Genshin_Calculator.Helpers;
+using Genshin_Calculator.Helpers.Enums;
 
 namespace Genshin_Calculator.Models;
 
@@ -20,8 +22,7 @@ public class Material
 
     public MaterialRarity Rarity { get; set; }
 
-    public string ImagePath =>
-        $"{App.Configuration["Resources:ImagesBasePath"]}/Materials/{this.Name}.png";
+    public Uri ImagePath => ResourcePaths.Material(this.Name);
 
     public override bool Equals(object? obj)
     {

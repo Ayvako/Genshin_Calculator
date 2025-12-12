@@ -4,7 +4,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>Genshin_Calculator</RootNamespace>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
+    <UseWPF>True</UseWPF>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
@@ -76,6 +76,20 @@
     <None Remove="Resources\Images\Characters\Yoimiya.png" />
     <None Remove="Resources\Images\Characters\Yun Jin.png" />
     <None Remove="Resources\Images\Characters\Zhongli.png" />
+    <None Remove="Resources\Images\Elements\anemo.png" />
+    <None Remove="Resources\Images\Elements\cryo.png" />
+    <None Remove="Resources\Images\Elements\dendro.png" />
+    <None Remove="Resources\Images\Elements\electro.png" />
+    <None Remove="Resources\Images\Elements\element_anemo.webp" />
+    <None Remove="Resources\Images\Elements\element_cryo.webp" />
+    <None Remove="Resources\Images\Elements\element_dendro.webp" />
+    <None Remove="Resources\Images\Elements\element_electro.webp" />
+    <None Remove="Resources\Images\Elements\element_geo.webp" />
+    <None Remove="Resources\Images\Elements\element_hydro.webp" />
+    <None Remove="Resources\Images\Elements\element_pyro.webp" />
+    <None Remove="Resources\Images\Elements\geo.png" />
+    <None Remove="Resources\Images\Elements\hydro.png" />
+    <None Remove="Resources\Images\Elements\pyro.png" />
     <None Remove="Resources\Images\Materials\AdventurersExperience.png" />
     <None Remove="Resources\Images\Materials\AFlowerYettoBloom.png" />
     <None Remove="Resources\Images\Materials\AgentsSacrificialKnife.png" />
@@ -359,14 +373,11 @@
     <None Remove="Resources\Images\Materials\WindwheelAster.png" />
     <None Remove="Resources\Images\Materials\Wolfhook.png" />
     <None Remove="Resources\Images\Materials\WorldspanFern.png" />
-    <None Remove="Resources\Images\Tools\acsend_icon_default.png" />
-    <None Remove="Resources\Images\Tools\acsend_icon_mouseover.png" />
-    <None Remove="Resources\Images\Tools\active_icon_default.png" />
-    <None Remove="Resources\Images\Tools\active_icon_mouseover.png" />
-    <None Remove="Resources\Images\Tools\edit_icon_default.png" />
-    <None Remove="Resources\Images\Tools\edit_icon_mouseover.png" />
-    <None Remove="Resources\Images\Tools\remove_icon_default.png" />
-    <None Remove="Resources\Images\Tools\remove_icon_mouseover.png" />
+    <None Remove="Resources\Images\Weapons\bow.png" />
+    <None Remove="Resources\Images\Weapons\catalyst.png" />
+    <None Remove="Resources\Images\Weapons\claymore.png" />
+    <None Remove="Resources\Images\Weapons\polearm.png" />
+    <None Remove="Resources\Images\Weapons\sword.png" />
     <None Remove="Resources\Json\Books.json" />
     <None Remove="Resources\Json\Enemies.json" />
     <None Remove="Resources\Json\Gems.json" />
@@ -378,6 +389,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.1-ci1190" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.12.0-beta1.25218.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -462,6 +474,13 @@
     <Resource Include="Resources\Images\Characters\Yoimiya.png" />
     <Resource Include="Resources\Images\Characters\Yun Jin.png" />
     <Resource Include="Resources\Images\Characters\Zhongli.png" />
+    <Resource Include="Resources\Images\Elements\anemo.png" />
+    <Resource Include="Resources\Images\Elements\cryo.png" />
+    <Resource Include="Resources\Images\Elements\dendro.png" />
+    <Resource Include="Resources\Images\Elements\electro.png" />
+    <Resource Include="Resources\Images\Elements\geo.png" />
+    <Resource Include="Resources\Images\Elements\hydro.png" />
+    <Resource Include="Resources\Images\Elements\pyro.png" />
     <Resource Include="Resources\Images\Materials\AdventurersExperience.png" />
     <Resource Include="Resources\Images\Materials\AFlowerYettoBloom.png" />
     <Resource Include="Resources\Images\Materials\AgentsSacrificialKnife.png" />
@@ -745,14 +764,11 @@
     <Resource Include="Resources\Images\Materials\WindwheelAster.png" />
     <Resource Include="Resources\Images\Materials\Wolfhook.png" />
     <Resource Include="Resources\Images\Materials\WorldspanFern.png" />
-    <Resource Include="Resources\Images\Tools\acsend_icon_default.png" />
-    <Resource Include="Resources\Images\Tools\acsend_icon_mouseover.png" />
-    <Resource Include="Resources\Images\Tools\active_icon_default.png" />
-    <Resource Include="Resources\Images\Tools\active_icon_mouseover.png" />
-    <Resource Include="Resources\Images\Tools\edit_icon_default.png" />
-    <Resource Include="Resources\Images\Tools\edit_icon_mouseover.png" />
-    <Resource Include="Resources\Images\Tools\remove_icon_default.png" />
-    <Resource Include="Resources\Images\Tools\remove_icon_mouseover.png" />
+    <Resource Include="Resources\Images\Weapons\bow.png" />
+    <Resource Include="Resources\Images\Weapons\catalyst.png" />
+    <Resource Include="Resources\Images\Weapons\claymore.png" />
+    <Resource Include="Resources\Images\Weapons\polearm.png" />
+    <Resource Include="Resources\Images\Weapons\sword.png" />
     <Resource Include="Resources\Json\Books.json" />
     <Resource Include="Resources\Json\Enemies.json" />
     <Resource Include="Resources\Json\Gems.json" />
@@ -768,5 +784,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 </Project>

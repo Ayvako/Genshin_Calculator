@@ -4,7 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Genshin_Calculator.ViewModels"
-             xmlns:views="clr-namespace:Genshin_Calculator.Views"
+             xmlns:controls="clr-namespace:Genshin_Calculator.Controls"
              d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d">
 
@@ -14,7 +14,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <views:ToolsPanel Grid.Row="0" />
+        <controls:ToolsPanelControl Grid.Row="0" />
 
         <ScrollViewer Grid.Row="1"
                       VerticalScrollBarVisibility="Auto"
@@ -28,7 +28,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <views:CharacterCard DataContext="{Binding}" />
+                            <controls:CharacterCardControl DataContext="{Binding}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

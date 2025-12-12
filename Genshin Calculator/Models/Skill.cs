@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Genshin_Calculator.Helpers;
 
 namespace Genshin_Calculator.Models
 {
@@ -17,7 +16,9 @@ namespace Genshin_Calculator.Models
             this.DesiredLevel = desiredLevel;
         }
 
-        public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel);
+        public string Name { get; set; } = string.Empty;
+
+        public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel) { Name = this.Name };
 
         partial void OnCurrentLevelChanged(int value)
         {

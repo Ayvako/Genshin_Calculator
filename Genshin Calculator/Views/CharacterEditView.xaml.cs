@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Interop;
 
 namespace Genshin_Calculator.Views
@@ -15,16 +14,6 @@ namespace Genshin_Calculator.Views
             this.LocationChanged += (sender, e) => { ResetPopupLocation(); };
         }
 
-        private static IEnumerable<Popup> GetOpenPopups()
-        {
-            return PresentationSource.CurrentSources.OfType<HwndSource>()
-                .Select(h => h.RootVisual)
-                .OfType<FrameworkElement>()
-                .Select(f => f.Parent)
-                .OfType<Popup>()
-                .Where(p => p.IsOpen);
-        }
-
         private static void ResetPopupLocation()
         {
             foreach (var popup in GetOpenPopups())
@@ -35,12 +24,14 @@ namespace Genshin_Calculator.Views
             }
         }
 
-        private void TopBarMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private static IEnumerable<Popup> GetOpenPopups()
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                this.DragMove();
-            }
+            return PresentationSource.CurrentSources.OfType<HwndSource>()
+                .Select(h => h.RootVisual)
+                .OfType<FrameworkElement>()
+                .Select(f => f.Parent)
+                .OfType<Popup>()
+                .Where(p => p.IsOpen);
         }
     }
 }

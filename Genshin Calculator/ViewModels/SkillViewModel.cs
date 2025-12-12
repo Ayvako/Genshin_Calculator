@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Models;
-using System;
 
 namespace Genshin_Calculator.ViewModels;
 

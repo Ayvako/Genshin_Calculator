@@ -12,9 +12,15 @@
             <conv:RarityToBrushConverter x:Key="RarityToBrushConverter" />
             <conv:LevelGreaterThanOneConverter x:Key="LevelGreaterThanOneConverter" />
             <conv:LevelLessThanConverter x:Key="LevelLessThanConverter" />
+
             <conv:ElementToIconConverter x:Key="ElementToIconConverter" />
             <conv:WeaponToIconConverter x:Key="WeaponToIconConverter" />
+            <conv:RarityStarToIconConverter x:Key="RarityStarToIconConverter" />
+
             <conv:ContainsConverter x:Key="ContainsConverter" />
+            <conv:DimElementConverter x:Key="DimElementConverter" />
+
+            <conv:IconProxyConverter x:Key="IconProxyConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -27,25 +27,25 @@ public class RarityToBrushConverter : IValueConverter
             EndPoint = new Point(1, 1),
             GradientStops = rarity switch
             {
-                4 =>
+                5 =>
                 [
                     new GradientStop(Color.FromArgb(144, 105, 84, 83), 0),
                     new GradientStop(Color.FromArgb(144, 161, 112, 78), 0.39),
                     new GradientStop(Color.FromArgb(144, 228, 171, 82), 1)
                 ],
-                3 =>
+                4 =>
                 [
                     new GradientStop(Color.FromArgb(144, 89, 84, 130), 0),
                     new GradientStop(Color.FromArgb(144, 120, 102, 157), 0.39),
                     new GradientStop(Color.FromArgb(144, 183, 133, 201), 1)
                 ],
-                2 =>
+                3 =>
                 [
                     new GradientStop(Color.FromArgb(144, 81, 84, 116), 0),
                     new GradientStop(Color.FromArgb(144, 80, 104, 135), 0.39),
                     new GradientStop(Color.FromArgb(144, 75, 160, 180), 1),
                 ],
-                1 =>
+                2 =>
                 [
                     new GradientStop(Color.FromArgb(144, 72, 87, 92), 0),
                     new GradientStop(Color.FromArgb(144, 72, 107, 103), 0.39),

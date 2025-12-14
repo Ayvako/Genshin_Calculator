@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 
@@ -17,10 +18,13 @@ public partial class CharacterSelectorViewModel : ObservableObject
     private string? searchQuery;
 
     [ObservableProperty]
-    private ObservableCollection<string> selectedElements = [];
+    private ObservableCollection<Element> selectedElements = [];
 
     [ObservableProperty]
-    private ObservableCollection<string> selectedWeapons = [];
+    private ObservableCollection<WeaponType> selectedWeapons = [];
+
+    [ObservableProperty]
+    private ObservableCollection<MaterialRarity> selectedCharactersRarities = [];
 
     [ObservableProperty]
     private bool isSortByRarity = false;
@@ -40,23 +44,24 @@ public partial class CharacterSelectorViewModel : ObservableObject
 
     public ObservableCollection<Character> FilteredCharacters { get; }
 
-    public ObservableCollection<string> ElementTypes { get; } =
-    [
-        "Pyro", "Hydro", "Cryo", "Electro", "Dendro", "Geo", "Anemo"
-    ];
+    public ObservableCollection<Element> ElementTypes { get; } = new(Enum.GetValues<Element>());
 
-    public ObservableCollection<string> WeaponTypes { get; } =
+    public ObservableCollection<WeaponType> WeaponTypes { get; } = new(Enum.GetValues<WeaponType>());
+
+    public ObservableCollection<MaterialRarity> CharactersRarityTypes { get; } =
     [
-        "Sword", "Claymore", "Polearm", "Bow", "Catalyst"
+        MaterialRarity.Violet, MaterialRarity.Orange
     ];
 
     partial void OnIsSortByRarityChanged(bool value) => ApplyFilter();
 
     partial void OnSearchQueryChanged(string? value) => ApplyFilter();
 
-    partial void OnSelectedElementsChanged(ObservableCollection<string> value) => ApplyFilter();
+    partial void OnSelectedElementsChanged(ObservableCollection<Element> value) => ApplyFilter();
 
-    partial void OnSelectedWeaponsChanged(ObservableCollection<string> value) => ApplyFilter();
+    partial void OnSelectedWeaponsChanged(ObservableCollection<WeaponType> value) => ApplyFilter();
+
+    partial void OnSelectedCharactersRaritiesChanged(ObservableCollection<MaterialRarity> value) => ApplyFilter();
 
     private void ApplyFilter()
     {
@@ -73,14 +78,21 @@ public partial class CharacterSelectorViewModel : ObservableObject
         if (this.SelectedElements.Count > 0)
         {
             query = query.Where(c =>
-                this.SelectedElements.Contains(c.Assets!.Element.ToString()));
+                this.SelectedElements.Contains(c.Assets!.Element));
         }
 
         // Оружие
         if (this.SelectedWeapons.Count > 0)
         {
             query = query.Where(c =>
-                this.SelectedWeapons.Contains(c.Assets!.Weapon.ToString()));
+                this.SelectedWeapons.Contains(c.Assets!.Weapon));
+        }
+
+        // Редкость
+        if (this.SelectedCharactersRarities.Count > 0)
+        {
+            query = query.Where(c =>
+                this.SelectedCharactersRarities.Contains(c.Assets!.Rarity));
         }
 
         // Сортировка
@@ -96,7 +108,7 @@ public partial class CharacterSelectorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleWeapon(string e)
+    private void ToggleWeapon(WeaponType e)
     {
         if (!this.SelectedWeapons.Remove(e))
         {
@@ -107,7 +119,18 @@ public partial class CharacterSelectorViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleElement(string e)
+    private void ToggleRarity(MaterialRarity e)
+    {
+        if (!this.SelectedCharactersRarities.Remove(e))
+        {
+            this.SelectedCharactersRarities.Add(e);
+        }
+
+        this.ApplyFilter();
+    }
+
+    [RelayCommand]
+    private void ToggleElement(Element e)
     {
         if (!this.SelectedElements.Remove(e))
         {

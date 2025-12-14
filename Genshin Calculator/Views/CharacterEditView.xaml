@@ -14,9 +14,9 @@
         SizeToContent="Height"
         WindowStartupLocation="CenterScreen">
 
-    <Border CornerRadius="14" Padding="0" Background="{StaticResource MyGradientBrush}">
+    <Border CornerRadius="14,14,0,0" Padding="0" Background="{StaticResource MyGradientBrush}">
 
-        <Grid Background="{StaticResource MyGradientBrush}">
+        <Grid>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

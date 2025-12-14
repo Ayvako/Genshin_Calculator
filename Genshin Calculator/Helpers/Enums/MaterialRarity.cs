@@ -8,26 +8,26 @@
         /// <summary>
         /// Represents a white rarity.
         /// </summary>
-        White,
+        White = 1,
 
         /// <summary>
         /// Represents a green rarity.
         /// </summary>
-        Green,
+        Green = 2,
 
         /// <summary>
         /// Represents a blue rarity.
         /// </summary>
-        Blue,
+        Blue = 3,
 
         /// <summary>
         /// Represents a violet rarity.
         /// </summary>
-        Violet,
+        Violet = 4,
 
         /// <summary>
         /// Represents an orange rarity.
         /// </summary>
-        Orange,
+        Orange = 5,
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using Genshin_Calculator.Services;
+using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Services.Materials;
 using Genshin_Calculator.ViewModels;
 using Genshin_Calculator.Views;
 using Microsoft.Extensions.Configuration;
@@ -26,11 +28,20 @@ public partial class App : Application
         services.AddSingleton<InventoryService>();
         services.AddSingleton<CharacterService>();
 
+        services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
+        services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
+
         services.AddTransient<ToolsPanelViewModel>();
         services.AddTransient<MainViewModel>();
 
         services.AddTransient<MainWindow>();
         services.AddTransient<MainView>();
+
+        services.AddSingleton<GemMaterialProvider>();
+        services.AddSingleton<BookMaterialProvider>();
+        services.AddSingleton<EnemyMaterialProvider>();
+
+        services.AddSingleton<IInventoryStore, InventoryStore>();
 
         Configuration = builder.Build();
 

@@ -28,7 +28,7 @@ public class MainViewModel : ObservableObject
     {
         this.Characters.Clear();
         Inventory inventory = this.inventoryService.GetInventory();
-        var missingByCharacter = InventoryService.CalculateMissingMaterials(inventory);
+        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var character in inventory.ActiveCharacters)
         {
@@ -55,7 +55,7 @@ public class MainViewModel : ObservableObject
     private void RefreshAllMaterials()
     {
         Inventory inventory = this.inventoryService.GetInventory();
-        var missingByCharacter = InventoryService.CalculateMissingMaterials(inventory);
+        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var charVm in this.Characters)
         {

@@ -373,6 +373,10 @@
     <None Remove="Resources\Images\Materials\WindwheelAster.png" />
     <None Remove="Resources\Images\Materials\Wolfhook.png" />
     <None Remove="Resources\Images\Materials\WorldspanFern.png" />
+    <None Remove="Resources\Images\Stars\4.png" />
+    <None Remove="Resources\Images\Stars\5.png" />
+    <None Remove="Resources\Images\Stars\Orange.png" />
+    <None Remove="Resources\Images\Stars\Violet.png" />
     <None Remove="Resources\Images\Weapons\bow.png" />
     <None Remove="Resources\Images\Weapons\catalyst.png" />
     <None Remove="Resources\Images\Weapons\claymore.png" />
@@ -408,7 +412,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\Characters\Albedo.png" />
-    <Resource Include="Resources\Images\Characters\Alhatham.png" />
     <Resource Include="Resources\Images\Characters\Aloy.png" />
     <Resource Include="Resources\Images\Characters\Amber.png" />
     <Resource Include="Resources\Images\Characters\Arataki Itto.png" />
@@ -764,6 +767,8 @@
     <Resource Include="Resources\Images\Materials\WindwheelAster.png" />
     <Resource Include="Resources\Images\Materials\Wolfhook.png" />
     <Resource Include="Resources\Images\Materials\WorldspanFern.png" />
+    <Resource Include="Resources\Images\Stars\Orange.png" />
+    <Resource Include="Resources\Images\Stars\Violet.png" />
     <Resource Include="Resources\Images\Weapons\bow.png" />
     <Resource Include="Resources\Images\Weapons\catalyst.png" />
     <Resource Include="Resources\Images\Weapons\claymore.png" />
@@ -797,8 +802,5 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 </Project>

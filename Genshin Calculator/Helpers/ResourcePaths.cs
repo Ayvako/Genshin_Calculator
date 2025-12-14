@@ -1,4 +1,5 @@
 ﻿using System;
+using Genshin_Calculator.Helpers.Enums;
 
 namespace Genshin_Calculator.Helpers;
 
@@ -20,7 +21,9 @@ public static class ResourcePaths
 
     private static string Weapons => Combine(BasePath, "Weapons");
 
-    private static object Elements => Combine(BasePath, "Elements");
+    private static string Elements => Combine(BasePath, "Elements");
+
+    private static string Stars => Combine(BasePath, "Stars");
 
     public static Uri Character(string name) => ToPackUri($"{Characters}/{name}.png");
 
@@ -28,9 +31,11 @@ public static class ResourcePaths
 
     public static Uri Tool(string name) => ToPackUri($"{Tools}/{name}.png");
 
-    public static Uri Element(string name) => ToPackUri($"{Elements}/{name}.png");
+    public static Uri Element(Element name) => ToPackUri($"{Elements}/{name}.png");
 
-    public static Uri Weapon(string name) => ToPackUri($"{Weapons}/{name}.png");
+    public static Uri Weapon(WeaponType name) => ToPackUri($"{Weapons}/{name}.png");
+
+    public static Uri Star(MaterialRarity name) => ToPackUri($"{Stars}/{name}.png");
 
     public static Uri MaterialsJson(string name) => ToPackUri($"Resources/Json/{name}.json");
 

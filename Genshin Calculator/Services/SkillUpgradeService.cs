@@ -4,11 +4,12 @@ using System.Linq;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Models.LevelingResources;
+using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Services.Materials;
 
 namespace Genshin_Calculator.Services
 {
-    public static class SkillUpgradeService
+    public class SkillUpgradeService : ISkillUpgradeService
     {
         private static readonly LevelMaterialData[] LevelConfigs =
         [
@@ -23,29 +24,41 @@ namespace Genshin_Calculator.Services
             new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
         ];
 
-        public static List<Material> GetSkillsCost(Character character)
+        private readonly IMaterialProvider books;
+
+        private readonly IMaterialProvider enemies;
+
+        public SkillUpgradeService(
+            BookMaterialProvider books,
+            EnemyMaterialProvider enemies)
+        {
+            this.books = books;
+            this.enemies = enemies;
+        }
+
+        public List<Material> GetSkillsCost(Character character)
         {
             Skill auto_attack = character.AutoAttack;
             Skill elemental = character.Elemental;
             Skill burst = character.Burst;
 
-            List<Material> materialsForAA = GetCost(character, auto_attack.CurrentLevel, auto_attack.DesiredLevel);
-            List<Material> materialsForElem = GetCost(character, elemental.CurrentLevel, elemental.DesiredLevel);
-            List<Material> materialsForBurst = GetCost(character, burst.CurrentLevel, burst.DesiredLevel);
+            List<Material> materialsForAA = this.GetCost(character, auto_attack.CurrentLevel, auto_attack.DesiredLevel);
+            List<Material> materialsForElem = this.GetCost(character, elemental.CurrentLevel, elemental.DesiredLevel);
+            List<Material> materialsForBurst = this.GetCost(character, burst.CurrentLevel, burst.DesiredLevel);
 
             return InventoryUtils.Merge(materialsForAA, materialsForElem, materialsForBurst);
         }
 
-        public static List<Material> GetCost(Character character, int from, int to)
+        private List<Material> GetCost(Character character, int from, int to)
         {
-            var materials = Enumerable.Range(from + 1, to - from).SelectMany(i => GetMaterials(character)[i]);
+            var materials = Enumerable.Range(from + 1, to - from).SelectMany(i => this.GetMaterials(character)[i]);
 
             var groupedMaterials = materials.GroupBy(m => m.Name).Select(g => new Material(g.Key, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount))).ToList();
 
             return groupedMaterials;
         }
 
-        private static Dictionary<int, Material[]> GetMaterials(Character character)
+        private Dictionary<int, Material[]> GetMaterials(Character character)
         {
             ArgumentNullException.ThrowIfNull(character);
             ArgumentNullException.ThrowIfNull(character.Assets);
@@ -59,13 +72,13 @@ namespace Genshin_Calculator.Services
                     var materials = new List<Material>
                     {
                         new(
-                            Book.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
+                            this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
                             MaterailTypes.Book,
                             cfg.BookRarity,
                             cfg.BookAmount),
 
                         new(
-                            Enemy.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),
+                            this.enemies.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),
                             MaterailTypes.Enemy,
                             cfg.EnemyRarity,
                             cfg.EnemyAmount),

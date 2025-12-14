@@ -69,7 +69,7 @@ public class CharacterService
         return character;
     }
 
-    public List<Character> GetCharacters()
+    public IReadOnlyList<Character> GetCharacters()
     {
         return this.inventoryService.GetCharacters();
     }

@@ -10,6 +10,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls="clr-namespace:Genshin_Calculator.Controls"
         mc:Ignorable="d"
         xmlns:h="clr-namespace:Genshin_Calculator.Helpers"
         d:DataContext="{d:DesignInstance Type=vm:CharacterSelectorViewModel, IsDesignTimeCreatable=False}">
@@ -25,16 +26,16 @@
             <!-- Поиск и фильтры -->
 
             <StackPanel Grid.Row="0"
-            Orientation="Horizontal"
-            HorizontalAlignment="Center"
-            Margin="0 0 0 10"
-            VerticalAlignment="Center">
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Margin="0 0 0 10"
+                VerticalAlignment="Center">
                 <TextBox Width="200" h:TextBoxHelper.Placeholder="Search..."
-             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
-             Foreground="White"
-             Background="#2A2A3C"
-             Padding="5"
-             Margin="0 0 10 0" />
+                    Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                    Foreground="White"
+                    Background="#2A2A3C"
+                    Padding="5"
+                    Margin="0 0 10 0" />
                 <ToggleButton IsChecked="{Binding IsSortByRarity}"
                   Style="{StaticResource SortToggleButtonStyle}" />
             </StackPanel>
@@ -42,103 +43,24 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal"
                          Margin="0 10 0 10" HorizontalAlignment="Center">
 
-                <ItemsControl ItemsSource="{Binding ElementTypes}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                <controls:FilterToggleList Items="{Binding ElementTypes}"
+                            SelectedItems="{Binding SelectedElements}"
+                            ToggleCommand="{Binding ToggleElementCommand}"
+                            IconConverter="{StaticResource ElementToIconConverter}" />
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ToggleButton Command="{Binding DataContext.ToggleElementCommand,
-                                                RelativeSource={RelativeSource AncestorType=Window}}"
-                              CommandParameter="{Binding}"
-                              Margin="4"
-                              Width="36" Height="36"
-                              Background="Transparent"
-                              BorderThickness="0"
-                              Cursor="Hand">
+                <Rectangle Width="1" Height="32" Fill="#66FFFFFF" Margin="6 0" />
 
-                                <ToggleButton.IsChecked>
-                                    <MultiBinding Converter="{StaticResource ContainsConverter}" Mode="OneWay">
-                                        <Binding Path="DataContext.SelectedElements"
-                                     RelativeSource="{RelativeSource AncestorType=Window}" />
-                                        <Binding Path="." />
-                                    </MultiBinding>
-                                </ToggleButton.IsChecked>
+                <controls:FilterToggleList Items="{Binding WeaponTypes}"
+                            SelectedItems="{Binding SelectedWeapons}"
+                            ToggleCommand="{Binding ToggleWeaponCommand}"
+                            IconConverter="{StaticResource WeaponToIconConverter}" />
 
-                                <Image Source="{Binding Converter={StaticResource ElementToIconConverter}}"
-                           Width="32" Height="32" />
+                <Rectangle Width="1" Height="32" Fill="#66FFFFFF" Margin="6 0" />
 
-                                <ToggleButton.Style>
-                                    <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ToggleButton">
-                                                    <Border x:Name="bd"
-                                                CornerRadius="6"
-                                                Background="{TemplateBinding Background}">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    </Border>
-
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter TargetName="bd" Property="Background" Value="#20FFFFFF" />
-                                                        </Trigger>
-
-                                                        <Trigger Property="IsChecked" Value="True">
-                                                            <Setter TargetName="bd" Property="Background" Value="#40FFFFFF" />
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ToggleButton.Style>
-
-                            </ToggleButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <Rectangle Width="1" Height="32" Fill="#66FFFFFF" Margin="12 0" />
-
-                <ItemsControl ItemsSource="{Binding WeaponTypes}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <ToggleButton Command="{Binding DataContext.ToggleWeaponCommand,
-                                                RelativeSource={RelativeSource AncestorType=Window}}"
-                              CommandParameter="{Binding}"
-                              Margin="4"
-                              Width="36" Height="36"
-                              Background="Transparent"
-                              BorderThickness="0"
-                              Cursor="Hand">
-
-                                <ToggleButton.IsChecked>
-                                    <MultiBinding Converter="{StaticResource ContainsConverter}" Mode="OneWay">
-                                        <Binding Path="DataContext.SelectedWeapons"
-                                     RelativeSource="{RelativeSource AncestorType=Window}" />
-                                        <Binding Path="." />
-                                    </MultiBinding>
-                                </ToggleButton.IsChecked>
-
-                                <Image Source="{Binding Converter={StaticResource WeaponToIconConverter}}"
-                           Width="32" Height="32" />
-
-                            </ToggleButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
+                <controls:FilterToggleList Items="{Binding CharactersRarityTypes}"
+                            SelectedItems="{Binding SelectedCharactersRarities}"
+                            ToggleCommand="{Binding ToggleRarityCommand}"
+                            IconConverter="{StaticResource RarityStarToIconConverter}" />
             </StackPanel>
 
             <!-- Сетка персонажей -->

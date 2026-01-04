@@ -8,6 +8,30 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Bold.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-BoldItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Italic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Regular.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Black.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BlackItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Bold.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-BoldItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Italic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Light.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-LightItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Medium.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-MediumItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Regular.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-Thin.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\Roboto-ThinItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Bold.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-BoldItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Italic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Light.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-LightItalic.ttf" />
+    <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Roboto\RobotoCondensed-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="Resources\Images\Characters\Albedo.png" />
     <None Remove="Resources\Images\Characters\Alhatham.png" />
@@ -393,6 +417,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="MaterialDesignColors" Version="5.3.1-ci1190" />
     <PackageReference Include="MaterialDesignThemes" Version="5.3.1-ci1190" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.12.0-beta1.25218.8">
       <PrivateAssets>all</PrivateAssets>
@@ -781,6 +806,12 @@
   </ItemGroup>
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Presentation\App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="Presentation\App.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.json">

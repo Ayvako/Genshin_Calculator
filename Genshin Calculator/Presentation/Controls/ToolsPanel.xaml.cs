@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
-using Genshin_Calculator.ViewModels;
+using Genshin_Calculator.Presentation.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genshin_Calculator.Controls;
+namespace Genshin_Calculator.Presentation.Controls;
 
 public partial class ToolsPanelControl : UserControl
 {

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using Genshin_Calculator.Views;
+using Genshin_Calculator.Presentation.Views;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genshin_Calculator;
+namespace Genshin_Calculator.Presentation;
 
 public partial class MainWindow : Window
 {

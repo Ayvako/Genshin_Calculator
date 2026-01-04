@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="Genshin_Calculator.Views.MainView"
+﻿<UserControl x:Class="Genshin_Calculator.Presentation.Views.MainView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Genshin_Calculator.ViewModels"
-             xmlns:controls="clr-namespace:Genshin_Calculator.Controls"
+             xmlns:vm="clr-namespace:Genshin_Calculator.Presentation.ViewModels"
+             xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
              d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d">
 

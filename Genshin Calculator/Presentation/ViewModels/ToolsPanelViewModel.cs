@@ -5,10 +5,10 @@ using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Views;
 
-namespace Genshin_Calculator.ViewModels;
+namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class ToolsPanelViewModel : ObservableObject
 {

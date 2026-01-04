@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 
-namespace Genshin_Calculator.ViewModels;
+namespace Genshin_Calculator.Presentation.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
@@ -16,48 +16,48 @@ public class MainViewModel : ObservableObject
         this.inventoryService = inventoryService;
         this.characterService = characterService;
 
-        characterService.CharacterAdded += this.OnCharacterAdded;
-        characterService.CharacterDeleted += this.OnCharacterDeleted;
+        characterService.CharacterAdded += OnCharacterAdded;
+        characterService.CharacterDeleted += OnCharacterDeleted;
 
-        this.RefreshCharacters();
+        RefreshCharacters();
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; set; } = [];
 
     private void RefreshCharacters()
     {
-        this.Characters.Clear();
-        Inventory inventory = this.inventoryService.GetInventory();
-        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
+        Characters.Clear();
+        Inventory inventory = inventoryService.GetInventory();
+        var missingByCharacter = inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var character in inventory.ActiveCharacters)
         {
             missingByCharacter.TryGetValue(character, out var materials);
             var required = materials ?? [];
 
-            var charVm = new CharacterCardViewModel(character, required, this.characterService);
-            charVm.Edited += this.RefreshAllMaterials;
+            var charVm = new CharacterCardViewModel(character, required, characterService);
+            charVm.Edited += RefreshAllMaterials;
 
-            this.Characters.Add(charVm);
+            Characters.Add(charVm);
         }
     }
 
     private void OnCharacterAdded(Character character)
     {
-        this.RefreshCharacters();
+        RefreshCharacters();
     }
 
     private void OnCharacterDeleted(Character character)
     {
-        this.RefreshCharacters();
+        RefreshCharacters();
     }
 
     private void RefreshAllMaterials()
     {
-        Inventory inventory = this.inventoryService.GetInventory();
-        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
+        Inventory inventory = inventoryService.GetInventory();
+        var missingByCharacter = inventoryService.CalculateMissingMaterials(inventory);
 
-        foreach (var charVm in this.Characters)
+        foreach (var charVm in Characters)
         {
             missingByCharacter.TryGetValue(charVm.Character, out var materials);
             charVm.RequiredMaterials = materials ?? [];

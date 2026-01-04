@@ -8,7 +8,7 @@ using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 
-namespace Genshin_Calculator.ViewModels;
+namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class CharacterSelectorViewModel : ObservableObject
 {

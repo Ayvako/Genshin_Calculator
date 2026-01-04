@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Helpers;
 
-namespace Genshin_Calculator.Controls;
+namespace Genshin_Calculator.Presentation.Controls;
 
 public partial class LevelSelectorControl : UserControl
 {

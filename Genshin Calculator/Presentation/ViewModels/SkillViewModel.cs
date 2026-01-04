@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.ViewModels;
+namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class SkillViewModel : ObservableObject
 {

@@ -1,9 +1,9 @@
-﻿<Window x:Class="Genshin_Calculator.MainWindow"
+﻿<Window x:Class="Genshin_Calculator.Presentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:Genshin_Calculator.Views"
+        xmlns:views="clr-namespace:Genshin_Calculator.Presentation.Views"
 
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
-namespace Genshin_Calculator.Controls
+namespace Genshin_Calculator.Presentation.Controls
 {
     public partial class FilterToggleList : UserControl
     {

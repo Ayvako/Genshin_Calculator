@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Genshin_Calculator.Controls
+namespace Genshin_Calculator.Presentation.Controls
 {
     public partial class TalentLevelControl : UserControl
     {

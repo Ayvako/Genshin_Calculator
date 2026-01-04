@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
-using Genshin_Calculator.ViewModels;
+using Genshin_Calculator.Presentation.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genshin_Calculator.Views
+namespace Genshin_Calculator.Presentation.Views
 {
     public partial class MainView : UserControl
     {

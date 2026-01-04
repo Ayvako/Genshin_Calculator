@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Genshin_Calculator.Controls;
+namespace Genshin_Calculator.Presentation.Controls;
 
 public partial class CharacterCardControl : UserControl
 {

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 
-namespace Genshin_Calculator.Views
+namespace Genshin_Calculator.Presentation.Views
 {
     public partial class CharacterEditView : Window
     {

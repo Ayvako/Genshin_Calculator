@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows;
+using Genshin_Calculator.Presentation.ViewModels;
+using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
 using Genshin_Calculator.Services.Materials;
-using Genshin_Calculator.ViewModels;
-using Genshin_Calculator.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Genshin_Calculator;
+namespace Genshin_Calculator.Presentation;
 
 public partial class App : Application
 {

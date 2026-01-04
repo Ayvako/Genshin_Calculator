@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.ViewModels;
+namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class CharacterEditViewModel : ObservableObject
 {

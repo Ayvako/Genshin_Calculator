@@ -7,6 +7,7 @@ using System.Windows.Resources;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation;
 using Genshin_Calculator.Services.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

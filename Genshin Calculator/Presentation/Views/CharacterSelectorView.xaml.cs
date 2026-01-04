@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Genshin_Calculator.Views;
+namespace Genshin_Calculator.Presentation.Views;
 
 public partial class CharacterSelectorView : Window
 {

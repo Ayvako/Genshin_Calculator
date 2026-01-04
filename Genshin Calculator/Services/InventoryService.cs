@@ -210,7 +210,22 @@ public class InventoryService
     {
         var charCost = this.characterUpgrade.GetCharacterCost(character);
         var skillCost = this.skillUpgrade.GetSkillsCost(character);
-        return InventoryUtils.Merge(charCost, skillCost);
+        return Merge(charCost, skillCost);
+    }
+
+    private static List<Material> Merge(params List<Material>[] dictionaries)
+    {
+        IEnumerable<Material> merged = dictionaries[0];
+        for (int i = 1; i < dictionaries.Length; i++)
+        {
+            merged = merged.Concat(dictionaries[i]);
+        }
+
+        var groupedMaterials = merged.GroupBy(m => new { m.Name })
+            .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
+            .ToList();
+
+        return groupedMaterials;
     }
 
     private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity) =>

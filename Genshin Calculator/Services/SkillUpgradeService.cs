@@ -46,7 +46,22 @@ namespace Genshin_Calculator.Services
             List<Material> materialsForElem = this.GetCost(character, elemental.CurrentLevel, elemental.DesiredLevel);
             List<Material> materialsForBurst = this.GetCost(character, burst.CurrentLevel, burst.DesiredLevel);
 
-            return InventoryUtils.Merge(materialsForAA, materialsForElem, materialsForBurst);
+            return Merge(materialsForAA, materialsForElem, materialsForBurst);
+        }
+
+        private static List<Material> Merge(params List<Material>[] dictionaries)
+        {
+            IEnumerable<Material> merged = dictionaries[0];
+            for (int i = 1; i < dictionaries.Length; i++)
+            {
+                merged = merged.Concat(dictionaries[i]);
+            }
+
+            var groupedMaterials = merged.GroupBy(m => new { m.Name })
+                .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
+                .ToList();
+
+            return groupedMaterials;
         }
 
         private List<Material> GetCost(Character character, int from, int to)

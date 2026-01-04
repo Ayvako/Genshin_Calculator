@@ -75,14 +75,11 @@ public class DataIOService
 
         var merged = MergeLists(
             materials["LocalSpecialty"],
-            materials["BookType"],
-            materials["Gem"],
-            materials["Enemy"],
             materials["MiniBoss"],
             materials["WeeklyBoss"],
             materials["Other"]);
 
-        this.store.Inventory.Materials = [.. merged.Select(m => new Material(m, MaterailTypes.Other, 0, 0))];
+        this.store.Inventory.Materials = [.. merged.Select(m => new Material(m, MaterialTypes.Other, 0, 0))];
 
         var characterAssets = initJson[Characters]?.ToObject<List<Assets>>()
             ?? throw new InvalidOperationException("Characters section is missing or invalid");

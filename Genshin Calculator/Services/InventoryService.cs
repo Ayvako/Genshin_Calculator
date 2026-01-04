@@ -71,13 +71,13 @@ public class InventoryService
             {
                 switch (required.Type)
                 {
-                    case MaterailTypes.Exp:
+                    case MaterialTypes.Exp:
                         totalExp = ConsumeExperience(required, missingMaterials, totalExp);
                         break;
 
-                    case MaterailTypes.Book:
-                    case MaterailTypes.Gem:
-                    case MaterailTypes.Enemy:
+                    case MaterialTypes.Book:
+                    case MaterialTypes.Gem:
+                    case MaterialTypes.Enemy:
                         this.ConsumeCraftableMaterials(inventoryCopy, required, character, missingMaterials);
                         break;
 
@@ -97,7 +97,7 @@ public class InventoryService
     public void Upgrade(Character character, Inventory inventory)
     {
         var requiredMaterials = this.CalculateMissingMaterials(inventory);
-        if (InventoryUtils.IsUpgradable(requiredMaterials[character]))
+        if (IsUpgradable(requiredMaterials[character]))
         {
             character.CurrentLevel = character.DesiredLevel;
 
@@ -118,6 +118,11 @@ public class InventoryService
         {
             Debug.WriteLine($"{character} Error Upgrade");
         }
+    }
+
+    private static bool IsUpgradable(List<Material> materials)
+    {
+        return materials.All(m => m.Amount == 0);
     }
 
     private static void ConsumeMaterialFromInventory(Inventory inventory, Material m, List<Material> remainingMaterials)
@@ -208,12 +213,12 @@ public class InventoryService
         return InventoryUtils.Merge(charCost, skillCost);
     }
 
-    private string GetMaterialName(Character c, MaterailTypes type, MaterialRarity rarity) =>
+    private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity) =>
     type switch
     {
-        MaterailTypes.Gem => this.gems.GetMaterial(c, rarity),
-        MaterailTypes.Book => this.books.GetMaterial(c, rarity),
-        MaterailTypes.Enemy => this.enemies.GetMaterial(c, rarity),
+        MaterialTypes.Gem => this.gems.GetMaterial(c, rarity),
+        MaterialTypes.Book => this.books.GetMaterial(c, rarity),
+        MaterialTypes.Enemy => this.enemies.GetMaterial(c, rarity),
         _ => throw new ArgumentException($"Unknown material type {type}"),
     };
 
@@ -221,9 +226,9 @@ public class InventoryService
     {
         MaterialRarity[] chain = required.Type switch
         {
-            MaterailTypes.Gem => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange],
-            MaterailTypes.Book => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
-            MaterailTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
+            MaterialTypes.Gem => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange],
+            MaterialTypes.Book => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
+            MaterialTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
             _ => throw new ArgumentException($"Unsupported craftable type: {required.Type}"),
         };
 

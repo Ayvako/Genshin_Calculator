@@ -6,7 +6,7 @@ namespace Genshin_Calculator.Models;
 
 public class Material
 {
-    public Material(string name, MaterailTypes type, MaterialRarity rarity, int amount)
+    public Material(string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         this.Name = name;
         this.Type = type;
@@ -18,7 +18,7 @@ public class Material
 
     public int Amount { get; set; }
 
-    public MaterailTypes Type { get; set; }
+    public MaterialTypes Type { get; set; }
 
     public MaterialRarity Rarity { get; set; }
 

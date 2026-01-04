@@ -73,27 +73,27 @@ namespace Genshin_Calculator.Services
                     {
                         new(
                             this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
-                            MaterailTypes.Book,
+                            MaterialTypes.Book,
                             cfg.BookRarity,
                             cfg.BookAmount),
 
                         new(
                             this.enemies.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),
-                            MaterailTypes.Enemy,
+                            MaterialTypes.Enemy,
                             cfg.EnemyRarity,
                             cfg.EnemyAmount),
 
-                        new("Mora", MaterailTypes.Other, MaterialRarity.Blue, cfg.MoraAmount),
+                        new("Mora", MaterialTypes.Other, MaterialRarity.Blue, cfg.MoraAmount),
                     };
 
                     if (cfg.WeeklyBossAmount > 0)
                     {
-                        materials.Add(new(weeklyBoss, MaterailTypes.Other, MaterialRarity.Orange, cfg.WeeklyBossAmount));
+                        materials.Add(new(weeklyBoss, MaterialTypes.Other, MaterialRarity.Orange, cfg.WeeklyBossAmount));
                     }
 
                     if (cfg.CrownAmount > 0)
                     {
-                        materials.Add(new("CrownOfInsight", MaterailTypes.Other, MaterialRarity.Orange, cfg.CrownAmount));
+                        materials.Add(new("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Orange, cfg.CrownAmount));
                     }
 
                     return new { level, materials = materials.ToArray() };

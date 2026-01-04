@@ -3,7 +3,7 @@
 /// <summary>
 /// Types of materials.
 /// </summary>
-public enum MaterailTypes
+public enum MaterialTypes
 {
     /// <summary>
     /// Represents gems.

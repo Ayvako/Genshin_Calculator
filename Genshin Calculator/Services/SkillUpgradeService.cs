@@ -23,9 +23,9 @@ namespace Genshin_Calculator.Services
             new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
         ];
 
-        private readonly IMaterialProvider books;
+        private readonly BookMaterialProvider books;
 
-        private readonly IMaterialProvider enemies;
+        private readonly EnemyMaterialProvider enemies;
 
         public SkillUpgradeService(
             BookMaterialProvider books,

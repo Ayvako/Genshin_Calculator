@@ -28,13 +28,8 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Border Grid.Row="0" CornerRadius="14,14,0,0"
+            <Border Grid.Row="0" CornerRadius="14,14,0,0" MouseLeftButtonDown="OnMouseLeftButtonDown"
                 Background="{Binding Editable.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}">
-                <Border.InputBindings>
-                    <MouseBinding MouseAction="LeftClick"
-                              Command="{Binding DragWindowCommand}"
-                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
-                </Border.InputBindings>
 
                 <TextBlock Text="{Binding Editable.Name, FallbackValue='Name'}"
                        HorizontalAlignment="Center"

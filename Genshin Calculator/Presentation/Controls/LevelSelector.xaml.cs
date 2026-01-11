@@ -3,24 +3,39 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Helpers;
+using Genshin_Calculator.Presentation.Models;
 
 namespace Genshin_Calculator.Presentation.Controls;
 
 public partial class LevelSelectorControl : UserControl
 {
     public static readonly DependencyProperty TitleProperty =
-    DependencyProperty.Register(nameof(Title), typeof(string), typeof(LevelSelectorControl), new PropertyMetadata(string.Empty));
+    DependencyProperty.Register(
+        nameof(Title),
+        typeof(string),
+        typeof(LevelSelectorControl),
+        new PropertyMetadata(string.Empty));
 
     public static readonly DependencyProperty LevelProperty =
-    DependencyProperty.Register(nameof(Level), typeof(string), typeof(LevelSelectorControl), new FrameworkPropertyMetadata(
-            "1",
-            FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+    DependencyProperty.Register(
+        nameof(Level),
+        typeof(string),
+        typeof(LevelSelectorControl),
+        new FrameworkPropertyMetadata("1", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     public static readonly DependencyProperty IsPopupOpenProperty =
-    DependencyProperty.Register(nameof(IsPopupOpen), typeof(bool), typeof(LevelSelectorControl), new PropertyMetadata(false));
+    DependencyProperty.Register(
+        nameof(IsPopupOpen),
+        typeof(bool),
+        typeof(LevelSelectorControl),
+        new PropertyMetadata(false));
 
     public static readonly DependencyProperty LevelOptionsPairsProperty =
-    DependencyProperty.Register(nameof(LevelOptionsPairs), typeof(List<string[]>), typeof(LevelSelectorControl), new PropertyMetadata(null));
+    DependencyProperty.Register(
+        nameof(LevelOptionsPairs),
+        typeof(IReadOnlyList<LevelPair>),
+        typeof(LevelSelectorControl),
+        new PropertyMetadata(null));
 
     public LevelSelectorControl()
     {
@@ -45,10 +60,10 @@ public partial class LevelSelectorControl : UserControl
         set => this.SetValue(IsPopupOpenProperty, value);
     }
 
-    public List<string[]> LevelOptionsPairs
+    public IReadOnlyList<LevelPair> LevelOptionsPairs
     {
-        get => (List<string[]>)this.GetValue(LevelOptionsPairsProperty);
-        set => this.SetValue(LevelOptionsPairsProperty, value);
+        get => (IReadOnlyList<LevelPair>)GetValue(LevelOptionsPairsProperty);
+        set => SetValue(LevelOptionsPairsProperty, value);
     }
 
     [RelayCommand]

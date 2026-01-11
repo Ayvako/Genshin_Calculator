@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Models;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
@@ -16,56 +16,37 @@ public partial class CharacterEditViewModel : ObservableObject
     [ObservableProperty]
     private bool isPopupOpen;
 
-    [ObservableProperty]
-    private Skill[] talents;
-
     public CharacterEditViewModel(Character character)
     {
         this.Character = character;
         this.Editable = character.Clone();
-        this.talents =
+        this.Talents =
         [
             this.Editable.AutoAttack!,
             this.Editable.Elemental!,
-            this.Editable.Burst!,
+            this.Editable.Burst!
         ];
     }
 
-    public event Action Saved = null!;
+    public event Action? Saved;
 
-    public event Action RequestClose = null!;
+    public event Action? RequestClose;
 
-    public List<string[]> LevelOptionsPairs { get; } =
+    public IReadOnlyList<Skill> Talents { get; }
 
+    public IReadOnlyList<LevelPair> LevelOptionsPairs { get; } =
     [
-        ["20", "20+"],
-        ["40", "40+"],
-        ["50", "50+"],
-        ["60", "60+"],
-        ["70", "70+"],
-        ["80", "80+"]
+        new LevelPair("20", "20★"),
+        new LevelPair("40", "40★"),
+        new LevelPair("50", "50★"),
+        new LevelPair("60", "60★"),
+        new LevelPair("70", "70★"),
+        new LevelPair("80", "80★"),
     ];
 
     public Character Character { get; }
 
     public Character Editable { get; }
-
-    private static void CopySkillLevels(Skill? target, Skill? source)
-    {
-        if (target is null || source is null)
-        {
-            return;
-        }
-
-        target.CurrentLevel = source.CurrentLevel;
-        target.DesiredLevel = source.DesiredLevel;
-    }
-
-    [RelayCommand]
-    private static void DragWindow(Window window)
-    {
-        window?.DragMove();
-    }
 
     [RelayCommand]
     private void TogglePopup() => this.IsPopupOpen = !this.IsPopupOpen;
@@ -78,25 +59,15 @@ public partial class CharacterEditViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void IncreaseCurrentCharacterLevel()
-    {
-        var index = this.levels.IndexOf(this.Editable.CurrentLevel);
-
-        if (index < (this.levels.Length - 1))
-        {
-            this.Editable.CurrentLevel = this.levels[index + 1];
-        }
-    }
+    private void IncreaseCurrentCharacterLevel() => this.ChangeLevel(1);
 
     [RelayCommand]
-    private void DecreaseCurrentCharacterLevel()
-    {
-        var index = this.levels.IndexOf(this.Editable.CurrentLevel);
+    private void DecreaseCurrentCharacterLevel() => this.ChangeLevel(-1);
 
-        if (index > 0)
-        {
-            this.Editable.CurrentLevel = this.levels[index - 1];
-        }
+    [RelayCommand]
+    private void Cancel()
+    {
+        this.RequestClose?.Invoke();
     }
 
     [RelayCommand]
@@ -107,68 +78,48 @@ public partial class CharacterEditViewModel : ObservableObject
             return;
         }
 
-        this.Character.CurrentLevel = this.Editable.CurrentLevel;
-        this.Character.DesiredLevel = this.Editable.DesiredLevel;
-
-        CopySkillLevels(this.Character.AutoAttack, this.Editable.AutoAttack);
-        CopySkillLevels(this.Character.Elemental, this.Editable.Elemental);
-        CopySkillLevels(this.Character.Burst, this.Editable.Burst);
+        this.Character.ApplyChangesFrom(this.Editable);
 
         this.Saved?.Invoke();
     }
 
+    private void ChangeLevel(int delta)
+    {
+        var index = this.GetLevelIndex(this.Editable.CurrentLevel);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        var newIndex = index + delta;
+
+        if (newIndex >= 0 && newIndex < this.levels.Length)
+        {
+            this.Editable.CurrentLevel = this.levels[newIndex];
+        }
+    }
+
+    private int GetLevelIndex(string level) => this.levels.IndexOf(level);
+
     private bool ValidateLevels()
     {
-        var editable = this.Editable;
+        var currentIndex = this.GetLevelIndex(this.Editable.CurrentLevel);
+        var desiredIndex = this.GetLevelIndex(this.Editable.DesiredLevel);
 
-        var currentIndex = this.levels.IndexOf(editable.CurrentLevel);
-        var desiredIndex = this.levels.IndexOf(editable.DesiredLevel);
-
-        if (currentIndex >= 0 && desiredIndex >= 0)
+        if (currentIndex > desiredIndex)
         {
-            if (currentIndex > desiredIndex)
+            return false;
+        }
+
+        foreach (var skill in this.Talents)
+        {
+            if (skill.CurrentLevel > skill.DesiredLevel)
             {
-                MessageBox.Show("Current Level cannot be greater than Desired Level.");
                 return false;
             }
-        }
-        else
-        {
-            if (int.TryParse(editable.CurrentLevel, out var current) &&
-                int.TryParse(editable.DesiredLevel, out var desired) &&
-                current > desired)
-            {
-                MessageBox.Show("Current Level cannot be greater than Desired Level.");
-                return false;
-            }
-        }
-
-        static bool SkillInvalid(Skill? skill) => skill != null && skill.CurrentLevel > skill.DesiredLevel;
-
-        if (SkillInvalid(editable.AutoAttack))
-        {
-            MessageBox.Show("Auto Attack Current Level cannot be greater than Desired Level.");
-            return false;
-        }
-
-        if (SkillInvalid(editable.Elemental))
-        {
-            MessageBox.Show("Elemental Current Level cannot be greater than Desired Level.");
-            return false;
-        }
-
-        if (SkillInvalid(editable.Burst))
-        {
-            MessageBox.Show("Burst Current Level cannot be greater than Desired Level.");
-            return false;
         }
 
         return true;
-    }
-
-    [RelayCommand]
-    private void Cancel()
-    {
-        this.RequestClose.Invoke();
     }
 }

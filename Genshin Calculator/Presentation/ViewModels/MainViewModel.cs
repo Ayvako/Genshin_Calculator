@@ -16,48 +16,48 @@ public class MainViewModel : ObservableObject
         this.inventoryService = inventoryService;
         this.characterService = characterService;
 
-        characterService.CharacterAdded += OnCharacterAdded;
-        characterService.CharacterDeleted += OnCharacterDeleted;
+        characterService.CharacterAdded += this.OnCharacterAdded;
+        characterService.CharacterDeleted += this.OnCharacterDeleted;
 
-        RefreshCharacters();
+        this.RefreshCharacters();
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; set; } = [];
 
     private void RefreshCharacters()
     {
-        Characters.Clear();
-        Inventory inventory = inventoryService.GetInventory();
-        var missingByCharacter = inventoryService.CalculateMissingMaterials(inventory);
+        this.Characters.Clear();
+        Inventory inventory = this.inventoryService.GetInventory();
+        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var character in inventory.ActiveCharacters)
         {
             missingByCharacter.TryGetValue(character, out var materials);
             var required = materials ?? [];
 
-            var charVm = new CharacterCardViewModel(character, required, characterService);
-            charVm.Edited += RefreshAllMaterials;
+            var charVm = new CharacterCardViewModel(character, required, this.characterService);
+            charVm.Edited += this.RefreshAllMaterials;
 
-            Characters.Add(charVm);
+            this.Characters.Add(charVm);
         }
     }
 
     private void OnCharacterAdded(Character character)
     {
-        RefreshCharacters();
+        this.RefreshCharacters();
     }
 
     private void OnCharacterDeleted(Character character)
     {
-        RefreshCharacters();
+        this.RefreshCharacters();
     }
 
     private void RefreshAllMaterials()
     {
-        Inventory inventory = inventoryService.GetInventory();
-        var missingByCharacter = inventoryService.CalculateMissingMaterials(inventory);
+        Inventory inventory = this.inventoryService.GetInventory();
+        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
-        foreach (var charVm in Characters)
+        foreach (var charVm in this.Characters)
         {
             missingByCharacter.TryGetValue(charVm.Character, out var materials);
             charVm.RequiredMaterials = materials ?? [];

@@ -45,7 +45,6 @@ namespace Genshin_Calculator.Presentation.Controls
 
         public IValueConverter IconConverter
         {
-
             get { return (IValueConverter)this.GetValue(IconConverterProperty); }
             set { this.SetValue(IconConverterProperty, value); }
         }

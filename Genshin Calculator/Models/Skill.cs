@@ -4,13 +4,17 @@ namespace Genshin_Calculator.Models
 {
     public partial class Skill : ObservableObject
     {
-        [ObservableProperty]
-        private int currentLevel = 1;
+        public const int MinLevel = 1;
+
+        public const int MaxLevel = 10;
 
         [ObservableProperty]
-        private int desiredLevel = 1;
+        private int currentLevel = MinLevel;
 
-        public Skill(int currentLevel = 1, int desiredLevel = 1)
+        [ObservableProperty]
+        private int desiredLevel = MinLevel;
+
+        public Skill(int currentLevel = MinLevel, int desiredLevel = MinLevel)
         {
             this.CurrentLevel = currentLevel;
             this.DesiredLevel = desiredLevel;
@@ -19,6 +23,12 @@ namespace Genshin_Calculator.Models
         public string Name { get; set; } = string.Empty;
 
         public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel) { Name = this.Name };
+
+        public void CopyLevelsFrom(Skill source)
+        {
+            this.CurrentLevel = source.CurrentLevel;
+            this.DesiredLevel = source.DesiredLevel;
+        }
 
         partial void OnCurrentLevelChanged(int value)
         {

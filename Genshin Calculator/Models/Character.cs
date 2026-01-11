@@ -61,6 +61,15 @@ namespace Genshin_Calculator.Models
             };
         }
 
+        public void ApplyChangesFrom(Character other)
+        {
+            this.CurrentLevel = other.CurrentLevel;
+            this.DesiredLevel = other.DesiredLevel;
+            this.AutoAttack.CopyLevelsFrom(other.AutoAttack!);
+            this.Elemental.CopyLevelsFrom(other.Elemental!);
+            this.Burst.CopyLevelsFrom(other.Burst!);
+        }
+
         partial void OnCurrentLevelChanged(string value)
         {
             if (LevelHelper.CompareLevels(value, DesiredLevel) > 0)

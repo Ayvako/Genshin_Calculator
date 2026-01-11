@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Interop;
 
 namespace Genshin_Calculator.Presentation.Views
@@ -32,6 +33,14 @@ namespace Genshin_Calculator.Presentation.Views
                 .Select(f => f.Parent)
                 .OfType<Popup>()
                 .Where(p => p.IsOpen);
+        }
+
+        private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
         }
     }
 }

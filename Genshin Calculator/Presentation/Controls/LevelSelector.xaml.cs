@@ -62,8 +62,8 @@ public partial class LevelSelectorControl : UserControl
 
     public IReadOnlyList<LevelPair> LevelOptionsPairs
     {
-        get => (IReadOnlyList<LevelPair>)GetValue(LevelOptionsPairsProperty);
-        set => SetValue(LevelOptionsPairsProperty, value);
+        get => (IReadOnlyList<LevelPair>)this.GetValue(LevelOptionsPairsProperty);
+        set => this.SetValue(LevelOptionsPairsProperty, value);
     }
 
     [RelayCommand]

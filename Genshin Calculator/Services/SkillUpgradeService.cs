@@ -6,113 +6,112 @@ using Genshin_Calculator.Models;
 using Genshin_Calculator.Services.Interfaces;
 using Genshin_Calculator.Services.Materials;
 
-namespace Genshin_Calculator.Services
+namespace Genshin_Calculator.Services;
+
+public class SkillUpgradeService : ISkillUpgradeService
 {
-    public class SkillUpgradeService : ISkillUpgradeService
+    private static readonly LevelMaterialData[] LevelConfigs =
+    [
+        new(MaterialRarity.Green, MaterialRarity.White, 3, 6, 12500),
+        new(MaterialRarity.Blue, MaterialRarity.Green, 2, 3, 17500),
+        new(MaterialRarity.Blue, MaterialRarity.Green, 4, 4, 25000),
+        new(MaterialRarity.Blue, MaterialRarity.Green, 6, 6, 30000),
+        new(MaterialRarity.Blue, MaterialRarity.Green, 9, 9, 37500),
+        new(MaterialRarity.Violet, MaterialRarity.Blue, 4, 4, 120000, 1),
+        new(MaterialRarity.Violet, MaterialRarity.Blue, 6, 6, 260000, 1),
+        new(MaterialRarity.Violet, MaterialRarity.Blue, 12, 9, 450000, 2),
+        new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
+    ];
+
+    private readonly BookMaterialProvider books;
+
+    private readonly EnemyMaterialProvider enemies;
+
+    public SkillUpgradeService(
+        BookMaterialProvider books,
+        EnemyMaterialProvider enemies)
     {
-        private static readonly LevelMaterialData[] LevelConfigs =
-        [
-            new(MaterialRarity.Green, MaterialRarity.White, 3, 6, 12500),
-            new(MaterialRarity.Blue, MaterialRarity.Green, 2, 3, 17500),
-            new(MaterialRarity.Blue, MaterialRarity.Green, 4, 4, 25000),
-            new(MaterialRarity.Blue, MaterialRarity.Green, 6, 6, 30000),
-            new(MaterialRarity.Blue, MaterialRarity.Green, 9, 9, 37500),
-            new(MaterialRarity.Violet, MaterialRarity.Blue, 4, 4, 120000, 1),
-            new(MaterialRarity.Violet, MaterialRarity.Blue, 6, 6, 260000, 1),
-            new(MaterialRarity.Violet, MaterialRarity.Blue, 12, 9, 450000, 2),
-            new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
-        ];
+        this.books = books;
+        this.enemies = enemies;
+    }
 
-        private readonly BookMaterialProvider books;
+    public List<Material> GetSkillsCost(Character character)
+    {
+        Skill auto_attack = character.AutoAttack;
+        Skill elemental = character.Elemental;
+        Skill burst = character.Burst;
 
-        private readonly EnemyMaterialProvider enemies;
+        List<Material> materialsForAA = this.GetCost(character, auto_attack.CurrentLevel, auto_attack.DesiredLevel);
+        List<Material> materialsForElem = this.GetCost(character, elemental.CurrentLevel, elemental.DesiredLevel);
+        List<Material> materialsForBurst = this.GetCost(character, burst.CurrentLevel, burst.DesiredLevel);
 
-        public SkillUpgradeService(
-            BookMaterialProvider books,
-            EnemyMaterialProvider enemies)
+        return Merge(materialsForAA, materialsForElem, materialsForBurst);
+    }
+
+    private static List<Material> Merge(params List<Material>[] dictionaries)
+    {
+        IEnumerable<Material> merged = dictionaries[0];
+        for (int i = 1; i < dictionaries.Length; i++)
         {
-            this.books = books;
-            this.enemies = enemies;
+            merged = merged.Concat(dictionaries[i]);
         }
 
-        public List<Material> GetSkillsCost(Character character)
-        {
-            Skill auto_attack = character.AutoAttack;
-            Skill elemental = character.Elemental;
-            Skill burst = character.Burst;
+        var groupedMaterials = merged.GroupBy(m => new { m.Name })
+            .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
+            .ToList();
 
-            List<Material> materialsForAA = this.GetCost(character, auto_attack.CurrentLevel, auto_attack.DesiredLevel);
-            List<Material> materialsForElem = this.GetCost(character, elemental.CurrentLevel, elemental.DesiredLevel);
-            List<Material> materialsForBurst = this.GetCost(character, burst.CurrentLevel, burst.DesiredLevel);
+        return groupedMaterials;
+    }
 
-            return Merge(materialsForAA, materialsForElem, materialsForBurst);
-        }
+    private List<Material> GetCost(Character character, int from, int to)
+    {
+        var materials = Enumerable.Range(from + 1, to - from).SelectMany(i => this.GetMaterials(character)[i]);
 
-        private static List<Material> Merge(params List<Material>[] dictionaries)
-        {
-            IEnumerable<Material> merged = dictionaries[0];
-            for (int i = 1; i < dictionaries.Length; i++)
+        var groupedMaterials = materials.GroupBy(m => m.Name).Select(g => new Material(g.Key, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount))).ToList();
+
+        return groupedMaterials;
+    }
+
+    private Dictionary<int, Material[]> GetMaterials(Character character)
+    {
+        ArgumentNullException.ThrowIfNull(character);
+        ArgumentNullException.ThrowIfNull(character.Assets);
+
+        string weeklyBoss = character.Assets.WeeklyBoss ?? throw new InvalidOperationException("WeeklyBoss cannot be null");
+
+        return LevelConfigs
+            .Select((cfg, idx) =>
             {
-                merged = merged.Concat(dictionaries[i]);
-            }
-
-            var groupedMaterials = merged.GroupBy(m => new { m.Name })
-                .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
-                .ToList();
-
-            return groupedMaterials;
-        }
-
-        private List<Material> GetCost(Character character, int from, int to)
-        {
-            var materials = Enumerable.Range(from + 1, to - from).SelectMany(i => this.GetMaterials(character)[i]);
-
-            var groupedMaterials = materials.GroupBy(m => m.Name).Select(g => new Material(g.Key, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount))).ToList();
-
-            return groupedMaterials;
-        }
-
-        private Dictionary<int, Material[]> GetMaterials(Character character)
-        {
-            ArgumentNullException.ThrowIfNull(character);
-            ArgumentNullException.ThrowIfNull(character.Assets);
-
-            string weeklyBoss = character.Assets.WeeklyBoss ?? throw new InvalidOperationException("WeeklyBoss cannot be null");
-
-            return LevelConfigs
-                .Select((cfg, idx) =>
+                int level = idx + 2;
+                var materials = new List<Material>
                 {
-                    int level = idx + 2;
-                    var materials = new List<Material>
-                    {
-                        new(
-                            this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
-                            MaterialTypes.Book,
-                            cfg.BookRarity,
-                            cfg.BookAmount),
+                    new(
+                        this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
+                        MaterialTypes.Book,
+                        cfg.BookRarity,
+                        cfg.BookAmount),
 
-                        new(
-                            this.enemies.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),
-                            MaterialTypes.Enemy,
-                            cfg.EnemyRarity,
-                            cfg.EnemyAmount),
+                    new(
+                        this.enemies.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),
+                        MaterialTypes.Enemy,
+                        cfg.EnemyRarity,
+                        cfg.EnemyAmount),
 
-                        new("Mora", MaterialTypes.Other, MaterialRarity.Blue, cfg.MoraAmount),
-                    };
+                    new("Mora", MaterialTypes.Other, MaterialRarity.Blue, cfg.MoraAmount),
+                };
 
-                    if (cfg.WeeklyBossAmount > 0)
-                    {
-                        materials.Add(new(weeklyBoss, MaterialTypes.Other, MaterialRarity.Orange, cfg.WeeklyBossAmount));
-                    }
+                if (cfg.WeeklyBossAmount > 0)
+                {
+                    materials.Add(new(weeklyBoss, MaterialTypes.Other, MaterialRarity.Orange, cfg.WeeklyBossAmount));
+                }
 
-                    if (cfg.CrownAmount > 0)
-                    {
-                        materials.Add(new("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Orange, cfg.CrownAmount));
-                    }
+                if (cfg.CrownAmount > 0)
+                {
+                    materials.Add(new("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Orange, cfg.CrownAmount));
+                }
 
-                    return new { level, materials = materials.ToArray() };
-                })
-                .ToDictionary(x => x.level, x => x.materials);
-        }
+                return new { level, materials = materials.ToArray() };
+            })
+            .ToDictionary(x => x.level, x => x.materials);
     }
 }

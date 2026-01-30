@@ -4,13 +4,15 @@ using System.Linq;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
-public partial class ToolsPanelViewModel : ObservableObject
+public partial class ToolsPanelViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>
 {
     private readonly CharacterService characterService;
 
@@ -23,11 +25,22 @@ public partial class ToolsPanelViewModel : ObservableObject
     public ToolsPanelViewModel(CharacterService characterService)
     {
         this.characterService = characterService;
-
-        characterService.CharacterAdded += this.OnCharacterAdded;
-        characterService.CharacterDeleted += this.OnCharacterDeleted;
-
+        this.IsActive = true;
         this.AvailableCharacters = this.LoadAvailableCharacters();
+    }
+
+    public void Receive(CharacterChangedMessage message)
+    {
+        var character = message.Value;
+
+        if (character.Deleted)
+        {
+            this.OnCharacterDeleted(character);
+        }
+        else
+        {
+            this.OnCharacterAdded(character);
+        }
     }
 
     private ObservableCollection<Character> LoadAvailableCharacters()

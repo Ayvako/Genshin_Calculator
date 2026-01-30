@@ -1,11 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
-public class MainViewModel : ObservableObject
+public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>
 {
     private readonly InventoryService inventoryService;
 
@@ -16,40 +20,60 @@ public class MainViewModel : ObservableObject
         this.inventoryService = inventoryService;
         this.characterService = characterService;
 
-        characterService.CharacterAdded += this.OnCharacterAdded;
-        characterService.CharacterDeleted += this.OnCharacterDeleted;
-
+        this.IsActive = true;
         this.RefreshCharacters();
     }
 
-    public ObservableCollection<CharacterCardViewModel> Characters { get; set; } = [];
+    public ObservableCollection<CharacterCardViewModel> Characters { get; } = [];
+
+    public void Receive(CharacterChangedMessage message)
+    {
+        var character = message.Value;
+
+        if (character.Deleted)
+        {
+            var vm = this.Characters.FirstOrDefault(c => c.Character == character);
+            if (vm != null)
+            {
+                this.Characters.Remove(vm);
+                this.RefreshAllMaterials();
+            }
+
+            return;
+        }
+
+        if (this.Characters.All(c => c.Character != character))
+        {
+            this.RefreshCharacters();
+            return;
+        }
+
+        this.RefreshAllMaterials();
+    }
+
+    public void Receive(RefreshMaterialsRequestMessage message)
+    {
+        this.RefreshAllMaterials();
+    }
 
     private void RefreshCharacters()
     {
         this.Characters.Clear();
-        Inventory inventory = this.inventoryService.GetInventory();
+        var inventory = this.inventoryService.GetInventory();
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var character in inventory.ActiveCharacters)
         {
-            missingByCharacter.TryGetValue(character, out var materials);
-            var required = materials ?? [];
-
-            var charVm = new CharacterCardViewModel(character, required, this.characterService);
-            charVm.Edited += this.RefreshAllMaterials;
-
+            var materials = missingByCharacter.GetValueOrDefault(character) ?? [];
+            var charVm = this.CreateCharacterViewModel(character, materials);
             this.Characters.Add(charVm);
         }
     }
 
-    private void OnCharacterAdded(Character character)
+    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<Material> materials)
     {
-        this.RefreshCharacters();
-    }
-
-    private void OnCharacterDeleted(Character character)
-    {
-        this.RefreshCharacters();
+        var charVm = new CharacterCardViewModel(character, materials, this.characterService);
+        return charVm;
     }
 
     private void RefreshAllMaterials()
@@ -59,8 +83,7 @@ public class MainViewModel : ObservableObject
 
         foreach (var charVm in this.Characters)
         {
-            missingByCharacter.TryGetValue(charVm.Character, out var materials);
-            charVm.RequiredMaterials = materials ?? [];
+            charVm.RequiredMaterials = missingByCharacter.GetValueOrDefault(charVm.Character) ?? [];
         }
     }
 }

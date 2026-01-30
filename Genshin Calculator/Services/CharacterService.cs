@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Services;
@@ -19,42 +21,37 @@ public class CharacterService
             .ToDictionary(c => c.Name.ToLowerInvariant(), c => c);
     }
 
-    public event Action<Character>? CharacterUpdated;
-
-    public event Action<Character>? CharacterAdded;
-
-    public event Action<Character>? CharacterDeleted;
-
-    public static void ChangePriority(Character character1, Character character2)
+    public void ChangePriority(Character character1, Character character2)
     {
         (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
+        this.UpdateCharacter(character1);
+        this.UpdateCharacter(character2);
     }
 
     public void EnableCharacter(Character character)
     {
         character.Activated = true;
-        this.CharacterUpdated?.Invoke(character);
+        this.UpdateCharacter(character);
     }
 
     public void DisableCharacter(Character character)
     {
         character.Activated = false;
-        this.CharacterUpdated?.Invoke(character);
+        this.UpdateCharacter(character);
     }
 
     public void AddCharacter(Character character)
     {
         character.Deleted = false;
         character.Activated = true;
-        this.CharacterAdded?.Invoke(character);
+        this.UpdateCharacter(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Activated = false;
-
-        this.CharacterDeleted?.Invoke(character);
+        this.UpdateCharacter(character);
     }
 
     public Character? GetCharacterByName(string name)
@@ -72,5 +69,10 @@ public class CharacterService
     public IReadOnlyList<Character> GetCharacters()
     {
         return this.inventoryService.GetCharacters();
+    }
+
+    public void UpdateCharacter(Character character)
+    {
+        WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
     }
 }

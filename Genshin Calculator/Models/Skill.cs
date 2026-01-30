@@ -1,49 +1,48 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Genshin_Calculator.Models
+namespace Genshin_Calculator.Models;
+
+public partial class Skill : ObservableObject
 {
-    public partial class Skill : ObservableObject
+    public const int MinLevel = 1;
+
+    public const int MaxLevel = 10;
+
+    [ObservableProperty]
+    private int currentLevel = MinLevel;
+
+    [ObservableProperty]
+    private int desiredLevel = MinLevel;
+
+    public Skill(int currentLevel = MinLevel, int desiredLevel = MinLevel)
     {
-        public const int MinLevel = 1;
+        this.CurrentLevel = currentLevel;
+        this.DesiredLevel = desiredLevel;
+    }
 
-        public const int MaxLevel = 10;
+    public string Name { get; set; } = string.Empty;
 
-        [ObservableProperty]
-        private int currentLevel = MinLevel;
+    public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel) { Name = this.Name };
 
-        [ObservableProperty]
-        private int desiredLevel = MinLevel;
+    public void CopyLevelsFrom(Skill source)
+    {
+        this.CurrentLevel = source.CurrentLevel;
+        this.DesiredLevel = source.DesiredLevel;
+    }
 
-        public Skill(int currentLevel = MinLevel, int desiredLevel = MinLevel)
+    partial void OnCurrentLevelChanged(int value)
+    {
+        if (value > desiredLevel)
         {
-            this.CurrentLevel = currentLevel;
-            this.DesiredLevel = desiredLevel;
+            DesiredLevel = CurrentLevel;
         }
+    }
 
-        public string Name { get; set; } = string.Empty;
-
-        public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel) { Name = this.Name };
-
-        public void CopyLevelsFrom(Skill source)
+    partial void OnDesiredLevelChanged(int value)
+    {
+        if (CurrentLevel > value)
         {
-            this.CurrentLevel = source.CurrentLevel;
-            this.DesiredLevel = source.DesiredLevel;
-        }
-
-        partial void OnCurrentLevelChanged(int value)
-        {
-            if (value > desiredLevel)
-            {
-                DesiredLevel = CurrentLevel;
-            }
-        }
-
-        partial void OnDesiredLevelChanged(int value)
-        {
-            if (CurrentLevel > value)
-            {
-                CurrentLevel = value;
-            }
+            CurrentLevel = value;
         }
     }
 }

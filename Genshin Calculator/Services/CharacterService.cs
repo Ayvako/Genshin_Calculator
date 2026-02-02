@@ -44,6 +44,14 @@ public class CharacterService
     {
         character.Deleted = false;
         character.Activated = true;
+
+        var allCharacters = this.GetCharacters();
+        int maxPriority = allCharacters.Any()
+            ? allCharacters.Max(c => c.Priority)
+            : 0;
+
+        character.Priority = maxPriority + 1;
+
         this.UpdateCharacter(character);
     }
 

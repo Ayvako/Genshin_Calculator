@@ -21,8 +21,15 @@ public partial class Character : ObservableObject
     [ObservableProperty]
     private Skill burst;
 
+    [ObservableProperty]
+    private bool deleted = true;
+
+    [ObservableProperty]
+    private bool activated;
+
     public Character(string name, Assets assets)
     {
+
         this.Name = name;
         this.Assets = assets;
 
@@ -30,39 +37,30 @@ public partial class Character : ObservableObject
         this.AutoAttack = new Skill() { Name = "AutoAttack" };
         this.Elemental = new Skill() { Name = "Elemental" };
         this.Burst = new Skill() { Name = "Burst" };
-        this.Priority = ++Count;
     }
 
     public string Name { get; set; }
-
-    public bool Deleted { get; set; } = true;
-
-    public bool Activated { get; set; }
 
     public int Priority { get; set; }
 
     [JsonIgnore]
     public Assets? Assets { get; set; }
 
-    private static int Count { get; set; }
-
     public Character Clone()
     {
-        return new Character(this.Name, this.Assets!)
-        {
-            CurrentLevel = this.CurrentLevel,
-            DesiredLevel = this.DesiredLevel,
-            AutoAttack = this.AutoAttack.Clone(),
-            Elemental = this.Elemental.Clone(),
-            Burst = this.Burst.Clone(),
-            Activated = this.Activated,
-            Deleted = this.Deleted,
-            Priority = this.Priority,
-        };
+        var clone = (Character)this.MemberwiseClone();
+
+        clone.AutoAttack = this.AutoAttack.Clone();
+        clone.Elemental = this.Elemental.Clone();
+        clone.Burst = this.Burst.Clone();
+
+        return clone;
     }
 
     public void ApplyChangesFrom(Character other)
     {
+        this.Activated = other.Activated;
+        this.Deleted = other.Deleted;
         this.CurrentLevel = other.CurrentLevel;
         this.DesiredLevel = other.DesiredLevel;
         this.AutoAttack.CopyLevelsFrom(other.AutoAttack!);
@@ -72,17 +70,17 @@ public partial class Character : ObservableObject
 
     partial void OnCurrentLevelChanged(string value)
     {
-        if (LevelHelper.CompareLevels(value, DesiredLevel) > 0)
+        if (LevelHelper.CompareLevels(value, this.DesiredLevel) > 0)
         {
-            DesiredLevel = CurrentLevel;
+            this.DesiredLevel = value;
         }
     }
 
     partial void OnDesiredLevelChanged(string value)
     {
-        if (LevelHelper.CompareLevels(CurrentLevel, value) > 0)
+        if (LevelHelper.CompareLevels(this.CurrentLevel, value) > 0)
         {
-            CurrentLevel = value;
+            this.CurrentLevel = value;
         }
     }
 }

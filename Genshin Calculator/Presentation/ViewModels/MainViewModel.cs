@@ -62,7 +62,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         var inventory = this.inventoryService.GetInventory();
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
-        foreach (var character in inventory.ActiveCharacters)
+        foreach (var character in inventory.NotDeletedCharacters)
         {
             var materials = missingByCharacter.GetValueOrDefault(character) ?? [];
             var charVm = this.CreateCharacterViewModel(character, materials);

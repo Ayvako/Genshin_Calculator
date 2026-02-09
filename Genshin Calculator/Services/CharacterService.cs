@@ -28,15 +28,15 @@ public class CharacterService
         this.UpdateCharacter(character2);
     }
 
-    public void EnableCharacter(Character character)
+    public void ToggleCharacterActivity(Character character)
     {
-        character.Activated = true;
+        character.Activated = !character.Activated;
         this.UpdateCharacter(character);
     }
 
-    public void DisableCharacter(Character character)
+    public void SetCharacterActivity(Character character, bool isActive)
     {
-        character.Activated = false;
+        character.Activated = isActive;
         this.UpdateCharacter(character);
     }
 

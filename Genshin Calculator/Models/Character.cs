@@ -29,7 +29,6 @@ public partial class Character : ObservableObject
 
     public Character(string name, Assets assets)
     {
-
         this.Name = name;
         this.Assets = assets;
 

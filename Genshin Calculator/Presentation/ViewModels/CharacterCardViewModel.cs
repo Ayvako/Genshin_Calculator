@@ -55,43 +55,26 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void Edit()
     {
-        var editVm = new CharacterEditViewModel(this.Character);
-        var editWindow = new CharacterEditView
-        {
-            DataContext = editVm,
-        };
-        editVm.Saved += () =>
-        {
-            this.characterService.UpdateCharacter(this.Character);
+        var editVm = new CharacterEditViewModel(this.Character, this.characterService);
+        this.OpenEditWindow(editVm);
+    }
 
-            WeakReferenceMessenger.Default.Send(new RefreshMaterialsRequestMessage());
-            editWindow.Close();
-        };
+    private void OpenEditWindow(CharacterEditViewModel vm)
+    {
+        var editWindow = new CharacterEditView { DataContext = vm };
 
-        editVm.RequestClose += () =>
-        {
-            editWindow.Close();
-        };
+        vm.RequestClose += () => editWindow.Close();
 
         editWindow.ShowDialog();
     }
 
     [RelayCommand]
-    private void Ascend() => this.Character.Activated = !this.Character.Activated;
+    private void Ascend() => throw new NotImplementedException();
 
     [RelayCommand]
     private void ToggleActive()
     {
-        if (this.Character.Activated)
-        {
-            this.characterService.DisableCharacter(this.Character);
-        }
-        else
-        {
-            this.characterService.EnableCharacter(this.Character);
-        }
-
-        this.OnPropertyChanged(nameof(this.IsActivated));
+        this.characterService.ToggleCharacterActivity(this.Character);
     }
 
     [RelayCommand]

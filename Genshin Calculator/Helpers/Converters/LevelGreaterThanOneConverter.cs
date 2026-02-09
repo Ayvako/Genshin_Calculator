@@ -23,9 +23,9 @@ public class LevelGreaterThanOneConverter : IValueConverter
         }
 
         string s = value.ToString()!;
-        if (s.EndsWith('+'))
+        if (s.EndsWith('★'))
         {
-            s = s.TrimEnd('+');
+            s = s.TrimEnd('★');
         }
 
         if (int.TryParse(s, out int num))

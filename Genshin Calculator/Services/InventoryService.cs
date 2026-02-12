@@ -72,7 +72,11 @@ public class InventoryService
 
         long totalExpPool = CalculateTotalExp(tempInventory);
 
-        foreach (var character in sourceInventory.NotDeletedCharacters)
+        var sortedCharacters = sourceInventory.NotDeletedCharacters
+        .OrderBy(c => c.Priority)
+        .ToList();
+
+        foreach (var character in sortedCharacters)
         {
             if (!character.Activated)
             {

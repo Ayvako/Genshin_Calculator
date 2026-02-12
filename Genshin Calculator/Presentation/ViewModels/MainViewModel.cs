@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
+using GongSolutions.Wpf.DragDrop;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
-public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>, IRecipient<InventoryChangedMessage>
+public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>, IRecipient<InventoryChangedMessage>, IDropTarget
 {
     private readonly InventoryService inventoryService;
 
@@ -29,6 +31,46 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; } = [];
+
+    public void DragOver(IDropInfo dropInfo)
+    {
+        if (dropInfo.Data is CharacterCardViewModel && dropInfo.TargetItem is CharacterCardViewModel)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = DragDropEffects.Move;
+        }
+    }
+
+    public void Drop(IDropInfo dropInfo)
+    {
+        if (dropInfo.Data is not CharacterCardViewModel sourceItem ||
+            dropInfo.TargetItem is not CharacterCardViewModel targetItem)
+        {
+            return;
+        }
+
+        int oldIndex = this.Characters.IndexOf(sourceItem);
+        int newIndex = this.Characters.IndexOf(targetItem);
+
+        if (oldIndex < 0 || newIndex < 0 || oldIndex == newIndex)
+        {
+            return;
+        }
+
+        this.Characters.Move(oldIndex, newIndex);
+
+        this.UpdatePriorities();
+
+        this.RefreshAllMaterials();
+    }
+
+    private void UpdatePriorities()
+    {
+        for (int i = 0; i < this.Characters.Count; i++)
+        {
+            this.Characters[i].Character.Priority = i;
+        }
+    }
 
     public void Receive(CharacterChangedMessage message)
     {
@@ -55,6 +97,11 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         this.RefreshAllMaterials();
     }
 
+    public void Receive(InventoryChangedMessage message)
+    {
+        this.RefreshAllMaterials();
+    }
+
     public void Receive(RefreshMaterialsRequestMessage message)
     {
         this.RefreshAllMaterials();
@@ -66,7 +113,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         var inventory = this.inventoryService.GetInventory();
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
-        foreach (var character in inventory.NotDeletedCharacters)
+        var sortedChars = inventory.NotDeletedCharacters.OrderBy(c => c.Priority);
+
+        foreach (var character in sortedChars)
         {
             var materials = missingByCharacter.GetValueOrDefault(character) ?? [];
             var charVm = this.CreateCharacterViewModel(character, materials);
@@ -89,10 +138,5 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         {
             charVm.RequiredMaterials = missingByCharacter.GetValueOrDefault(charVm.Character) ?? [];
         }
-    }
-
-    public void Receive(InventoryChangedMessage message)
-    {
-        this.RefreshAllMaterials();
     }
 }

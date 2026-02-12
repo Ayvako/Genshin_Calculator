@@ -27,6 +27,9 @@ public partial class Character : ObservableObject
     [ObservableProperty]
     private bool activated;
 
+    [ObservableProperty]
+    public int priority;
+
     public Character(string name, Assets assets)
     {
         this.Name = name;
@@ -39,8 +42,6 @@ public partial class Character : ObservableObject
     }
 
     public string Name { get; set; }
-
-    public int Priority { get; set; }
 
     [JsonIgnore]
     public Assets? Assets { get; set; }

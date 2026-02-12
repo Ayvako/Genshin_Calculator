@@ -1,11 +1,15 @@
 ﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 
 namespace Genshin_Calculator.Models;
 
-public class Material
+public partial class Material : ObservableObject
 {
+    [ObservableProperty]
+    private int amount;
+
     public Material(string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         this.Name = name;
@@ -15,8 +19,6 @@ public class Material
     }
 
     public string Name { get; set; }
-
-    public int Amount { get; set; }
 
     public MaterialTypes Type { get; set; }
 
@@ -37,11 +39,6 @@ public class Material
     public override int GetHashCode()
     {
         return this.Name.GetHashCode();
-    }
-
-    public override string ToString()
-    {
-        return $"Material: {this.Name,-25} Amount: {this.Amount,-10} Type: {this.Type}";
     }
 
     public Material Clone() => (Material)this.MemberwiseClone();

@@ -51,6 +51,13 @@ public partial class CharacterEditViewModel : ObservableObject
 
     public Character Editable { get; }
 
+    private static string EnsureLevelIsSufficient(string heroLevel, int talentLevel)
+    {
+        return talentLevel > LevelHelper.GetMaxTalentLevel(heroLevel)
+            ? LevelHelper.GetRequiredLevelForTalent(talentLevel)
+            : heroLevel;
+    }
+
     [RelayCommand]
     private void TogglePopup() => this.IsPopupOpen = !this.IsPopupOpen;
 
@@ -112,11 +119,11 @@ public partial class CharacterEditViewModel : ObservableObject
 
         if (e.PropertyName == nameof(Skill.CurrentLevel))
         {
-            this.Editable.CurrentLevel = this.EnsureLevelIsSufficient(this.Editable.CurrentLevel, talent.CurrentLevel);
+            this.Editable.CurrentLevel = EnsureLevelIsSufficient(this.Editable.CurrentLevel, talent.CurrentLevel);
         }
         else if (e.PropertyName == nameof(Skill.DesiredLevel))
         {
-            this.Editable.DesiredLevel = this.EnsureLevelIsSufficient(this.Editable.DesiredLevel, talent.DesiredLevel);
+            this.Editable.DesiredLevel = EnsureLevelIsSufficient(this.Editable.DesiredLevel, talent.DesiredLevel);
         }
     }
 
@@ -152,12 +159,5 @@ public partial class CharacterEditViewModel : ObservableObject
                 talent.CurrentLevel = Math.Min(talent.CurrentLevel, limit);
             }
         }
-    }
-
-    private string EnsureLevelIsSufficient(string heroLevel, int talentLevel)
-    {
-        return talentLevel > LevelHelper.GetMaxTalentLevel(heroLevel)
-            ? LevelHelper.GetRequiredLevelForTalent(talentLevel)
-            : heroLevel;
     }
 }

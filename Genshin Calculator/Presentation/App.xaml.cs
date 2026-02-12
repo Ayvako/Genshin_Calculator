@@ -41,6 +41,7 @@ public partial class App : Application
         services.AddSingleton<BookMaterialProvider>();
         services.AddSingleton<EnemyMaterialProvider>();
 
+        services.AddSingleton<IDialogService, WpfDialogService>();
         services.AddSingleton<IInventoryStore, InventoryStore>();
 
         Configuration = builder.Build();

@@ -5,8 +5,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
+using Genshin_Calculator.Services.Interfaces;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
@@ -14,16 +14,19 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 {
     private readonly CharacterService characterService;
 
+    private readonly IDialogService dialogService;
+
     [ObservableProperty]
     private List<Material> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService)
+    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService, IDialogService dialogService)
     {
         this.characterService = characterService;
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
 
         this.IsActive = true;
+        this.dialogService = dialogService;
     }
 
     public Character Character { get; }
@@ -55,17 +58,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void Edit()
     {
-        var editVm = new CharacterEditViewModel(this.Character, this.characterService);
-        this.OpenEditWindow(editVm);
-    }
-
-    private void OpenEditWindow(CharacterEditViewModel vm)
-    {
-        var editWindow = new CharacterEditView { DataContext = vm };
-
-        vm.RequestClose += () => editWindow.Close();
-
-        editWindow.ShowDialog();
+        this.dialogService.ShowCharacterEdit(this.Character);
     }
 
     [RelayCommand]

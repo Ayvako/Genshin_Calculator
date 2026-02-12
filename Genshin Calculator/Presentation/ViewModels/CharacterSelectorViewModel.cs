@@ -29,12 +29,12 @@ public partial class CharacterSelectorViewModel : ObservableObject
     [ObservableProperty]
     private bool isSortByRarity = false;
 
-    public CharacterSelectorViewModel(ObservableCollection<Character> availableCharacters, CharacterService characterServise)
+    public CharacterSelectorViewModel(CharacterService characterServise)
     {
         this.characterService = characterServise;
-        this.AvailableCharacters = availableCharacters;
+        var deletedChars = this.characterService.GetCharacters().Where(c => c.Deleted);
+        this.AvailableCharacters = new ObservableCollection<Character>(deletedChars);
         this.FilteredCharacters = [];
-
         this.ApplyFilter();
     }
 
@@ -144,7 +144,6 @@ public partial class CharacterSelectorViewModel : ObservableObject
     private void SelectCharacter(Character character)
     {
         this.characterService.AddCharacter(character);
-        this.AvailableCharacters.Remove(character);
         this.CloseRequested?.Invoke(this, true);
     }
 

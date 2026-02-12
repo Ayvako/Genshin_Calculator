@@ -26,6 +26,26 @@ public enum MaterialTypes
     Exp,
 
     /// <summary>
+    /// Represents local specialties.
+    /// </summary>
+    LocalSpecialty,
+
+    /// <summary>
+    /// Represents mini bosses.
+    /// </summary>
+    MiniBoss,
+
+    /// <summary>
+    /// Represents weekly bosses.
+    /// </summary>
+    WeeklyBoss,
+
+    /// <summary>
+    /// Represents the Mora.
+    /// </summary>
+    Mora,
+
+    /// <summary>
     /// Represents other types.
     /// </summary>
     Other,

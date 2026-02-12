@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows;
+using System.Windows.Resources;
+using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using Newtonsoft.Json;
 
 namespace Genshin_Calculator.Services.Materials;
 
@@ -12,8 +17,24 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected MaterialProvider(string jsonName)
     {
-        this.materials = DataIOService.GetMaterials<Dictionary<TKey, string[]>>(jsonName)
+        this.materials = GetMaterials<Dictionary<TKey, string[]>>(jsonName)
             ?? throw new InvalidOperationException($"{jsonName}.json not found");
+    }
+
+    public static T? GetMaterials<T>(string materials)
+    {
+        var uri = ResourcePaths.MaterialsJson(materials);
+
+        StreamResourceInfo? info = Application.GetResourceStream(uri);
+        if (info == null)
+        {
+            return default;
+        }
+
+        using var reader = new StreamReader(info.Stream);
+        var json = reader.ReadToEnd();
+
+        return JsonConvert.DeserializeObject<T>(json);
     }
 
     public string GetMaterial(Character character, MaterialRarity rarity)

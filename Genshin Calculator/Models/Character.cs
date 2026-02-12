@@ -56,12 +56,38 @@ public partial class Character : ObservableObject
         return clone;
     }
 
+    public void Reset()
+    {
+        this.CurrentLevel = "1";
+        this.DesiredLevel = "1";
+        this.Activated = false;
+
+        if (this.AutoAttack != null)
+        {
+            this.AutoAttack.CurrentLevel = 1;
+            this.AutoAttack.DesiredLevel = 1;
+        }
+
+        if (this.Elemental != null)
+        {
+            this.Elemental.CurrentLevel = 1;
+            this.Elemental.DesiredLevel = 1;
+        }
+
+        if (this.Burst != null)
+        {
+            this.Burst.CurrentLevel = 1;
+            this.Burst.DesiredLevel = 1;
+        }
+    }
+
     public void ApplyChangesFrom(Character other)
     {
         this.Activated = other.Activated;
         this.Deleted = other.Deleted;
         this.CurrentLevel = other.CurrentLevel;
         this.DesiredLevel = other.DesiredLevel;
+        this.Priority = other.Priority;
         this.AutoAttack.CopyLevelsFrom(other.AutoAttack!);
         this.Elemental.CopyLevelsFrom(other.Elemental!);
         this.Burst.CopyLevelsFrom(other.Burst!);

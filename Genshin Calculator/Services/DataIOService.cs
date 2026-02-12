@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Resources;
-using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation;
@@ -16,142 +14,184 @@ namespace Genshin_Calculator.Services;
 
 public class DataIOService
 {
-    private const string Characters = "Characters";
-
-    private static readonly string ExportFilePath = App.Configuration["Paths:ExportFile"]!;
-
-    private static readonly string InitFilePath = App.Configuration["Paths:InitFile"]!;
-
     private readonly IInventoryStore store;
+
+    private readonly string exportFilePath = App.Configuration["Paths:ExportFile"] ?? "Data/Export.json";
+
+    private readonly string initFilesPath = App.Configuration["Paths:InitFiles"] ?? "pack://application:,,,/Resources/Json";
 
     public DataIOService(IInventoryStore store)
     {
         this.store = store;
     }
 
-    public static T? GetMaterials<T>(string materials)
+    public void Import()
     {
-        var uri = ResourcePaths.MaterialsJson(materials);
+        var inventoryMaterials = new List<Material>();
 
-        StreamResourceInfo? info = Application.GetResourceStream(uri);
-        if (info == null)
+        try
         {
-            return default;
+            var mainData = this.LoadJson("Initializations.json");
+            if (mainData["Materials"] is JObject simpleGroups)
+            {
+                AddSimpleGroup(inventoryMaterials, simpleGroups, "LocalSpecialty", MaterialTypes.LocalSpecialty, MaterialRarity.White);
+                AddSimpleGroup(inventoryMaterials, simpleGroups, "MiniBoss", MaterialTypes.MiniBoss, MaterialRarity.Violet);
+                AddSimpleGroup(inventoryMaterials, simpleGroups, "WeeklyBoss", MaterialTypes.WeeklyBoss, MaterialRarity.Orange);
+                AddSimpleGroup(inventoryMaterials, simpleGroups, "Other", MaterialTypes.Other, MaterialRarity.Orange);
+                AddSimpleGroup(inventoryMaterials, simpleGroups, "Mora", MaterialTypes.Mora, MaterialRarity.Blue);
+            }
+            this.LoadTieredGroup(inventoryMaterials, "Exp.json", MaterialTypes.Exp, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+
+            this.LoadTieredGroup(inventoryMaterials, "Books.json", MaterialTypes.Book, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+
+            this.LoadTieredGroup(inventoryMaterials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
+
+            this.LoadTieredGroup(inventoryMaterials, "Gems.json", MaterialTypes.Gem, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange]);
+
+            this.store.Inventory.Materials = inventoryMaterials;
+
+            this.LoadCharacters();
+
+            this.LoadUserExport();
+
+            Console.WriteLine("✅ Import completed");
         }
-
-        using var reader = new StreamReader(info.Stream);
-        var json = reader.ReadToEnd();
-
-        return JsonConvert.DeserializeObject<T>(json);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Import Error: {ex.Message}");
+            throw;
+        }
     }
 
-    public static void Export(Inventory inventory, List<Character> characters)
+    public void Export(Inventory inventory, List<Character> characters)
     {
         var exportJson = new JObject
         {
             ["Inventory"] = JToken.FromObject(inventory),
-            [Characters] = JToken.FromObject(characters),
+            ["Characters"] = JToken.FromObject(characters),
         };
 
-        Directory.CreateDirectory("Data");
-        File.WriteAllText(ExportFilePath, exportJson.ToString(Formatting.Indented));
-
-        Console.WriteLine("Export");
-    }
-
-    public void Import()
-    {
-        var characters = this.store.Inventory.Characters;
-        Uri resourceUri = new(InitFilePath);
-        StreamResourceInfo resourceInfo = Application.GetResourceStream(resourceUri)
-            ?? throw new FileNotFoundException("Initializations.json not found in resources.");
-        using StreamReader reader = new(resourceInfo.Stream);
-
-        string jsonContent = reader.ReadToEnd();
-        JObject initJson = JObject.Parse(jsonContent);
-        ArgumentNullException.ThrowIfNull(initJson);
-
-        var materials = initJson["Materials"]?.ToObject<Dictionary<string, List<string>>>()
-            ?? throw new InvalidOperationException("Materials section is invalid or missing");
-
-        var merged = MergeLists(
-            materials["LocalSpecialty"],
-            materials["MiniBoss"],
-            materials["WeeklyBoss"],
-            materials["Other"]);
-
-        this.store.Inventory.Materials = [.. merged.Select(m => new Material(m, MaterialTypes.Other, 0, 0))];
-
-        var characterAssets = initJson[Characters]?.ToObject<List<Assets>>()
-            ?? throw new InvalidOperationException("Characters section is missing or invalid");
-        foreach (var asset in characterAssets)
+        var directory = Path.GetDirectoryName(this.exportFilePath);
+        if (!string.IsNullOrEmpty(directory))
         {
-            characters.Add(new Character(asset.Name, asset));
+            Directory.CreateDirectory(directory);
         }
 
-        if (File.Exists(ExportFilePath))
-        {
-            JObject exportJson = JObject.Parse(File.ReadAllText(ExportFilePath));
-
-            if (exportJson["Inventory"] is not null)
-            {
-                var importedInventory = exportJson["Inventory"]?.ToObject<Inventory>()
-                    ?? throw new InvalidOperationException("Failed to deserialize Inventory");
-                this.store.Inventory = MergeInventories(this.store.Inventory, importedInventory);
-            }
-
-            if (exportJson[Characters] is not null)
-            {
-                var importedChars = exportJson[Characters]?.ToObject<List<Character>>()
-                    ?? [];
-
-                UpdateCharacters(characters, importedChars);
-            }
-        }
-
-        Console.WriteLine("✅ Import completed");
+        File.WriteAllText(this.exportFilePath, exportJson.ToString(Formatting.Indented));
+        Console.WriteLine($"💾 Export saved to {this.exportFilePath}");
     }
 
     private static void UpdateCharacters(List<Character> baseChars, List<Character> importedChars)
     {
+        var importMap = importedChars.ToDictionary(c => c.Name);
+
         foreach (var c in baseChars)
         {
-            var update = importedChars.FirstOrDefault(x => x.Name == c.Name);
-            if (update == null)
+            if (importMap.TryGetValue(c.Name, out var update))
             {
-                continue;
+                c.ApplyChangesFrom(update);
             }
-
-            c.Priority = update.Priority;
-            c.CurrentLevel = update.CurrentLevel;
-            c.DesiredLevel = update.DesiredLevel;
-            c.AutoAttack = update.AutoAttack;
-            c.Elemental = update.Elemental;
-            c.Burst = update.Burst;
-            c.Deleted = update.Deleted;
-            c.Activated = update.Activated;
         }
     }
 
-    private static Inventory MergeInventories(Inventory baseInv, Inventory imported)
+    private static void MergeInventories(Inventory baseInv, Inventory imported)
     {
-        foreach (var m in imported.Materials)
+        var importedDict = imported.Materials.ToDictionary(m => m.Name);
+
+        foreach (var baseMat in baseInv.Materials)
         {
-            var existing = baseInv.GetMaterial(m.Name);
-            if (existing == null)
+            if (importedDict.TryGetValue(baseMat.Name, out var importedMat))
             {
-                baseInv.Materials.Add(new Material(m.Name, m.Type, m.Rarity, m.Amount));
-            }
-            else
-            {
-                existing.Amount = m.Amount;
+                baseMat.Amount = importedMat.Amount;
             }
         }
 
         baseInv.RefreshCache();
-        return baseInv;
     }
 
-    private static List<string> MergeLists(params List<string>[] lists) =>
-        [.. lists.SelectMany(x => x).Distinct()];
+    private static void AddSimpleGroup(List<Material> list, JObject source, string key, MaterialTypes type, MaterialRarity rarity)
+    {
+        if (source[key] is JArray names)
+        {
+            foreach (var name in names)
+            {
+                list.Add(new Material(name.ToString(), type, rarity, 0));
+            }
+        }
+    }
+
+    private JObject LoadJson(string fileName)
+    {
+        var fullPath = $"{this.initFilesPath.TrimEnd('/')}/{fileName}";
+
+        Uri uri = new(fullPath);
+        var info = Application.GetResourceStream(uri)
+                   ?? throw new FileNotFoundException($"Resource not found: {fullPath}");
+
+        using var reader = new StreamReader(info.Stream);
+        return JObject.Parse(reader.ReadToEnd());
+    }
+
+    private void LoadCharacters()
+    {
+        var json = this.LoadJson("Characters.json");
+        var assets = json["Characters"]?.ToObject<List<Assets>>()
+                     ?? throw new InvalidOperationException("Characters section missing");
+
+        this.store.Inventory.Characters = [.. assets.Select(a => new Character(a.Name, a))];
+    }
+
+    private void LoadTieredGroup(List<Material> targetList, string fileName, MaterialTypes type, MaterialRarity[] rarities)
+    {
+        var json = this.LoadJson(fileName);
+
+        foreach (var property in json.Properties())
+        {
+            var names = property.Value.ToObject<string[]>();
+            if (names == null)
+            {
+                continue;
+            }
+
+            int count = Math.Min(names.Length, rarities.Length);
+
+            for (int i = 0; i < count; i++)
+            {
+                targetList.Add(new Material(names[i], type, rarities[i], 0));
+            }
+        }
+    }
+
+    private void LoadUserExport()
+    {
+        if (!File.Exists(this.exportFilePath))
+        {
+            return;
+        }
+
+        try
+        {
+            var jsonContent = File.ReadAllText(this.exportFilePath);
+            var exportJson = JObject.Parse(jsonContent);
+
+            if (exportJson["Inventory"] is not null)
+            {
+                var importedInventory = exportJson["Inventory"]?.ToObject<Inventory>();
+                if (importedInventory != null)
+                {
+                    MergeInventories(this.store.Inventory, importedInventory);
+                }
+            }
+
+            if (exportJson["Characters"] is not null)
+            {
+                var importedChars = exportJson["Characters"]?.ToObject<List<Character>>() ?? [];
+                UpdateCharacters(this.store.Inventory.Characters, importedChars);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"⚠️ Warning: Failed to load user export. {ex.Message}");
+        }
+    }
 }

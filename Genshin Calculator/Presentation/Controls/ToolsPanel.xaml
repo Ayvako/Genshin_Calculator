@@ -13,7 +13,7 @@
                     Width="150"
                     Height="35"
                     Style="{StaticResource RoundedButtonStyle}"
-                    Command="{Binding TogglePopupCommand}" />
+                    Command="{Binding ShowCharacterSelectorCommand}" />
 
             <Button Content="Manage Inventory" Padding="0"
                     Width="150"

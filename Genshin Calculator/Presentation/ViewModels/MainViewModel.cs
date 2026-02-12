@@ -6,19 +6,23 @@ using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
+using Genshin_Calculator.Services.Interfaces;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
-public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>
+public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>, IRecipient<InventoryChangedMessage>
 {
     private readonly InventoryService inventoryService;
 
     private readonly CharacterService characterService;
 
-    public MainViewModel(InventoryService inventoryService, CharacterService characterService)
+    private readonly IDialogService dialogService;
+
+    public MainViewModel(InventoryService inventoryService, CharacterService characterService, IDialogService dialogService)
     {
         this.inventoryService = inventoryService;
         this.characterService = characterService;
+        this.dialogService = dialogService;
 
         this.IsActive = true;
         this.RefreshCharacters();
@@ -72,7 +76,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
 
     private CharacterCardViewModel CreateCharacterViewModel(Character character, List<Material> materials)
     {
-        var charVm = new CharacterCardViewModel(character, materials, this.characterService);
+        var charVm = new CharacterCardViewModel(character, materials, this.characterService, this.dialogService);
         return charVm;
     }
 
@@ -85,5 +89,10 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         {
             charVm.RequiredMaterials = missingByCharacter.GetValueOrDefault(charVm.Character) ?? [];
         }
+    }
+
+    public void Receive(InventoryChangedMessage message)
+    {
+        this.RefreshAllMaterials();
     }
 }

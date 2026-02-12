@@ -39,10 +39,25 @@ public class InventoryService
         this.characterUpgrade = characterUpgrade;
     }
 
-    public Inventory GetInventory()
+    public void Upgrade(Character character, Inventory inventory)
     {
-        return this.store.Inventory;
+        var missingMap = this.CalculateMissingMaterials(inventory);
+        var missing = missingMap.ContainsKey(character) ? missingMap[character] : [];
+
+        if (missing.Count == 0)
+        {
+            character.CurrentLevel = character.DesiredLevel;
+            character.AutoAttack.CurrentLevel = character.AutoAttack.DesiredLevel;
+            character.Elemental.CurrentLevel = character.Elemental.DesiredLevel;
+            character.Burst.CurrentLevel = character.Burst.DesiredLevel;
+        }
+        else
+        {
+            Debug.WriteLine($"{character.Name}: Cannot upgrade, missing materials.");
+        }
     }
+
+    public Inventory GetInventory() => this.store.Inventory;
 
     public IReadOnlyList<Character> GetCharacters()
     {
@@ -51,206 +66,212 @@ public class InventoryService
 
     public Dictionary<Character, List<Material>> CalculateMissingMaterials(Inventory sourceInventory)
     {
-        var missingMaterialsByCharacter = new Dictionary<Character, List<Material>>();
-        var inventoryCopy = sourceInventory.Clone();
-        var missingMaterials = new List<Material>();
+        var tempInventory = sourceInventory.Clone();
 
-        int totalExp = ((inventoryCopy.GetMaterial("HerosWit")?.Amount ?? 0) * 20)
-                + ((inventoryCopy.GetMaterial("AdventurersExperience")?.Amount ?? 0) * 5)
-                + ((inventoryCopy.GetMaterial("WanderersAdvice")?.Amount ?? 0) * 1);
+        var result = new Dictionary<Character, List<Material>>();
+
+        long totalExpPool = CalculateTotalExp(tempInventory);
 
         foreach (var character in sourceInventory.NotDeletedCharacters)
         {
-            if (!character.Activated!)
+            if (!character.Activated)
             {
                 continue;
             }
 
-            foreach (var required in this.TotalCost(character).OrderBy(m => m.Type))
+            var missingForChar = new List<Material>();
+
+            var requiredMaterials = this.TotalCost(character).OrderByDescending(m => m.Rarity);
+
+            foreach (var required in requiredMaterials)
             {
                 switch (required.Type)
                 {
                     case MaterialTypes.Exp:
-                        totalExp = ConsumeExperience(required, missingMaterials, totalExp);
+
+                        if (totalExpPool >= required.Amount)
+                        {
+                            totalExpPool -= (long)required.Amount;
+                        }
+                        else
+                        {
+                            long shortageXP = (long)required.Amount - totalExpPool;
+
+                            int booksNeeded = (int)Math.Ceiling(shortageXP / 20000.0);
+
+                            if (booksNeeded > 0)
+                            {
+                                missingForChar.Add(new Material(
+                                    "HerosWit",
+                                    MaterialTypes.Exp,
+                                    MaterialRarity.Violet,
+                                    booksNeeded
+                                ));
+                            }
+
+                            totalExpPool = 0;
+                        }
+
                         break;
 
                     case MaterialTypes.Book:
                     case MaterialTypes.Gem:
                     case MaterialTypes.Enemy:
-                        this.ConsumeCraftableMaterials(inventoryCopy, required, character, missingMaterials);
+                        this.ConsumeWithCascade(tempInventory, required, character, missingForChar);
                         break;
 
                     default:
-                        ConsumeMaterialFromInventory(inventoryCopy, required, missingMaterials);
+                        ConsumeDirectly(tempInventory, required, missingForChar);
                         break;
                 }
             }
 
-            missingMaterialsByCharacter[character] = [.. missingMaterials];
-            missingMaterials.Clear();
-        }
-
-        return missingMaterialsByCharacter;
-    }
-
-    public void Upgrade(Character character, Inventory inventory)
-    {
-        var requiredMaterials = this.CalculateMissingMaterials(inventory);
-        if (IsUpgradable(requiredMaterials[character]))
-        {
-            character.CurrentLevel = character.DesiredLevel;
-
-            Skill autoAttack = character.AutoAttack;
-            Skill elemental = character.Elemental;
-            Skill burst = character.Burst;
-
-            autoAttack.CurrentLevel = autoAttack.DesiredLevel;
-            elemental.CurrentLevel = elemental.DesiredLevel;
-            burst.CurrentLevel = burst.DesiredLevel;
-
-            foreach (Material m in requiredMaterials[character])
+            if (missingForChar.Count > 0)
             {
-                inventory.SubtractMaterial(m);
+                result[character] = SortMaterialsForDisplay(missingForChar);
             }
         }
-        else
-        {
-            Debug.WriteLine($"{character} Error Upgrade");
-        }
+
+        return result;
     }
 
-    private static bool IsUpgradable(List<Material> materials)
+    private static List<Material> SortMaterialsForDisplay(List<Material> materials)
     {
-        return materials.All(m => m.Amount == 0);
+        return [.. materials
+            .OrderBy(m => GetTypePriority(m.Type))
+            .ThenBy(m => m.Rarity)];
     }
 
-    private static void ConsumeMaterialFromInventory(Inventory inventory, Material m, List<Material> remainingMaterials)
+    private static int GetTypePriority(MaterialTypes type) => type switch
     {
-        var available = inventory.GetMaterial(m.Name)?.Amount ?? 0;
+        MaterialTypes.Gem => 1,
+        MaterialTypes.WeeklyBoss => 2,
+        MaterialTypes.MiniBoss => 3,
+        MaterialTypes.LocalSpecialty => 4,
+        MaterialTypes.Enemy => 5,
+        MaterialTypes.Book => 6,
+        MaterialTypes.Mora => 99,
+        MaterialTypes.Exp => 100,
+        _ => 50,
+    };
 
-        if (available < m.Amount)
-        {
-            remainingMaterials.Add(new Material(m.Name, m.Type, m.Rarity, m.Amount - available));
-            inventory.SetMaterial(new Material(m.Name, m.Type, m.Rarity, 0));
-        }
-        else
-        {
-            inventory.SetMaterial(new Material(m.Name, m.Type, m.Rarity, available - m.Amount));
-            remainingMaterials.Add(new Material(m.Name, m.Type, m.Rarity, 0));
-        }
-    }
-
-    private static int ConsumeExperience(Material requiredMaterial, List<Material> inventory, int exp)
+    private static void ConsumeDirectly(Inventory inventory, Material required, List<Material> missingList)
     {
-        if (requiredMaterial.Name == "WanderersAdvice" && exp < requiredMaterial.Amount)
-        {
-            inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, requiredMaterial.Amount - exp));
-            exp = 0;
-        }
-        else
-        {
-            inventory.Add(new Material(requiredMaterial.Name, requiredMaterial.Type, requiredMaterial.Rarity, 0));
-            exp -= requiredMaterial.Amount;
-        }
-
-        return exp;
-    }
-
-    private static MaterialRarity? GetLowerColor(List<MaterialRarity> colors, MaterialRarity current)
-    {
-        int i = colors.IndexOf(current);
-        return i > 0 ? colors[i - 1] : null;
-    }
-
-    private static void ConsumeWithCrafting(Inventory inventory, Dictionary<MaterialRarity, string> chain, MaterialRarity color, Material required, List<Material> shortages)
-    {
-        string materialName = chain[color];
-        int available = inventory.GetMaterial(materialName)?.Amount ?? 0;
+        var item = inventory.GetMaterial(required.Name);
+        int available = item?.Amount ?? 0;
 
         if (available >= required.Amount)
         {
-            inventory.SetMaterial(new(materialName, required.Type, required.Rarity, available - required.Amount));
-            shortages.Add(new(materialName, required.Type, required.Rarity, 0));
-            return;
-        }
-
-        int missing = required.Amount - available;
-        MaterialRarity? lowerColor = GetLowerColor([.. chain.Keys], color);
-
-        if (lowerColor is null)
-        {
-            shortages.Add(new(materialName, required.Type, required.Rarity, missing));
-            inventory.SetMaterial(new(materialName, required.Type, required.Rarity, 0));
-            return;
-        }
-
-        string lowerName = chain[lowerColor.Value];
-        int lowerAvailable = inventory.GetMaterial(lowerName)?.Amount ?? 0;
-        int canCraft = lowerAvailable / 3;
-        int totalPossible = available + canCraft;
-
-        if (totalPossible < required.Amount)
-        {
-            shortages.Add(new(materialName, required.Type, required.Rarity, required.Amount - totalPossible));
-
-            inventory.SetMaterial(new(lowerName, required.Type, required.Rarity, lowerAvailable % 3));
-            inventory.SetMaterial(new(materialName, required.Type, required.Rarity, 0));
+            inventory.SetMaterial(new Material(required.Name, required.Type, required.Rarity, available - required.Amount));
         }
         else
         {
-            int needToCraft = missing * 3;
-            inventory.SetMaterial(new(lowerName, required.Type, required.Rarity, lowerAvailable - needToCraft));
-            inventory.SetMaterial(new(materialName, required.Type, required.Rarity, 0));
-            shortages.Add(new(materialName, required.Type, required.Rarity, 0));
+            inventory.SetMaterial(new Material(required.Name, required.Type, required.Rarity, 0));
+            missingList.Add(new Material(required.Name, required.Type, required.Rarity, required.Amount - available));
         }
     }
 
-    private static List<Material> Merge(params List<Material>[] dictionaries)
+    private static long CalculateTotalExp(Inventory inv)
     {
-        IEnumerable<Material> merged = dictionaries[0];
-        for (int i = 1; i < dictionaries.Length; i++)
+        return ((long)(inv.GetMaterial("HerosWit")?.Amount ?? 0) * 20000)
+             + ((long)(inv.GetMaterial("AdventurersExperience")?.Amount ?? 0) * 5000)
+             + ((long)(inv.GetMaterial("WanderersAdvice")?.Amount ?? 0) * 1000);
+    }
+
+    private static List<MaterialRarity> GetRarityChain(MaterialTypes type) => type switch
+    {
+        MaterialTypes.Gem => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange],
+        MaterialTypes.Book => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
+        MaterialTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
+        _ => [],
+    };
+
+    private void ConsumeWithCascade(Inventory inventory, Material required, Character character, List<Material> missingList)
+    {
+        var chain = GetRarityChain(required.Type);
+
+        int tierIndex = chain.IndexOf(required.Rarity);
+        if (tierIndex == -1)
         {
-            merged = merged.Concat(dictionaries[i]);
+            return;
         }
 
-        var groupedMaterials = merged.GroupBy(m => new { m.Name })
-            .Select(g => new Material(g.Key.Name, g.First().Type, g.First().Rarity, g.Sum(m => m.Amount)))
-            .ToList();
+        int remainingNeeded = this.ProcessTier(inventory, character, required.Type, chain, tierIndex, required.Amount);
 
-        return groupedMaterials;
+        if (remainingNeeded > 0)
+        {
+            string name = this.GetMaterialName(character, required.Type, required.Rarity);
+            missingList.Add(new Material(name, required.Type, required.Rarity, remainingNeeded));
+        }
     }
+
+    private int ProcessTier(Inventory inventory, Character character, MaterialTypes type, List<MaterialRarity> chain, int tierIndex, int amountNeeded)
+    {
+        if (amountNeeded <= 0)
+        {
+            return 0;
+        }
+
+        MaterialRarity currentRarity = chain[tierIndex];
+        string name = this.GetMaterialName(character, type, currentRarity);
+
+        var itemInStock = inventory.GetMaterial(name);
+        int available = itemInStock?.Amount ?? 0;
+
+        int take = Math.Min(available, amountNeeded);
+        if (take > 0)
+        {
+            inventory.SetMaterial(new Material(name, type, currentRarity, available - take));
+            amountNeeded -= take;
+        }
+
+        if (amountNeeded == 0)
+        {
+            return 0;
+        }
+
+        if (tierIndex > 0)
+        {
+            int neededFromLowerTier = amountNeeded * 3;
+            int remainingFromLower = this.ProcessTier(inventory, character, type, chain, tierIndex - 1, neededFromLowerTier);
+            int crafted = (neededFromLowerTier - remainingFromLower) / 3;
+            amountNeeded -= crafted;
+        }
+
+        return amountNeeded;
+    }
+
+    private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity) =>
+       type switch
+       {
+           MaterialTypes.Gem => this.gems.GetMaterial(c, rarity),
+           MaterialTypes.Book => this.books.GetMaterial(c, rarity),
+           MaterialTypes.Enemy => this.enemies.GetMaterial(c, rarity),
+           _ => throw new ArgumentException($"Unknown material type {type}"),
+       };
 
     private List<Material> TotalCost(Character character)
     {
         var charCost = this.characterUpgrade.GetCharacterCost(character);
         var skillCost = this.skillUpgrade.GetSkillsCost(character);
-        return Merge(charCost, skillCost);
-    }
 
-    private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity) =>
-    type switch
-    {
-        MaterialTypes.Gem => this.gems.GetMaterial(c, rarity),
-        MaterialTypes.Book => this.books.GetMaterial(c, rarity),
-        MaterialTypes.Enemy => this.enemies.GetMaterial(c, rarity),
-        _ => throw new ArgumentException($"Unknown material type {type}"),
-    };
+        var result = new Dictionary<string, Material>();
 
-    private void ConsumeCraftableMaterials(Inventory inventory, Material required, Character character, List<Material> shortages)
-    {
-        MaterialRarity[] chain = required.Type switch
+        foreach (var list in new[] { charCost, skillCost })
         {
-            MaterialTypes.Gem => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange],
-            MaterialTypes.Book => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
-            MaterialTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
-            _ => throw new ArgumentException($"Unsupported craftable type: {required.Type}"),
-        };
+            foreach (var m in list)
+            {
+                if (result.TryGetValue(m.Name, out var existing))
+                {
+                    existing.Amount += m.Amount;
+                }
+                else
+                {
+                    result[m.Name] = m.Clone();
+                }
+            }
+        }
 
-        var materialsByTier = chain
-            .ToDictionary(color => color, color => this.GetMaterialName(character, required.Type, color));
-
-        MaterialRarity requiredColor = materialsByTier.First(x => x.Value == required.Name).Key;
-
-        ConsumeWithCrafting(inventory, materialsByTier, requiredColor, required, shortages);
+        return [.. result.Values];
     }
 }

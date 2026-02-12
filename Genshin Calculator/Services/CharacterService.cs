@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Messages;
@@ -58,7 +57,7 @@ public class CharacterService
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
-        character.Activated = false;
+        character.Reset();
         this.UpdateCharacter(character);
     }
 

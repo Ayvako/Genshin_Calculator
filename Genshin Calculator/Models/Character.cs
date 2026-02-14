@@ -28,7 +28,7 @@ public partial class Character : ObservableObject
     private bool activated;
 
     [ObservableProperty]
-    public int priority;
+    private int priority;
 
     public Character(string name, Assets assets)
     {

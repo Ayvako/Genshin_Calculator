@@ -20,11 +20,14 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
 
     private readonly IDialogService dialogService;
 
-    public MainViewModel(InventoryService inventoryService, CharacterService characterService, IDialogService dialogService)
+    private readonly DataIOService dataIOService;
+
+    public MainViewModel(InventoryService inventoryService, CharacterService characterService, IDialogService dialogService, DataIOService dataIOService)
     {
         this.inventoryService = inventoryService;
         this.characterService = characterService;
         this.dialogService = dialogService;
+        this.dataIOService = dataIOService;
 
         this.IsActive = true;
         this.RefreshCharacters();
@@ -62,14 +65,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         this.UpdatePriorities();
 
         this.RefreshAllMaterials();
-    }
-
-    private void UpdatePriorities()
-    {
-        for (int i = 0; i < this.Characters.Count; i++)
-        {
-            this.Characters[i].Character.Priority = i;
-        }
+        this.dataIOService.Save();
     }
 
     public void Receive(CharacterChangedMessage message)
@@ -95,16 +91,27 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         }
 
         this.RefreshAllMaterials();
+        this.dataIOService.Save();
     }
 
     public void Receive(InventoryChangedMessage message)
     {
         this.RefreshAllMaterials();
+        this.dataIOService.Save();
     }
 
     public void Receive(RefreshMaterialsRequestMessage message)
     {
         this.RefreshAllMaterials();
+        this.dataIOService.Save();
+    }
+
+    private void UpdatePriorities()
+    {
+        for (int i = 0; i < this.Characters.Count; i++)
+        {
+            this.Characters[i].Character.Priority = i;
+        }
     }
 
     private void RefreshCharacters()

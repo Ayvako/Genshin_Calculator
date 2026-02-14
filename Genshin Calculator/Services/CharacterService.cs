@@ -20,23 +20,28 @@ public class CharacterService
             .ToDictionary(c => c.Name.ToLowerInvariant(), c => c);
     }
 
+    public static void UpdateCharacter(Character character)
+    {
+        WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
+    }
+
     public void ChangePriority(Character character1, Character character2)
     {
         (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
-        this.UpdateCharacter(character1);
-        this.UpdateCharacter(character2);
+        UpdateCharacter(character1);
+        UpdateCharacter(character2);
     }
 
     public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public void SetCharacterActivity(Character character, bool isActive)
     {
         character.Activated = isActive;
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public void AddCharacter(Character character)
@@ -51,14 +56,14 @@ public class CharacterService
 
         character.Priority = maxPriority + 1;
 
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Reset();
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public Character? GetCharacterByName(string name)
@@ -76,10 +81,5 @@ public class CharacterService
     public IReadOnlyList<Character> GetCharacters()
     {
         return this.inventoryService.GetCharacters();
-    }
-
-    public void UpdateCharacter(Character character)
-    {
-        WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
     }
 }

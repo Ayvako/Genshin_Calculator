@@ -40,9 +40,10 @@ public class DataIOService
                 AddSimpleGroup(inventoryMaterials, simpleGroups, "Other", MaterialTypes.Other, MaterialRarity.Orange);
                 AddSimpleGroup(inventoryMaterials, simpleGroups, "Mora", MaterialTypes.Mora, MaterialRarity.Blue);
             }
+
             this.LoadTieredGroup(inventoryMaterials, "Exp.json", MaterialTypes.Exp, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
 
-            this.LoadTieredGroup(inventoryMaterials, "Books.json", MaterialTypes.Book, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+            this.LoadTieredGroup(inventoryMaterials, "SkillMaterials.json", MaterialTypes.Book, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
 
             this.LoadTieredGroup(inventoryMaterials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
 
@@ -79,6 +80,11 @@ public class DataIOService
 
         File.WriteAllText(this.exportFilePath, exportJson.ToString(Formatting.Indented));
         Console.WriteLine($"💾 Export saved to {this.exportFilePath}");
+    }
+
+    public void Save()
+    {
+        this.Export(this.store.Inventory, this.store.Inventory.Characters);
     }
 
     private static void UpdateCharacters(List<Character> baseChars, List<Character> importedChars)

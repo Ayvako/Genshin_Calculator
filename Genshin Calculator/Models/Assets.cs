@@ -6,11 +6,11 @@ namespace Genshin_Calculator.Models;
 
 public record Assets
 {
-    public Assets(string name, WeaponType weapon, Element element, string localSpecialty, string bookType, string enemy, string miniBoss, string weeklyBoss, MaterialRarity rarity)
+    public Assets(string name, WeaponType weapon, Element element, string localSpecialty, string skillMaterials, string enemy, string miniBoss, string weeklyBoss, MaterialRarity rarity)
     {
         this.Name = name;
         this.LocalSpecialty = localSpecialty;
-        this.BookType = bookType;
+        this.SkillMaterials = skillMaterials;
         this.Element = element;
         this.Weapon = weapon;
         this.Enemy = enemy;
@@ -35,7 +35,7 @@ public record Assets
 
     public string WeeklyBoss { get; set; }
 
-    public string BookType { get; set; }
+    public string SkillMaterials { get; set; }
 
     public MaterialRarity Rarity { get; set; }
 }

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
+using Newtonsoft.Json;
 
 namespace Genshin_Calculator.Models;
 
@@ -20,10 +21,13 @@ public partial class Material : ObservableObject
 
     public string Name { get; set; }
 
+    [JsonIgnore]
     public MaterialTypes Type { get; set; }
 
+    [JsonIgnore]
     public MaterialRarity Rarity { get; set; }
 
+    [JsonIgnore]
     public Uri ImagePath => ResourcePaths.Material(this.Name);
 
     public override bool Equals(object? obj)

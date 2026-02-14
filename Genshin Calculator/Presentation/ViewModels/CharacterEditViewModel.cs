@@ -13,8 +13,6 @@ namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class CharacterEditViewModel : ObservableObject
 {
-    private readonly CharacterService characterService;
-
     private readonly ImmutableArray<string> levels = LevelHelper.Levels;
 
     [ObservableProperty]
@@ -23,9 +21,8 @@ public partial class CharacterEditViewModel : ObservableObject
     [ObservableProperty]
     private int maxTalentLevel;
 
-    public CharacterEditViewModel(Character character, CharacterService characterService)
+    public CharacterEditViewModel(Character character)
     {
-        this.characterService = characterService;
         this.Character = character;
         this.Editable = character.Clone();
 
@@ -84,7 +81,7 @@ public partial class CharacterEditViewModel : ObservableObject
     private void Save()
     {
         this.Character.ApplyChangesFrom(this.Editable);
-        this.characterService.UpdateCharacter(this.Character);
+        CharacterService.UpdateCharacter(this.Character);
         this.RequestClose?.Invoke();
     }
 

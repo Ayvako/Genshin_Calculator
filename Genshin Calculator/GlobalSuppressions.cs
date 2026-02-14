@@ -8,3 +8,5 @@
 [assembly: SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1000:Keywords should be spaced correctly", Justification = "<Ожидание>")]
 [assembly: SuppressMessage("Maintainability", "CA1507:Используйте nameof для выражения имен символов", Justification = "<Ожидание>")]
 [assembly: SuppressMessage("Style", "S107:Constructor has 9 parameters, which is greater than the 7 authorized.", Justification = "<Ожидание>")]
+[assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1208:System using directives should be placed before other using directives", Justification = "<Ожидание>")]
+[assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "S1192:Define a constant instead of using this literal 'n' x times.", Justification = "<Ожидание>")]

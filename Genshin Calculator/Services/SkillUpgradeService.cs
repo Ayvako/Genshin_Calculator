@@ -23,12 +23,12 @@ public class SkillUpgradeService : ISkillUpgradeService
         new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
     ];
 
-    private readonly BookMaterialProvider books;
+    private readonly SkillMaterialProvider books;
 
     private readonly EnemyMaterialProvider enemies;
 
     public SkillUpgradeService(
-        BookMaterialProvider books,
+        SkillMaterialProvider books,
         EnemyMaterialProvider enemies)
     {
         this.books = books;

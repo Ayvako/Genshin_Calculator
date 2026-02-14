@@ -123,15 +123,28 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Border Margin="4" CornerRadius="10" BorderBrush="Black" BorderThickness="1" Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                            <Button Command="{Binding DataContext.OpenAddItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                CommandParameter="{Binding}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Padding="0"
+                                Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Button.Template>
 
-                                <StackPanel Orientation="Vertical">
-                                    <Border Background="Black" CornerRadius="10,10,0,0">
-                                        <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
-                                    </Border>
-                                    <Image Source="{Binding ImagePath}" Width="40" Height="40" />
-                                </StackPanel>
-                            </Border>
+                                <Border Margin="4" CornerRadius="10" BorderBrush="Black" BorderThickness="1"
+                                    Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                                    <StackPanel Orientation="Vertical">
+                                        <Border Background="Black" CornerRadius="10,10,0,0">
+                                            <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
+                                        </Border>
+                                        <Image Source="{Binding ImagePath}" Width="40" Height="40" />
+                                    </StackPanel>
+                                </Border>
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

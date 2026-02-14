@@ -20,7 +20,7 @@ public class WpfDialogService : IDialogService
 
     public void ShowCharacterEdit(Character character)
     {
-        var vm = new CharacterEditViewModel(character, this.characterService);
+        var vm = new CharacterEditViewModel(character);
         var view = new CharacterEditView
         {
             DataContext = vm,

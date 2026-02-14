@@ -4,16 +4,16 @@ using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Services.Materials;
 
-public sealed class BookMaterialProvider : MaterialProvider<string>
+public sealed class SkillMaterialProvider : MaterialProvider<string>
 {
-    public BookMaterialProvider()
-        : base("Books")
+    public SkillMaterialProvider()
+        : base("SkillMaterials")
     {
     }
 
     protected override string GetKey(Character character) =>
-        character.Assets?.BookType
-        ?? throw new ArgumentException("Character has no book group");
+        character.Assets?.SkillMaterials
+        ?? throw new ArgumentException("Character has no skill materials group");
 
     protected override string Resolve(string[] materials, MaterialRarity rarity) => rarity switch
     {

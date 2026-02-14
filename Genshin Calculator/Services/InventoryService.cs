@@ -13,7 +13,7 @@ public class InventoryService
 {
     private readonly IInventoryStore store;
 
-    private readonly BookMaterialProvider books;
+    private readonly SkillMaterialProvider books;
 
     private readonly GemMaterialProvider gems;
 
@@ -24,7 +24,7 @@ public class InventoryService
     private readonly ICharacterUpgradeService characterUpgrade;
 
     public InventoryService(
-        BookMaterialProvider books,
+        SkillMaterialProvider books,
         GemMaterialProvider gems,
         EnemyMaterialProvider enemies,
         IInventoryStore store,
@@ -42,7 +42,7 @@ public class InventoryService
     public void Upgrade(Character character, Inventory inventory)
     {
         var missingMap = this.CalculateMissingMaterials(inventory);
-        var missing = missingMap.ContainsKey(character) ? missingMap[character] : [];
+        var missing = missingMap.TryGetValue(character, out List<Material>? value) ? value : [];
 
         if (missing.Count == 0)
         {
@@ -109,8 +109,7 @@ public class InventoryService
                                     "HerosWit",
                                     MaterialTypes.Exp,
                                     MaterialRarity.Violet,
-                                    booksNeeded
-                                ));
+                                    booksNeeded));
                             }
 
                             totalExpPool = 0;

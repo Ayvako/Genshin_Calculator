@@ -20,7 +20,7 @@ public partial class Skill : ObservableObject
         this.DesiredLevel = desiredLevel;
     }
 
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } = "Title";
 
     public Skill Clone() => new(this.CurrentLevel, this.DesiredLevel) { Name = this.Name };
 

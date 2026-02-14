@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace Genshin_Calculator.Models;
 
@@ -12,10 +14,13 @@ public class Inventory
         this.materialCache = [];
     }
 
+    [JsonIgnore]
     public IEnumerable<Character> ActiveCharacters => this.Characters.Where(c => c.Activated && !c.Deleted);
 
+    [JsonIgnore]
     public IEnumerable<Character> DeletedCharacters => this.Characters.Where(c => c.Deleted);
 
+    [JsonIgnore]
     public IEnumerable<Character> NotDeletedCharacters => this.Characters.Where(c => !c.Deleted);
 
     public List<Material> Materials { get; set; } = [];

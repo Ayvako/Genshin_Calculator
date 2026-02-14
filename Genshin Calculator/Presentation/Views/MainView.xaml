@@ -18,28 +18,30 @@
         <controls:ToolsPanelControl Grid.Row="0" />
 
         <ListBox Grid.Row="1"
-                 ItemsSource="{Binding Characters}"
+            ItemsSource="{Binding Characters}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
 
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+            dd:DragDrop.IsDragSource="True"
+            dd:DragDrop.IsDropTarget="True"
+            dd:DragDrop.DropHandler="{Binding}"
 
-                 dd:DragDrop.IsDragSource="True"
-                 dd:DragDrop.IsDropTarget="True"
-                 dd:DragDrop.DropHandler="{Binding}"
+            BorderThickness="0"
+            Background="Transparent"
 
-                 BorderThickness="0"
-                 Background="Transparent">
+            Padding="20,10,20,10">
 
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListBox}}" />
+                    <WrapPanel Orientation="Horizontal"
+                       HorizontalAlignment="Center" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
 
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
+                    <Setter Property="Margin" Value="5" />
                     <Setter Property="Padding" Value="0" />
-                    <Setter Property="Margin" Value="0" />
                     <Setter Property="BorderThickness" Value="0" />
                     <Setter Property="Background" Value="Transparent" />
                     <Setter Property="Template">

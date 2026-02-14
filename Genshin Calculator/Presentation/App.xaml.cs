@@ -38,7 +38,7 @@ public partial class App : Application
         services.AddTransient<MainView>();
 
         services.AddSingleton<GemMaterialProvider>();
-        services.AddSingleton<BookMaterialProvider>();
+        services.AddSingleton<SkillMaterialProvider>();
         services.AddSingleton<EnemyMaterialProvider>();
 
         services.AddSingleton<IDialogService, WpfDialogService>();
@@ -54,5 +54,13 @@ public partial class App : Application
         var mainWindow = Services.GetRequiredService<MainWindow>();
 
         mainWindow.Show();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        var dataService = Services.GetService<DataIOService>();
+        dataService?.Save();
+
+        base.OnExit(e);
     }
 }

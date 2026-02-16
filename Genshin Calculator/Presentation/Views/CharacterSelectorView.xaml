@@ -12,6 +12,7 @@
         xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
         mc:Ignorable="d"
         xmlns:h="clr-namespace:Genshin_Calculator.Helpers"
+
         d:DataContext="{d:DesignInstance Type=vm:CharacterSelectorViewModel, IsDesignTimeCreatable=False}">
 
     <Border Padding="15" Background="#1E1E2A" CornerRadius="12">

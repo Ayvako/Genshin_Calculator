@@ -22,6 +22,8 @@
 
             <conv:IconProxyConverter x:Key="IconProxyConverter" />
 
+            <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

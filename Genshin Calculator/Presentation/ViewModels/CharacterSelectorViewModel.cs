@@ -150,6 +150,6 @@ public partial class CharacterSelectorViewModel : ObservableObject
     [RelayCommand]
     private void Cancel()
     {
-        this.CloseRequested?.Invoke(this, false);
+        this.CloseRequested?.Invoke(this, true);
     }
 }

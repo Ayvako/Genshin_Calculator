@@ -64,6 +64,28 @@ public class InventoryService
         return this.GetInventory().Characters;
     }
 
+    public List<Material> GetRelatedMaterials(Character character, Material material)
+    {
+        IMaterialProvider? provider = material.Type switch
+        {
+            MaterialTypes.Book => this.books,
+            MaterialTypes.Enemy => this.enemies,
+            MaterialTypes.Gem => this.gems,
+            _ => null,
+        };
+
+        var inventory = this.GetInventory();
+
+        if (provider == null)
+        {
+            return [inventory.GetMaterial(material.Name)];
+        }
+
+        var names = provider.GetMaterialGroup(character);
+
+        return names.Select(inventory.GetMaterial).Where(m => m != null).ToList()!;
+    }
+
     public Dictionary<Character, List<Material>> CalculateMissingMaterials(Inventory sourceInventory)
     {
         var tempInventory = sourceInventory.Clone();

@@ -12,7 +12,11 @@ using System.Windows;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
-public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>, IRecipient<RefreshMaterialsRequestMessage>, IRecipient<InventoryChangedMessage>, IDropTarget
+public partial class MainViewModel : ObservableRecipient,
+    IRecipient<CharacterChangedMessage>,
+    IRecipient<RefreshMaterialsRequestMessage>,
+    IRecipient<InventoryChangedMessage>, IDropTarget,
+    IRecipient<DimmingMessage>
 {
     private readonly InventoryService inventoryService;
 
@@ -21,6 +25,9 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
     private readonly IDialogService dialogService;
 
     private readonly DataIOService dataIOService;
+
+    [ObservableProperty]
+    private bool isDimmed;
 
     public MainViewModel(InventoryService inventoryService, CharacterService characterService, IDialogService dialogService, DataIOService dataIOService)
     {
@@ -106,6 +113,11 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
         this.dataIOService.Save();
     }
 
+    public void Receive(DimmingMessage message)
+    {
+        this.IsDimmed = message.IsEnabled;
+    }
+
     private void UpdatePriorities()
     {
         for (int i = 0; i < this.Characters.Count; i++)
@@ -132,8 +144,7 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<CharacterCh
 
     private CharacterCardViewModel CreateCharacterViewModel(Character character, List<Material> materials)
     {
-        var charVm = new CharacterCardViewModel(character, materials, this.characterService, this.dialogService);
-        return charVm;
+        return new CharacterCardViewModel(character, materials, this.characterService, this.dialogService, this.inventoryService);
     }
 
     private void RefreshAllMaterials()

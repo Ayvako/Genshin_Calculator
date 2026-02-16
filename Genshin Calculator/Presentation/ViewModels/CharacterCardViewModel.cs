@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 
@@ -16,14 +16,17 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 
     private readonly IDialogService dialogService;
 
+    private readonly InventoryService inventoryService;
+
     [ObservableProperty]
     private List<Material> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService, IDialogService dialogService)
+    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService, IDialogService dialogService, InventoryService inventoryService)
     {
         this.characterService = characterService;
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
+        this.inventoryService = inventoryService;
 
         this.IsActive = true;
         this.dialogService = dialogService;
@@ -59,6 +62,13 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     private void Edit()
     {
         this.dialogService.ShowCharacterEdit(this.Character);
+    }
+
+    [RelayCommand]
+    private void OpenAddItem(Material material)
+    {
+        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character, material);
+        this.dialogService.ShowAddMaterialsDialog(relatedMaterials);
     }
 
     [RelayCommand]

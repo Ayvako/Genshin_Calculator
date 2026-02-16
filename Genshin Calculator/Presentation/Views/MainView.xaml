@@ -8,16 +8,21 @@
              xmlns:dd="urn:gong-wpf-dragdrop"
              d:DataContext="{d:DesignInstance Type=vm:MainViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d">
-
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        <Border x:Name="DimmingOverlay"
+            Background="Black"
+            Opacity="0.5"
+            Panel.ZIndex="99"
+            Visibility="{Binding IsDimmed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <controls:ToolsPanelControl Grid.Row="0" />
+            <controls:ToolsPanelControl Grid.Row="0" />
 
-        <ListBox Grid.Row="1"
+            <ListBox Grid.Row="1"
             ItemsSource="{Binding Characters}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -31,34 +36,36 @@
 
             Padding="20,10,20,10">
 
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal"
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"
                        HorizontalAlignment="Center" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
 
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="Padding" Value="0" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ListBoxItem">
-                                <ContentPresenter />
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="5" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <controls:CharacterCardControl />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <controls:CharacterCardControl />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
     </Grid>
 </UserControl>

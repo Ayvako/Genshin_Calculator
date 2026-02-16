@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Genshin_Calculator.Helpers;
+using Genshin_Calculator.Helpers.Enums;
+using Genshin_Calculator.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Resources;
-using Genshin_Calculator.Helpers;
-using Genshin_Calculator.Helpers.Enums;
-using Genshin_Calculator.Models;
-using Newtonsoft.Json;
 
 namespace Genshin_Calculator.Services.Materials;
 
@@ -35,6 +35,17 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
         var json = reader.ReadToEnd();
 
         return JsonConvert.DeserializeObject<T>(json);
+    }
+
+    public IEnumerable<string> GetMaterialGroup(Character character)
+    {
+        var key = this.GetKey(character);
+        if (this.materials.TryGetValue(key, out var group))
+        {
+            return group;
+        }
+
+        return [];
     }
 
     public string GetMaterial(Character character, MaterialRarity rarity)

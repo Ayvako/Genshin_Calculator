@@ -132,6 +132,51 @@
         </Setter>
     </Style>
 
+    <Style x:Key="RoundShadowButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="border"
+                                   CornerRadius="24"
+                                   Background="{TemplateBinding Background}"
+                                   BorderThickness="0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="15"
+                                                     ShadowDepth="3"
+                                                     Direction="270"
+                                                     Color="Black"
+                                                     Opacity="0.3" />
+                            </Border.Effect>
+                        </Border>
+
+                        <ContentPresenter HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             RecognizesAccessKey="True" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.8" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="RenderTransformOrigin" Value="0.5,0.5" />
+                            <Setter TargetName="border" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="RoundedButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="#FFECE5D8" />
         <Setter Property="BorderBrush" Value="Black" />

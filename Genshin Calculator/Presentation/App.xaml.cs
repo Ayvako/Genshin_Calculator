@@ -41,6 +41,8 @@ public partial class App : Application
         services.AddSingleton<SkillMaterialProvider>();
         services.AddSingleton<EnemyMaterialProvider>();
 
+        services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
+
         services.AddSingleton<IDialogService, WpfDialogService>();
         services.AddSingleton<IInventoryStore, InventoryStore>();
 

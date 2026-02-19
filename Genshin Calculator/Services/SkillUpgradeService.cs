@@ -87,7 +87,7 @@ public class SkillUpgradeService : ISkillUpgradeService
                 {
                     new(
                         this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
-                        MaterialTypes.Book,
+                        MaterialTypes.SkillMaterial,
                         cfg.BookRarity,
                         cfg.BookAmount),
 

@@ -18,7 +18,7 @@ public enum MaterialTypes
     /// <summary>
     /// Represents books.
     /// </summary>
-    Book,
+    SkillMaterial,
 
     /// <summary>
     /// Represents an experience.

@@ -43,7 +43,7 @@ public class DataIOService
 
             this.LoadTieredGroup(inventoryMaterials, "Exp.json", MaterialTypes.Exp, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
 
-            this.LoadTieredGroup(inventoryMaterials, "SkillMaterials.json", MaterialTypes.Book, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+            this.LoadTieredGroup(inventoryMaterials, "SkillMaterials.json", MaterialTypes.SkillMaterial, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
 
             this.LoadTieredGroup(inventoryMaterials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
 

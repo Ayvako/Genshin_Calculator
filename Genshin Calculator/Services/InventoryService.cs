@@ -11,31 +11,35 @@ namespace Genshin_Calculator.Services;
 
 public class InventoryService
 {
+    private const string HeroWit = "HerosWit";
+
+    private const int HeroWitXp = 20000;
+
+    private const string AdventurerExperience = "AdventurerExperience";
+
+    private const int AdventurerExperienceXp = 5000;
+
+    private const string WandererAdvice = "WanderersAdvice";
+
+    private const int WandererAdviceXp = 1000;
+
     private readonly IInventoryStore store;
-
-    private readonly SkillMaterialProvider books;
-
-    private readonly GemMaterialProvider gems;
-
-    private readonly EnemyMaterialProvider enemies;
 
     private readonly ISkillUpgradeService skillUpgrade;
 
     private readonly ICharacterUpgradeService characterUpgrade;
 
+    private readonly IMaterialProviderFactory materialFactory;
+
     public InventoryService(
-        SkillMaterialProvider books,
-        GemMaterialProvider gems,
-        EnemyMaterialProvider enemies,
+        IMaterialProviderFactory materialFactory,
         IInventoryStore store,
         ISkillUpgradeService skillUpgrade,
         ICharacterUpgradeService characterUpgrade)
     {
         this.skillUpgrade = skillUpgrade;
         this.store = store;
-        this.books = books;
-        this.gems = gems;
-        this.enemies = enemies;
+        this.materialFactory = materialFactory;
         this.characterUpgrade = characterUpgrade;
     }
 
@@ -66,13 +70,7 @@ public class InventoryService
 
     public List<Material> GetRelatedMaterials(Character character, Material material)
     {
-        IMaterialProvider? provider = material.Type switch
-        {
-            MaterialTypes.Book => this.books,
-            MaterialTypes.Enemy => this.enemies,
-            MaterialTypes.Gem => this.gems,
-            _ => null,
-        };
+        IMaterialProvider? provider = this.materialFactory.GetProvider(material.Type);
 
         var inventory = this.GetInventory();
 
@@ -123,7 +121,7 @@ public class InventoryService
                         {
                             long shortageXP = (long)required.Amount - totalExpPool;
 
-                            int booksNeeded = (int)Math.Ceiling(shortageXP / 20000.0);
+                            int booksNeeded = (int)Math.Ceiling(shortageXP / (float)HeroWitXp);
 
                             if (booksNeeded > 0)
                             {
@@ -139,7 +137,7 @@ public class InventoryService
 
                         break;
 
-                    case MaterialTypes.Book:
+                    case MaterialTypes.SkillMaterial:
                     case MaterialTypes.Gem:
                     case MaterialTypes.Enemy:
                         this.ConsumeWithCascade(tempInventory, required, character, missingForChar);
@@ -174,7 +172,7 @@ public class InventoryService
         MaterialTypes.MiniBoss => 3,
         MaterialTypes.LocalSpecialty => 4,
         MaterialTypes.Enemy => 5,
-        MaterialTypes.Book => 6,
+        MaterialTypes.SkillMaterial => 6,
         MaterialTypes.Mora => 99,
         MaterialTypes.Exp => 100,
         _ => 50,
@@ -198,15 +196,15 @@ public class InventoryService
 
     private static long CalculateTotalExp(Inventory inv)
     {
-        return ((long)(inv.GetMaterial("HerosWit")?.Amount ?? 0) * 20000)
-             + ((long)(inv.GetMaterial("AdventurersExperience")?.Amount ?? 0) * 5000)
-             + ((long)(inv.GetMaterial("WanderersAdvice")?.Amount ?? 0) * 1000);
+        return ((long)(inv.GetMaterial(HeroWit)?.Amount ?? 0) * HeroWitXp)
+             + ((long)(inv.GetMaterial(AdventurerExperience)?.Amount ?? 0) * AdventurerExperienceXp)
+             + ((long)(inv.GetMaterial(WandererAdvice)?.Amount ?? 0) * WandererAdviceXp);
     }
 
     private static List<MaterialRarity> GetRarityChain(MaterialTypes type) => type switch
     {
         MaterialTypes.Gem => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange],
-        MaterialTypes.Book => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
+        MaterialTypes.SkillMaterial => [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet],
         MaterialTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
         _ => [],
     };
@@ -266,37 +264,20 @@ public class InventoryService
         return amountNeeded;
     }
 
-    private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity) =>
-       type switch
-       {
-           MaterialTypes.Gem => this.gems.GetMaterial(c, rarity),
-           MaterialTypes.Book => this.books.GetMaterial(c, rarity),
-           MaterialTypes.Enemy => this.enemies.GetMaterial(c, rarity),
-           _ => throw new ArgumentException($"Unknown material type {type}"),
-       };
+    private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity)
+    {
+        var provider = this.materialFactory.GetProvider(type);
+
+        return provider == null ? throw new ArgumentException($"No provider found for type {type}") : provider.GetMaterial(c, rarity);
+    }
 
     private List<Material> TotalCost(Character character)
     {
         var charCost = this.characterUpgrade.GetCharacterCost(character);
         var skillCost = this.skillUpgrade.GetSkillsCost(character);
 
-        var result = new Dictionary<string, Material>();
-
-        foreach (var list in new[] { charCost, skillCost })
-        {
-            foreach (var m in list)
-            {
-                if (result.TryGetValue(m.Name, out var existing))
-                {
-                    existing.Amount += m.Amount;
-                }
-                else
-                {
-                    result[m.Name] = m.Clone();
-                }
-            }
-        }
-
-        return [.. result.Values];
+        return [.. charCost.Concat(skillCost)
+            .GroupBy(m => new { m.Name, m.Type, m.Rarity })
+            .Select(g => new Material(g.Key.Name, g.Key.Type, g.Key.Rarity, g.Sum(x => x.Amount)))];
     }
 }

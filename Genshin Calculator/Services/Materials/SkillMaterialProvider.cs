@@ -1,25 +1,44 @@
-﻿using System;
-using Genshin_Calculator.Helpers.Enums;
+﻿using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Genshin_Calculator.Services.Materials;
 
-public sealed class SkillMaterialProvider : MaterialProvider<string>
+public sealed class SkillMaterialProvider : IMaterialProvider
 {
-    public SkillMaterialProvider()
-        : base("SkillMaterials")
+    public string GetMaterial(Character character, MaterialRarity rarity)
     {
+        var baseName = GetBaseName(character);
+
+        return rarity switch
+        {
+            MaterialRarity.Green => $"TeachingsOf{baseName}",
+            MaterialRarity.Blue => $"GuideTo{baseName}",
+            MaterialRarity.Violet => $"PhilosophiesOf{baseName}",
+            _ => throw new ArgumentOutOfRangeException(nameof(rarity), "Talent books only have Green, Blue, and Violet rarities"),
+        };
     }
 
-    protected override string GetKey(Character character) =>
-        character.Assets?.SkillMaterials
-        ?? throw new ArgumentException("Character has no skill materials group");
-
-    protected override string Resolve(string[] materials, MaterialRarity rarity) => rarity switch
+    public IEnumerable<string> GetMaterialGroup(Character character)
     {
-        MaterialRarity.Green => materials[0],
-        MaterialRarity.Blue => materials[1],
-        MaterialRarity.Violet => materials[2],
-        _ => throw new ArgumentOutOfRangeException(nameof(rarity)),
-    };
+        var baseName = GetBaseName(character);
+
+        return
+        [
+            $"TeachingsOf{baseName}",
+            $"GuideTo{baseName}",
+            $"PhilosophiesOf{baseName}"
+        ];
+    }
+
+    private static string GetBaseName(Character character)
+    {
+        if (string.IsNullOrEmpty(character.Assets?.SkillMaterials))
+        {
+            throw new ArgumentException($"Character {character.Name} has no skill materials base name defined");
+        }
+
+        return character.Assets.SkillMaterials;
+    }
 }

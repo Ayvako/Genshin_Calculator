@@ -87,67 +87,16 @@ public class InventoryService
     public Dictionary<Character, List<Material>> CalculateMissingMaterials(Inventory sourceInventory)
     {
         var tempInventory = sourceInventory.Clone();
-
         var result = new Dictionary<Character, List<Material>>();
-
         long totalExpPool = CalculateTotalExp(tempInventory);
 
-        var sortedCharacters = sourceInventory.NotDeletedCharacters
-        .OrderBy(c => c.Priority)
-        .ToList();
+        var activeSortedCharacters = sourceInventory.NotDeletedCharacters
+            .Where(c => c.Activated)
+            .OrderBy(c => c.Priority);
 
-        foreach (var character in sortedCharacters)
+        foreach (var character in activeSortedCharacters)
         {
-            if (!character.Activated)
-            {
-                continue;
-            }
-
-            var missingForChar = new List<Material>();
-
-            var requiredMaterials = this.TotalCost(character).OrderByDescending(m => m.Rarity);
-
-            foreach (var required in requiredMaterials)
-            {
-                switch (required.Type)
-                {
-                    case MaterialTypes.Exp:
-
-                        if (totalExpPool >= required.Amount)
-                        {
-                            totalExpPool -= (long)required.Amount;
-                        }
-                        else
-                        {
-                            long shortageXP = (long)required.Amount - totalExpPool;
-
-                            int booksNeeded = (int)Math.Ceiling(shortageXP / (float)HeroWitXp);
-
-                            if (booksNeeded > 0)
-                            {
-                                missingForChar.Add(new Material(
-                                    "HerosWit",
-                                    MaterialTypes.Exp,
-                                    MaterialRarity.Violet,
-                                    booksNeeded));
-                            }
-
-                            totalExpPool = 0;
-                        }
-
-                        break;
-
-                    case MaterialTypes.SkillMaterial:
-                    case MaterialTypes.Gem:
-                    case MaterialTypes.Enemy:
-                        this.ConsumeWithCascade(tempInventory, required, character, missingForChar);
-                        break;
-
-                    default:
-                        ConsumeDirectly(tempInventory, required, missingForChar);
-                        break;
-                }
-            }
+            var missingForChar = this.ProcessCharacterRequirements(character, tempInventory, ref totalExpPool);
 
             if (missingForChar.Count > 0)
             {
@@ -208,6 +157,57 @@ public class InventoryService
         MaterialTypes.Enemy => [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue],
         _ => [],
     };
+
+    private static void ConsumeExp(Material required, List<Material> missingForChar, ref long totalExpPool)
+    {
+        if (totalExpPool >= required.Amount)
+        {
+            totalExpPool -= (long)required.Amount;
+            return;
+        }
+
+        long shortageXP = (long)required.Amount - totalExpPool;
+        int booksNeeded = (int)Math.Ceiling(shortageXP / (float)HeroWitXp);
+
+        if (booksNeeded > 0)
+        {
+            missingForChar.Add(new Material(
+                "HerosWit",
+                MaterialTypes.Exp,
+                MaterialRarity.Violet,
+                booksNeeded));
+        }
+
+        totalExpPool = 0;
+    }
+
+    private List<Material> ProcessCharacterRequirements(Character character, Inventory tempInventory, ref long totalExpPool)
+    {
+        var missingForChar = new List<Material>();
+        var requiredMaterials = this.TotalCost(character).OrderByDescending(m => m.Rarity);
+
+        foreach (var required in requiredMaterials)
+        {
+            switch (required.Type)
+            {
+                case MaterialTypes.Exp:
+                    ConsumeExp(required, missingForChar, ref totalExpPool);
+                    break;
+
+                case MaterialTypes.SkillMaterial:
+                case MaterialTypes.Gem:
+                case MaterialTypes.Enemy:
+                    this.ConsumeWithCascade(tempInventory, required, character, missingForChar);
+                    break;
+
+                default:
+                    ConsumeDirectly(tempInventory, required, missingForChar);
+                    break;
+            }
+        }
+
+        return missingForChar;
+    }
 
     private void ConsumeWithCascade(Inventory inventory, Material required, Character character, List<Material> missingList)
     {

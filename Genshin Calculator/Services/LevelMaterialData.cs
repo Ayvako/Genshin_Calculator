@@ -4,9 +4,9 @@ namespace Genshin_Calculator.Services;
 
 public sealed record LevelMaterialData
 (
-    MaterialRarity BookRarity,
+    MaterialRarity SkillMaterialRarity,
     MaterialRarity EnemyRarity,
-    int BookAmount,
+    int SkillMaterialAmount,
     int EnemyAmount,
     int MoraAmount,
     int WeeklyBossAmount = 0,

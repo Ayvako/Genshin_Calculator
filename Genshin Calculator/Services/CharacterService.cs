@@ -25,22 +25,29 @@ public class CharacterService
         WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
     }
 
-    public void ChangePriority(Character character1, Character character2)
+    public static void ChangePriority(Character character1, Character character2)
     {
         (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
         UpdateCharacter(character1);
         UpdateCharacter(character2);
     }
 
-    public void ToggleCharacterActivity(Character character)
+    public static void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
         UpdateCharacter(character);
     }
 
-    public void SetCharacterActivity(Character character, bool isActive)
+    public static void SetCharacterActivity(Character character, bool isActive)
     {
         character.Activated = isActive;
+        UpdateCharacter(character);
+    }
+
+    public static void DeleteCharacter(Character character)
+    {
+        character.Deleted = true;
+        character.Reset();
         UpdateCharacter(character);
     }
 
@@ -56,13 +63,6 @@ public class CharacterService
 
         character.Priority = maxPriority + 1;
 
-        UpdateCharacter(character);
-    }
-
-    public void DeleteCharacter(Character character)
-    {
-        character.Deleted = true;
-        character.Reset();
         UpdateCharacter(character);
     }
 

@@ -23,15 +23,15 @@ public class SkillUpgradeService : ISkillUpgradeService
         new(MaterialRarity.Violet, MaterialRarity.Blue, 16, 12, 700000, 2, 1),
     ];
 
-    private readonly SkillMaterialProvider books;
+    private readonly SkillMaterialProvider skillMaterials;
 
     private readonly EnemyMaterialProvider enemies;
 
     public SkillUpgradeService(
-        SkillMaterialProvider books,
+        SkillMaterialProvider skillMaterials,
         EnemyMaterialProvider enemies)
     {
-        this.books = books;
+        this.skillMaterials = skillMaterials;
         this.enemies = enemies;
     }
 
@@ -86,10 +86,10 @@ public class SkillUpgradeService : ISkillUpgradeService
                 var materials = new List<Material>
                 {
                     new(
-                        this.books.GetMaterial(character, cfg.BookRarity) ?? throw new InvalidOperationException("Book material is null"),
+                        this.skillMaterials.GetMaterial(character, cfg.SkillMaterialRarity) ?? throw new InvalidOperationException("SkillMaterial material is null"),
                         MaterialTypes.SkillMaterial,
-                        cfg.BookRarity,
-                        cfg.BookAmount),
+                        cfg.SkillMaterialRarity,
+                        cfg.SkillMaterialAmount),
 
                     new(
                         this.enemies.GetMaterial(character, cfg.EnemyRarity) ?? throw new InvalidOperationException("Enemy material is null"),

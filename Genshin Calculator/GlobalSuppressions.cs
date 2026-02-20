@@ -10,3 +10,4 @@
 [assembly: SuppressMessage("Style", "S107:Constructor has 9 parameters, which is greater than the 7 authorized.", Justification = "<Ожидание>")]
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1208:System using directives should be placed before other using directives", Justification = "<Ожидание>")]
 [assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "S1192:Define a constant instead of using this literal 'n' x times.", Justification = "<Ожидание>")]
+[assembly: SuppressMessage("StyleCop.CSharp.OrderingRules", "S1075: Refactor your code not to use hardcoded absolute paths or URIs.", Justification = "<Ожидание>")]

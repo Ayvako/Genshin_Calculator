@@ -40,6 +40,7 @@ public partial class App : Application
         services.AddSingleton<GemMaterialProvider>();
         services.AddSingleton<SkillMaterialProvider>();
         services.AddSingleton<EnemyMaterialProvider>();
+        services.AddSingleton<ExpMaterialProvider>();
 
         services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
 

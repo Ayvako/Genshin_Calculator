@@ -20,8 +20,6 @@ public partial class MainViewModel : ObservableRecipient,
 {
     private readonly InventoryService inventoryService;
 
-    private readonly CharacterService characterService;
-
     private readonly IDialogService dialogService;
 
     private readonly DataIOService dataIOService;
@@ -29,10 +27,9 @@ public partial class MainViewModel : ObservableRecipient,
     [ObservableProperty]
     private bool isDimmed;
 
-    public MainViewModel(InventoryService inventoryService, CharacterService characterService, IDialogService dialogService, DataIOService dataIOService)
+    public MainViewModel(InventoryService inventoryService, IDialogService dialogService, DataIOService dataIOService)
     {
         this.inventoryService = inventoryService;
-        this.characterService = characterService;
         this.dialogService = dialogService;
         this.dataIOService = dataIOService;
 
@@ -144,7 +141,7 @@ public partial class MainViewModel : ObservableRecipient,
 
     private CharacterCardViewModel CreateCharacterViewModel(Character character, List<Material> materials)
     {
-        return new CharacterCardViewModel(character, materials, this.characterService, this.dialogService, this.inventoryService);
+        return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService);
     }
 
     private void RefreshAllMaterials()

@@ -118,14 +118,14 @@
       "SkillMaterials": "Freedom",
       "Enemy": "FirmArrowhead",
       "MiniBoss": "HoarfrostCore",
-      "WeeklyBoss": "ShardOfAFourlLegacy",
+      "WeeklyBoss": "ShardofaFoulLegacy",
       "Rarity": 4
     },
     {
       "Name": "Dori",
       "Weapon": "Catalyst",
       "Element": "Electro",
-      "LocalSpecialty": "KalpataLotus",
+      "LocalSpecialty": "KalpalataLotus",
       "SkillMaterials": "Ingenuity",
       "Enemy": "FadedRedSatin",
       "MiniBoss": "ThunderclapFruitcore",
@@ -184,7 +184,7 @@
       "SkillMaterials": "Diligence",
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "JuvenileJade",
-      "WeeklyBoss": "ShardOfAFourlLegacy",
+      "WeeklyBoss": "ShardofaFoulLegacy",
       "Rarity": 5
     },
     {
@@ -437,7 +437,7 @@
       "SkillMaterials": "Freedom",
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "CleansingHeart",
-      "WeeklyBoss": "ShardOfAFourlLegacy",
+      "WeeklyBoss": "ShardofaFoulLegacy",
       "Rarity": 5
     },
     {
@@ -477,7 +477,7 @@
       "Name": "Xiangling",
       "Weapon": "Polearm",
       "Element": "Pyro",
-      "LocalSpecialty": "JueyunChill",
+      "LocalSpecialty": "JueyunChili",
       "SkillMaterials": "Diligence",
       "Enemy": "SlimeCondensate",
       "MiniBoss": "EverflameSeed",
@@ -502,7 +502,7 @@
       "LocalSpecialty": "SilkFlower",
       "SkillMaterials": "Gold",
       "Enemy": "DamagedMask",
-      "MiniBoss": "CleansingHear",
+      "MiniBoss": "CleansingHeart",
       "WeeklyBoss": "TailOfBoreas",
       "Rarity": 4
     },

@@ -12,8 +12,6 @@ namespace Genshin_Calculator.Presentation.ViewModels;
 
 public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>
 {
-    private readonly CharacterService characterService;
-
     private readonly IDialogService dialogService;
 
     private readonly InventoryService inventoryService;
@@ -21,9 +19,8 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [ObservableProperty]
     private List<Material> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, CharacterService characterService, IDialogService dialogService, InventoryService inventoryService)
+    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, IDialogService dialogService, InventoryService inventoryService)
     {
-        this.characterService = characterService;
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
         this.inventoryService = inventoryService;
@@ -77,12 +74,12 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void ToggleActive()
     {
-        this.characterService.ToggleCharacterActivity(this.Character);
+        CharacterService.ToggleCharacterActivity(this.Character);
     }
 
     [RelayCommand]
     private void Remove()
     {
-        this.characterService.DeleteCharacter(this.Character);
+        CharacterService.DeleteCharacter(this.Character);
     }
 }

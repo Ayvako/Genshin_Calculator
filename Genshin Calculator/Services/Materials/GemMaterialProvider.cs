@@ -1,26 +1,46 @@
-﻿using System;
-using Genshin_Calculator.Helpers.Enums;
+﻿using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Genshin_Calculator.Services.Materials;
 
-public sealed class GemMaterialProvider : MaterialProvider<Element>
+public sealed class GemMaterialProvider : IMaterialProvider
 {
-    public GemMaterialProvider()
-        : base("Gems")
+    public static string GetBaseGemName(Element element) => element switch
     {
+        Element.Cryo => "ShivadaJade",
+        Element.Electro => "VajradaAmethyst",
+        Element.Dendro => "NagadusEmerald",
+        Element.Pyro => "AgnidusAgate",
+        Element.Geo => "PrithivaTopaz",
+        Element.Hydro => "VarunadaLazurite",
+        Element.Anemo => "VayudaTurquoise",
+        _ => throw new ArgumentException($"Unknown element: {element}"),
+    };
+
+    public string GetMaterial(Character character, MaterialRarity rarity)
+    {
+        string baseName = GetBaseGemName(character.Assets!.Element);
+
+        return rarity switch
+        {
+            MaterialRarity.Green => $"{baseName}Sliver",
+            MaterialRarity.Blue => $"{baseName}Fragment",
+            MaterialRarity.Violet => $"{baseName}Chunk",
+            MaterialRarity.Orange => $"{baseName}Gemstone",
+            _ => throw new ArgumentOutOfRangeException(nameof(rarity), "Gems only have Green, Blue, Violet, and Orange rarities"),
+        };
     }
 
-    protected override Element GetKey(Character character) =>
-        character.Assets?.Element
-        ?? throw new ArgumentException("Character has no element");
-
-    protected override string Resolve(string[] materials, MaterialRarity rarity) => rarity switch
+    public IEnumerable<string> GetMaterialGroup(Character character)
     {
-        MaterialRarity.Green => materials[0],
-        MaterialRarity.Blue => materials[1],
-        MaterialRarity.Violet => materials[2],
-        MaterialRarity.Orange => materials[3],
-        _ => throw new ArgumentOutOfRangeException(nameof(rarity)),
-    };
+        string baseName = GetBaseGemName(character.Assets!.Element);
+        return [
+            $"{baseName}Sliver",
+            $"{baseName}Fragment",
+            $"{baseName}Chunk",
+            $"{baseName}Gemstone"
+        ];
+    }
 }

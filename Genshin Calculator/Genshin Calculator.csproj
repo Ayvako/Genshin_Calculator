@@ -805,10 +805,6 @@
     <Resource Include="Resources\Images\Weapons\sword.png" />
     <Resource Include="Resources\Json\Characters.json" />
     <Resource Include="Resources\Json\Enemies.json" />
-    <Resource Include="Resources\Json\Exp.json" />
-    <Resource Include="Resources\Json\Gems.json" />
-    <Resource Include="Resources\Json\Initializations.json" />
-    <Resource Include="Resources\Json\SkillMaterials.json" />
   </ItemGroup>
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />

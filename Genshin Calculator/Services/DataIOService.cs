@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using Genshin_Calculator.Helpers.Enums;
+﻿using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation;
 using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Services.Materials;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
 
 namespace Genshin_Calculator.Services;
 
@@ -31,36 +33,52 @@ public class DataIOService
 
         try
         {
-            var mainData = this.LoadJson("Initializations.json");
-            if (mainData["Materials"] is JObject simpleGroups)
+            this.LoadCharacters();
+            var allCharacters = this.store.Inventory.Characters;
+
+            var skillBaseNames = allCharacters
+                .Select(c => c.Assets!.SkillMaterials)
+                .Distinct()
+                .Where(name => !string.IsNullOrEmpty(name));
+
+            foreach (var baseName in skillBaseNames)
             {
-                AddSimpleGroup(inventoryMaterials, simpleGroups, "LocalSpecialty", MaterialTypes.LocalSpecialty, MaterialRarity.White);
-                AddSimpleGroup(inventoryMaterials, simpleGroups, "MiniBoss", MaterialTypes.MiniBoss, MaterialRarity.Violet);
-                AddSimpleGroup(inventoryMaterials, simpleGroups, "WeeklyBoss", MaterialTypes.WeeklyBoss, MaterialRarity.Orange);
-                AddSimpleGroup(inventoryMaterials, simpleGroups, "Other", MaterialTypes.Other, MaterialRarity.Orange);
-                AddSimpleGroup(inventoryMaterials, simpleGroups, "Mora", MaterialTypes.Mora, MaterialRarity.Blue);
+                inventoryMaterials.Add(new Material($"TeachingsOf{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Green, 0));
+                inventoryMaterials.Add(new Material($"GuideTo{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Blue, 0));
+                inventoryMaterials.Add(new Material($"PhilosophiesOf{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Violet, 0));
             }
 
-            this.LoadTieredGroup(inventoryMaterials, "Exp.json", MaterialTypes.Exp, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+            var elements = allCharacters
+                .Select(c => c.Assets!.Element)
+                .Distinct();
 
-            this.LoadTieredGroup(inventoryMaterials, "SkillMaterials.json", MaterialTypes.SkillMaterial, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet]);
+            foreach (var element in elements)
+            {
+                string baseName = GemMaterialProvider.GetBaseGemName(element);
+                inventoryMaterials.Add(new Material($"{baseName}Sliver", MaterialTypes.Gem, MaterialRarity.Green, 0));
+                inventoryMaterials.Add(new Material($"{baseName}Fragment", MaterialTypes.Gem, MaterialRarity.Blue, 0));
+                inventoryMaterials.Add(new Material($"{baseName}Chunk", MaterialTypes.Gem, MaterialRarity.Violet, 0));
+                inventoryMaterials.Add(new Material($"{baseName}Gemstone", MaterialTypes.Gem, MaterialRarity.Orange, 0));
+            }
+
+            AddUniqueFromCharacters(inventoryMaterials, allCharacters, c => c.Assets!.LocalSpecialty, MaterialTypes.LocalSpecialty, MaterialRarity.White);
+            AddUniqueFromCharacters(inventoryMaterials, allCharacters, c => c.Assets!.MiniBoss, MaterialTypes.MiniBoss, MaterialRarity.Violet);
+            AddUniqueFromCharacters(inventoryMaterials, allCharacters, c => c.Assets!.WeeklyBoss, MaterialTypes.WeeklyBoss, MaterialRarity.Orange);
 
             this.LoadTieredGroup(inventoryMaterials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
 
-            this.LoadTieredGroup(inventoryMaterials, "Gems.json", MaterialTypes.Gem, [MaterialRarity.Green, MaterialRarity.Blue, MaterialRarity.Violet, MaterialRarity.Orange]);
+            inventoryMaterials.Add(new Material("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Blue, 0));
+            inventoryMaterials.Add(new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0));
+            inventoryMaterials.Add(new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0));
+            inventoryMaterials.Add(new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0));
+            inventoryMaterials.Add(new Material("HerosWit", MaterialTypes.Exp, MaterialRarity.Violet, 0));
 
             this.store.Inventory.Materials = inventoryMaterials;
-
-            this.LoadCharacters();
-
             this.LoadUserExport();
-
-            Console.WriteLine("✅ Import completed");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Import Error: {ex.Message}");
-            throw;
+            Debug.WriteLine($"❌ Import Error: {ex.Message}");
         }
     }
 
@@ -85,6 +103,15 @@ public class DataIOService
     public void Save()
     {
         this.Export(this.store.Inventory, this.store.Inventory.Characters);
+    }
+
+    private static void AddUniqueFromCharacters(List<Material> list, IEnumerable<Character> characters, Func<Character, string> selector, MaterialTypes type, MaterialRarity rarity)
+    {
+        var names = characters.Select(selector).Distinct().Where(n => !string.IsNullOrEmpty(n));
+        foreach (var name in names)
+        {
+            list.Add(new Material(name, type, rarity, 0));
+        }
     }
 
     private static void UpdateCharacters(List<Character> baseChars, List<Character> importedChars)
@@ -113,17 +140,6 @@ public class DataIOService
         }
 
         baseInv.RefreshCache();
-    }
-
-    private static void AddSimpleGroup(List<Material> list, JObject source, string key, MaterialTypes type, MaterialRarity rarity)
-    {
-        if (source[key] is JArray names)
-        {
-            foreach (var name in names)
-            {
-                list.Add(new Material(name.ToString(), type, rarity, 0));
-            }
-        }
     }
 
     private JObject LoadJson(string fileName)

@@ -2,9 +2,10 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
+using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 
-namespace Genshin_Calculator.Helpers.Converters;
+namespace Genshin_Calculator.Presentation.Converters;
 
 public class RarityStarToIconConverter : IValueConverter
 {

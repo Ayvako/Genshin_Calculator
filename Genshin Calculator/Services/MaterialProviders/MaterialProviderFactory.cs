@@ -1,6 +1,7 @@
 ﻿using Genshin_Calculator.Helpers.Enums;
+using Genshin_Calculator.Services.Interfaces;
 
-namespace Genshin_Calculator.Services.Materials;
+namespace Genshin_Calculator.Services.MaterialProviders;
 
 public class MaterialProviderFactory : IMaterialProviderFactory
 {
@@ -24,10 +25,10 @@ public class MaterialProviderFactory : IMaterialProviderFactory
     {
         return materialType switch
         {
-            MaterialTypes.SkillMaterial => this.skillMaterials,
-            MaterialTypes.Gem => this.gems,
-            MaterialTypes.Enemy => this.enemies,
-            MaterialTypes.Exp => this.exp,
+            MaterialTypes.SkillMaterial => skillMaterials,
+            MaterialTypes.Gem => gems,
+            MaterialTypes.Enemy => enemies,
+            MaterialTypes.Exp => exp,
             _ => null,
         };
     }

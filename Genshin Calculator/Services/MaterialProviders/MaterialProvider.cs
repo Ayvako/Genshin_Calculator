@@ -1,6 +1,7 @@
 ﻿using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Services.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Resources;
 
-namespace Genshin_Calculator.Services.Materials;
+namespace Genshin_Calculator.Services.MaterialProviders;
 
 public abstract class MaterialProvider<TKey> : IMaterialProvider
     where TKey : notnull
@@ -17,7 +18,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected MaterialProvider(string jsonName)
     {
-        this.materials = GetMaterials<Dictionary<TKey, string[]>>(jsonName)
+        materials = GetMaterials<Dictionary<TKey, string[]>>(jsonName)
             ?? throw new InvalidOperationException($"{jsonName}.json not found");
     }
 
@@ -39,8 +40,8 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public IEnumerable<string> GetMaterialGroup(Character character)
     {
-        var key = this.GetKey(character);
-        if (this.materials.TryGetValue(key, out var group))
+        var key = GetKey(character);
+        if (materials.TryGetValue(key, out var group))
         {
             return group;
         }
@@ -50,14 +51,14 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public string GetMaterial(Character character, MaterialRarity rarity)
     {
-        var key = this.GetKey(character);
+        var key = GetKey(character);
 
-        if (!this.materials.TryGetValue(key, out var materialSet))
+        if (!materials.TryGetValue(key, out var materialSet))
         {
             throw new KeyNotFoundException($"Material group '{key}' not found");
         }
 
-        return this.Resolve(materialSet, rarity);
+        return Resolve(materialSet, rarity);
     }
 
     protected abstract TKey GetKey(Character character);

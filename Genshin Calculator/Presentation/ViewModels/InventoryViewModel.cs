@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Messages;
 using Genshin_Calculator.Services;
 using System;
 using System.Collections.Generic;

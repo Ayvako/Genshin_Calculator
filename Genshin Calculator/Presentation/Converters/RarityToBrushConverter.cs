@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Genshin_Calculator.Helpers.Converters;
+namespace Genshin_Calculator.Presentation.Converters;
 
 public class RarityToBrushConverter : IValueConverter
 {

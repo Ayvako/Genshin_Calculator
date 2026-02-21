@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Genshin_Calculator.Helpers.Converters;
+namespace Genshin_Calculator.Presentation.Converters;
 
 public class ContainsConverter : IMultiValueConverter
 {

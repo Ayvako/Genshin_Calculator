@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Genshin_Calculator.Presentation.ViewModels"
-        xmlns:converters="clr-namespace:Genshin_Calculator.Helpers.Converters"
         mc:Ignorable="d"
         Title="Inventory Manager" Height="600" Width="720"
         WindowStartupLocation="CenterOwner"

@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Messages;
 using Genshin_Calculator.Presentation.ViewModels;
 using Genshin_Calculator.Presentation.Views;
-using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Services;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Presentation.Services;
 
 public class WpfDialogService : IDialogService
 {

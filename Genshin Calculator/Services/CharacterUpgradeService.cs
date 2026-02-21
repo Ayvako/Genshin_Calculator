@@ -5,7 +5,7 @@ using Genshin_Calculator.Helpers;
 using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services.Interfaces;
-using Genshin_Calculator.Services.Materials;
+using Genshin_Calculator.Services.MaterialProviders;
 
 namespace Genshin_Calculator.Services;
 

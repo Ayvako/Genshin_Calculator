@@ -1,6 +1,6 @@
 ﻿using Genshin_Calculator.Helpers.Enums;
 
-namespace Genshin_Calculator.Services.Materials;
+namespace Genshin_Calculator.Services.Interfaces;
 
 public interface IMaterialProviderFactory
 {

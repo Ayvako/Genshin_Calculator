@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows;
+using Genshin_Calculator.Presentation.Services;
 using Genshin_Calculator.Presentation.ViewModels;
 using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
-using Genshin_Calculator.Services.Materials;
+using Genshin_Calculator.Services.MaterialProviders;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

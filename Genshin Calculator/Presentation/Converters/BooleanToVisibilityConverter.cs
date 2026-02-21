@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Genshin_Calculator.Helpers.Converters;
+namespace Genshin_Calculator.Presentation.Converters;
 
 public class BooleanToVisibilityConverter : IValueConverter
 {

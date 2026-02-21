@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Presentation.Services;
 
 namespace Genshin_Calculator.Presentation.ViewModels;
 

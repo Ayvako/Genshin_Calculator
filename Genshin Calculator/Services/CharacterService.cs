@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Messages;
 
 namespace Genshin_Calculator.Services;
 

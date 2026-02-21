@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Messages;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation.Messages;
+using Genshin_Calculator.Presentation.Services;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.Interfaces;
 using GongSolutions.Wpf.DragDrop;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

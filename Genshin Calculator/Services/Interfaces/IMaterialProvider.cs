@@ -2,7 +2,7 @@
 using Genshin_Calculator.Models;
 using System.Collections.Generic;
 
-namespace Genshin_Calculator.Services.Materials;
+namespace Genshin_Calculator.Services.Interfaces;
 
 public interface IMaterialProvider
 {

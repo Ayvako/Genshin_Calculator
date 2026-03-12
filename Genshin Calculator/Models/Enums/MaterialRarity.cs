@@ -1,4 +1,4 @@
-﻿namespace Genshin_Calculator.Helpers.Enums;
+﻿namespace Genshin_Calculator.Models.Enums;
 
 /// <summary>
 /// Types of rarity of materials.

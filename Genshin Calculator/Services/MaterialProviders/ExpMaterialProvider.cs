@@ -1,5 +1,5 @@
-﻿using Genshin_Calculator.Helpers.Enums;
-using Genshin_Calculator.Models;
+﻿using Genshin_Calculator.Models;
+using Genshin_Calculator.Models.Enums;
 using Genshin_Calculator.Services.Interfaces;
 using System.Collections.Generic;
 

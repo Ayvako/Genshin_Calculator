@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Genshin_Calculator.Helpers.Enums;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Models.Enums;
 using Genshin_Calculator.Services.Interfaces;
 
 namespace Genshin_Calculator.Services;

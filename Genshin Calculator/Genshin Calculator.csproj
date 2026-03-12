@@ -836,4 +836,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Presentation\Features\Inventory\" />
+    <Folder Include="Presentation\Features\Characters\" />
+    <Folder Include="Presentation\Features\Dialogs\" />
+  </ItemGroup>
 </Project>

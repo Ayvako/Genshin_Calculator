@@ -1,4 +1,4 @@
-﻿using Genshin_Calculator.Helpers.Enums;
+﻿using Genshin_Calculator.Models.Enums;
 
 namespace Genshin_Calculator.Services.Interfaces;
 

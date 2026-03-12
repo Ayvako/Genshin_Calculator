@@ -1,13 +1,14 @@
-﻿using System;
-using System.Windows;
-using Genshin_Calculator.Presentation.Services;
+﻿using Genshin_Calculator.Presentation.Services;
 using Genshin_Calculator.Presentation.ViewModels;
 using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
 using Genshin_Calculator.Services.MaterialProviders;
+using Genshin_Calculator.Services.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
 
@@ -25,6 +26,8 @@ public partial class App : Application
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
+        services.AddSingleton<IStaticDataRepository, WpfStaticDataRepository>();
+        services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
         services.AddSingleton<DataIOService>();
         services.AddSingleton<InventoryService>();
         services.AddSingleton<CharacterService>();

@@ -1,0 +1,90 @@
+﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Dialogs.AddMaterialsDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        SizeToContent="WidthAndHeight"
+        MinWidth="350"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+
+    <Border CornerRadius="15" Background="{StaticResource MyGradientBrush}" BorderBrush="Black" BorderThickness="1" Padding="20">
+        <StackPanel>
+            <ItemsControl ItemsSource="{Binding MaterialWrappers}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="5" Background="{StaticResource MyGradientBrush}" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Padding="10">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.15" />
+                            </Border.Effect>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0" Width="45" Height="45" CornerRadius="5"
+                                    Background="{Binding Material.Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                                    <Image Source="{Binding Material.ImagePath}" Margin="2" />
+                                </Border>
+
+                                <TextBlock Grid.Column="1" Text="{Binding Material.Name}"
+                                    VerticalAlignment="Center" Margin="15,0"
+                                    FontSize="14" Foreground="#495366" FontWeight="SemiBold" />
+
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,2">
+                                        <TextBlock Text="In stock:" VerticalAlignment="Center" FontSize="11" Foreground="#888" Margin="0,0,5,0" />
+                                        <TextBox Text="{Binding Material.Amount, UpdateSourceTrigger=PropertyChanged}"
+                                        MinWidth="40" Padding="5,0" Height="24"
+                                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                        Background="#E9E5DC" BorderThickness="0" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,2">
+                                        <TextBlock Text="Add:" VerticalAlignment="Center" FontSize="11" Foreground="#888" Margin="0,0,5,0" />
+                                        <TextBox Text="{Binding AdditionAmount, UpdateSourceTrigger=PropertyChanged}"
+                                        MinWidth="40" Padding="5,0" Height="24"
+                                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                        Foreground="#419D5F" FontWeight="Bold"
+                                        Background="#E9E5DC" BorderThickness="0" />
+                                    </StackPanel>
+
+                                    <Border BorderBrush="Black" BorderThickness="0,1,0,0" Margin="0,4,0,0" Padding="0,2,0,0">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock Text="Total:" FontSize="12" Foreground="#495366" Margin="0,0,5,0" />
+                                            <TextBlock Text="{Binding TotalResult}" FontSize="12" FontWeight="Bold" Foreground="#495366" />
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0">
+
+                <Button Content="✖"
+                        Style="{StaticResource RoundShadowButtonStyle}"
+                        Margin="0,0,25,0"
+                        Background="#C84646"
+                        Foreground="White"
+                        Command="{Binding CloseCommand}"
+                        IsCancel="True" />
+                <Button Content="✔"
+                        Style="{StaticResource RoundShadowButtonStyle}"
+                        Margin="25,0,0,0"
+                        Background="#419D5F"
+                        Foreground="White"
+                        Command="{Binding SaveCommand}"
+                        IsDefault="True" />
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
+</Window>

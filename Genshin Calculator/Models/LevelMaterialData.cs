@@ -1,0 +1,13 @@
+﻿using Genshin_Calculator.Models.Enums;
+
+namespace Genshin_Calculator.Models;
+
+public sealed record LevelMaterialData
+(
+    MaterialRarity SkillMaterialRarity,
+    MaterialRarity EnemyRarity,
+    int SkillMaterialAmount,
+    int EnemyAmount,
+    int MoraAmount,
+    int WeeklyBossAmount = 0,
+    int CrownAmount = 0);

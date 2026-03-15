@@ -1,6 +1,6 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Genshin_Calculator.Helpers;
+using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Models.Enums;
 using Newtonsoft.Json;
 

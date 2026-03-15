@@ -1,6 +1,7 @@
-﻿using Genshin_Calculator.Presentation.Services;
+﻿using Genshin_Calculator.Presentation.Features.Main;
+using Genshin_Calculator.Presentation.Features.Tools;
+using Genshin_Calculator.Presentation.Services;
 using Genshin_Calculator.Presentation.ViewModels;
-using Genshin_Calculator.Presentation.Views;
 using Genshin_Calculator.Services;
 using Genshin_Calculator.Services.Interfaces;
 using Genshin_Calculator.Services.MaterialProviders;

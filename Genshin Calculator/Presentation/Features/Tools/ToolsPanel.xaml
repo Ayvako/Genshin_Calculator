@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Genshin_Calculator.Presentation.Features.Tools.ToolsPanelControl"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <Grid>
+        <WrapPanel HorizontalAlignment="Center" Margin="10">
+            <Button Content="Add Character" Padding="0"
+                    Width="150"
+                    Height="35"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    Command="{Binding ShowCharacterSelectorCommand}" />
+
+            <Button Content="Manage Inventory" Padding="0"
+                    Width="150"
+                    Height="35"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    Command="{Binding ManageInventoryCommand}" />
+
+            <Button Content="Manage Priority" Padding="0"
+                    Width="150"
+                    Height="35"
+                    Style="{StaticResource RoundedButtonStyle}"
+                    Command="{Binding ManagePriorityCommand}" />
+        </WrapPanel>
+
+    </Grid>
+</UserControl>

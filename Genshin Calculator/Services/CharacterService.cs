@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation.Messages;
 
 namespace Genshin_Calculator.Services;
 
@@ -20,31 +20,31 @@ public class CharacterService
             .ToDictionary(c => c.Name.ToLowerInvariant(), c => c);
     }
 
-    public static void UpdateCharacter(Character character)
+    public void UpdateCharacter(Character character)
     {
         WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
     }
 
-    public static void ChangePriority(Character character1, Character character2)
+    public void ChangePriority(Character character1, Character character2)
     {
         (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
         UpdateCharacter(character1);
         UpdateCharacter(character2);
     }
 
-    public static void ToggleCharacterActivity(Character character)
+    public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
         UpdateCharacter(character);
     }
 
-    public static void SetCharacterActivity(Character character, bool isActive)
+    public void SetCharacterActivity(Character character, bool isActive)
     {
         character.Activated = isActive;
         UpdateCharacter(character);
     }
 
-    public static void DeleteCharacter(Character character)
+    public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Reset();

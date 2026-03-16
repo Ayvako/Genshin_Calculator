@@ -1,34 +1,18 @@
 ﻿using Genshin_Calculator.Models.Enums;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Genshin_Calculator.Services.MaterialProviders;
 
 public class MaterialProviderFactory : IMaterialProviderFactory
 {
-    private readonly IMaterialProvider skillMaterials;
+    private readonly Dictionary<MaterialTypes, IMaterialProvider> providers;
 
-    private readonly IMaterialProvider gems;
-
-    private readonly IMaterialProvider enemies;
-
-    private readonly IMaterialProvider exp;
-
-    public MaterialProviderFactory(SkillMaterialProvider skillMaterials, GemMaterialProvider gems, EnemyMaterialProvider enemies, ExpMaterialProvider exp)
+    public MaterialProviderFactory(IEnumerable<IMaterialProvider> providers)
     {
-        this.skillMaterials = skillMaterials;
-        this.gems = gems;
-        this.enemies = enemies;
-        this.exp = exp;
+        this.providers = providers.ToDictionary(p => p.SupportedType);
     }
 
-    public IMaterialProvider? GetProvider(MaterialTypes materialType)
-    {
-        return materialType switch
-        {
-            MaterialTypes.SkillMaterial => this.skillMaterials,
-            MaterialTypes.Gem => this.gems,
-            MaterialTypes.Enemy => this.enemies,
-            MaterialTypes.Exp => this.exp,
-            _ => null,
-        };
-    }
+    public IMaterialProvider? GetProvider(MaterialTypes materialType) =>
+        this.providers.GetValueOrDefault(materialType);
 }

@@ -6,6 +6,8 @@ namespace Genshin_Calculator.Services.MaterialProviders;
 
 public interface IMaterialProvider
 {
+    MaterialTypes SupportedType { get; }
+
     string GetMaterial(Character character, MaterialRarity rarity);
 
     IEnumerable<string> GetMaterialGroup(Character character);

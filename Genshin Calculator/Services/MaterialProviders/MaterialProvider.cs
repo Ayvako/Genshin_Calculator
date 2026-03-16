@@ -21,6 +21,8 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
             ?? throw new InvalidOperationException($"{jsonName}.json not found");
     }
 
+    public virtual MaterialTypes SupportedType { get; }
+
     public static T? GetMaterials<T>(string materials)
     {
         var uri = ResourcePaths.MaterialsJson(materials);

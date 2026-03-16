@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Genshin_Calculator.Services;
 
 public class CharacterService
 {
-    private readonly InventoryService inventoryService;
+    private readonly IInventoryService inventoryService;
 
     private readonly Dictionary<string, Character> characterByName;
 
-    public CharacterService(InventoryService inventoryService)
+    public CharacterService(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
 

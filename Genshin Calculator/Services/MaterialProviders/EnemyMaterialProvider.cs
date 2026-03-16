@@ -11,6 +11,8 @@ public sealed class EnemyMaterialProvider : MaterialProvider<string>
     {
     }
 
+    public override MaterialTypes SupportedType => MaterialTypes.Enemy;
+
     protected override string GetKey(Character character) =>
         character.Assets?.Enemy
         ?? throw new ArgumentException("Character has no enemy group");

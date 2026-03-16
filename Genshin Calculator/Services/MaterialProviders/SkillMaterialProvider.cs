@@ -7,38 +7,24 @@ namespace Genshin_Calculator.Services.MaterialProviders;
 
 public sealed class SkillMaterialProvider : IMaterialProvider
 {
+    public MaterialTypes SupportedType => MaterialTypes.SkillMaterial;
+
     public string GetMaterial(Character character, MaterialRarity rarity)
     {
-        var baseName = GetBaseName(character);
-
+        var names = MaterialNaming.GetSkillNames(GetBaseName(character));
         return rarity switch
         {
-            MaterialRarity.Green => $"TeachingsOf{baseName}",
-            MaterialRarity.Blue => $"GuideTo{baseName}",
-            MaterialRarity.Violet => $"PhilosophiesOf{baseName}",
-            _ => throw new ArgumentOutOfRangeException(nameof(rarity), "Talent books only have Green, Blue, and Violet rarities"),
+            MaterialRarity.Green => names[0],
+            MaterialRarity.Blue => names[1],
+            MaterialRarity.Violet => names[2],
+            _ => throw new ArgumentOutOfRangeException(nameof(rarity)),
         };
     }
 
-    public IEnumerable<string> GetMaterialGroup(Character character)
-    {
-        var baseName = GetBaseName(character);
-
-        return
-        [
-            $"TeachingsOf{baseName}",
-            $"GuideTo{baseName}",
-            $"PhilosophiesOf{baseName}"
-        ];
-    }
+    public IEnumerable<string> GetMaterialGroup(Character character) => MaterialNaming.GetSkillNames(GetBaseName(character));
 
     private static string GetBaseName(Character character)
     {
-        if (string.IsNullOrEmpty(character.Assets?.SkillMaterials))
-        {
-            throw new ArgumentException($"Character {character.Name} has no skill materials base name defined");
-        }
-
-        return character.Assets.SkillMaterials;
+        return character.Assets?.SkillMaterials ?? throw new ArgumentException("Character has no skillMaterials");
     }
 }

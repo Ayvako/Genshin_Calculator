@@ -9,7 +9,7 @@ using Genshin_Calculator.Services.State;
 
 namespace Genshin_Calculator.Services;
 
-public class InventoryService
+public class InventoryService : IInventoryService
 {
     private const string HeroWit = "HerosWit";
 

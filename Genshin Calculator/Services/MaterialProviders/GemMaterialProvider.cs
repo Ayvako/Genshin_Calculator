@@ -7,40 +7,21 @@ namespace Genshin_Calculator.Services.MaterialProviders;
 
 public sealed class GemMaterialProvider : IMaterialProvider
 {
-    public static string GetBaseGemName(Element element) => element switch
-    {
-        Element.Cryo => "ShivadaJade",
-        Element.Electro => "VajradaAmethyst",
-        Element.Dendro => "NagadusEmerald",
-        Element.Pyro => "AgnidusAgate",
-        Element.Geo => "PrithivaTopaz",
-        Element.Hydro => "VarunadaLazurite",
-        Element.Anemo => "VayudaTurquoise",
-        _ => throw new ArgumentException($"Unknown element: {element}"),
-    };
+    public MaterialTypes SupportedType => MaterialTypes.Gem;
 
     public string GetMaterial(Character character, MaterialRarity rarity)
     {
-        string baseName = GetBaseGemName(character.Assets!.Element);
-
+        var names = MaterialNaming.GetGemNames(character.Assets?.Element ?? throw new ArgumentException("Character has no element"));
         return rarity switch
         {
-            MaterialRarity.Green => $"{baseName}Sliver",
-            MaterialRarity.Blue => $"{baseName}Fragment",
-            MaterialRarity.Violet => $"{baseName}Chunk",
-            MaterialRarity.Orange => $"{baseName}Gemstone",
-            _ => throw new ArgumentOutOfRangeException(nameof(rarity), "Gems only have Green, Blue, Violet, and Orange rarities"),
+            MaterialRarity.Green => names[0],
+            MaterialRarity.Blue => names[1],
+            MaterialRarity.Violet => names[2],
+            MaterialRarity.Orange => names[3],
+            _ => throw new ArgumentOutOfRangeException(nameof(rarity)),
         };
     }
 
     public IEnumerable<string> GetMaterialGroup(Character character)
-    {
-        string baseName = GetBaseGemName(character.Assets!.Element);
-        return [
-            $"{baseName}Sliver",
-            $"{baseName}Fragment",
-            $"{baseName}Chunk",
-            $"{baseName}Gemstone"
-        ];
-    }
+            => MaterialNaming.GetGemNames(character.Assets?.Element ?? throw new ArgumentException("Character has no element"));
 }

@@ -37,6 +37,8 @@ public partial class App : Application
         services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
         services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
 
+        services.AddTransient<IInventoryService, InventoryService>();
+
         services.AddTransient<ToolsPanelViewModel>();
         services.AddTransient<MainViewModel>();
 
@@ -47,6 +49,11 @@ public partial class App : Application
         services.AddSingleton<SkillMaterialProvider>();
         services.AddSingleton<EnemyMaterialProvider>();
         services.AddSingleton<ExpMaterialProvider>();
+
+        services.AddSingleton<IMaterialProvider, SkillMaterialProvider>();
+        services.AddSingleton<IMaterialProvider, GemMaterialProvider>();
+        services.AddSingleton<IMaterialProvider, EnemyMaterialProvider>();
+        services.AddSingleton<IMaterialProvider, ExpMaterialProvider>();
 
         services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
 

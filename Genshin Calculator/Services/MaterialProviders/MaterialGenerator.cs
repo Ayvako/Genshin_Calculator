@@ -12,43 +12,59 @@ public static class MaterialGenerator
     {
         var materials = new List<Material>();
 
-        var skillBaseNames = characters.Select(c => c.Assets!.SkillMaterials).Distinct().Where(n => !string.IsNullOrEmpty(n));
-        foreach (var baseName in skillBaseNames)
-        {
-            materials.Add(new Material($"TeachingsOf{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Green, 0));
-            materials.Add(new Material($"GuideTo{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Blue, 0));
-            materials.Add(new Material($"PhilosophiesOf{baseName}", MaterialTypes.SkillMaterial, MaterialRarity.Violet, 0));
-        }
+        var skillMaterials = characters
+            .Select(c => c.Assets!.SkillMaterials)
+            .Where(n => !string.IsNullOrEmpty(n))
+            .Distinct()
+            .SelectMany(baseName =>
+            {
+                var names = MaterialNaming.GetSkillNames(baseName);
+                return new[]
+                {
+                    new Material(names[0], MaterialTypes.SkillMaterial, MaterialRarity.Green, 0),
+                    new Material(names[1], MaterialTypes.SkillMaterial, MaterialRarity.Blue, 0),
+                    new Material(names[2], MaterialTypes.SkillMaterial, MaterialRarity.Violet, 0),
+                };
+            });
 
-        var elements = characters.Select(c => c.Assets!.Element).Distinct();
-        foreach (var element in elements)
-        {
-            string baseName = GemMaterialProvider.GetBaseGemName(element);
-            materials.Add(new Material($"{baseName}Sliver", MaterialTypes.Gem, MaterialRarity.Green, 0));
-            materials.Add(new Material($"{baseName}Fragment", MaterialTypes.Gem, MaterialRarity.Blue, 0));
-            materials.Add(new Material($"{baseName}Chunk", MaterialTypes.Gem, MaterialRarity.Violet, 0));
-            materials.Add(new Material($"{baseName}Gemstone", MaterialTypes.Gem, MaterialRarity.Orange, 0));
-        }
+        materials.AddRange(skillMaterials);
+
+        var gemMaterials = characters
+            .Select(c => c.Assets!.Element)
+            .Distinct()
+            .SelectMany(element =>
+            {
+                var names = MaterialNaming.GetGemNames(element);
+                return new[]
+                {
+                    new Material(names[0], MaterialTypes.Gem, MaterialRarity.Green, 0),
+                    new Material(names[1], MaterialTypes.Gem, MaterialRarity.Blue, 0),
+                    new Material(names[2], MaterialTypes.Gem, MaterialRarity.Violet, 0),
+                    new Material(names[3], MaterialTypes.Gem, MaterialRarity.Orange, 0),
+                };
+            });
+
+        materials.AddRange(gemMaterials);
 
         AddUnique(materials, characters, c => c.Assets!.LocalSpecialty, MaterialTypes.LocalSpecialty, MaterialRarity.White);
         AddUnique(materials, characters, c => c.Assets!.MiniBoss, MaterialTypes.MiniBoss, MaterialRarity.Violet);
         AddUnique(materials, characters, c => c.Assets!.WeeklyBoss, MaterialTypes.WeeklyBoss, MaterialRarity.Orange);
 
-        materials.Add(new Material("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Blue, 0));
-        materials.Add(new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0));
-        materials.Add(new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0));
-        materials.Add(new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0));
-        materials.Add(new Material("HerosWit", MaterialTypes.Exp, MaterialRarity.Violet, 0));
+        materials.AddRange(new[]
+        {
+            new Material("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Blue, 0),
+            new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0),
+            new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0),
+            new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0),
+            new Material("HerosWit", MaterialTypes.Exp, MaterialRarity.Violet, 0),
+        });
 
         return materials;
     }
 
     private static void AddUnique(List<Material> list, IEnumerable<Character> chars, Func<Character, string> selector, MaterialTypes type, MaterialRarity rarity)
     {
-        var names = chars.Select(selector).Distinct().Where(n => !string.IsNullOrEmpty(n));
-        foreach (var name in names)
-        {
-            list.Add(new Material(name, type, rarity, 0));
-        }
+        var names = chars.Select(selector).Where(n => !string.IsNullOrEmpty(n)).Distinct();
+        list.AddRange(names.Select(name => new Material(name, type, rarity, 0)));
     }
 }

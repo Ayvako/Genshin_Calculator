@@ -36,10 +36,10 @@ public partial class MainViewModel : ObservableRecipient,
         this.inventoryService = inventoryService;
         this.dialogService = dialogService;
         this.dataIOService = dataIOService;
+        this.characterService = characterService;
 
         this.IsActive = true;
         this.RefreshCharacters();
-        this.characterService = characterService;
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; } = [];

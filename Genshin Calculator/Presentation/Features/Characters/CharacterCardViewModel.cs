@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -77,13 +77,12 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void ToggleActive()
     {
-
-        characterService.ToggleCharacterActivity(this.Character);
+        this.characterService.ToggleCharacterActivity(this.Character);
     }
 
     [RelayCommand]
     private void Remove()
     {
-        characterService.DeleteCharacter(this.Character);
+        this.characterService.DeleteCharacter(this.Character);
     }
 }

@@ -28,27 +28,27 @@ public class CharacterService
     public void ChangePriority(Character character1, Character character2)
     {
         (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
-        UpdateCharacter(character1);
-        UpdateCharacter(character2);
+        this.UpdateCharacter(character1);
+        this.UpdateCharacter(character2);
     }
 
     public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public void SetCharacterActivity(Character character, bool isActive)
     {
         character.Activated = isActive;
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Reset();
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public void AddCharacter(Character character)
@@ -63,7 +63,7 @@ public class CharacterService
 
         character.Priority = maxPriority + 1;
 
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public Character? GetCharacterByName(string name)

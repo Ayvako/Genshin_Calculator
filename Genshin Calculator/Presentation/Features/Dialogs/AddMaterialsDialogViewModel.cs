@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Presentation.ViewModels;
 using System;
 using System.Collections.Generic;

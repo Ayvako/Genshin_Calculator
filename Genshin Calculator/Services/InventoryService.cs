@@ -4,7 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Models.Enums;
-using Genshin_Calculator.Services.Interfaces;
+using Genshin_Calculator.Services.MaterialProviders;
+using Genshin_Calculator.Services.State;
 
 namespace Genshin_Calculator.Services;
 

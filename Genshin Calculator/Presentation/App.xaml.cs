@@ -1,11 +1,12 @@
-﻿using Genshin_Calculator.Presentation.Features.Main;
+﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Infrastructure;
+using Genshin_Calculator.Infrastructure.Repositories;
+using Genshin_Calculator.Presentation.Features.Main;
 using Genshin_Calculator.Presentation.Features.Tools;
 using Genshin_Calculator.Presentation.Services;
-using Genshin_Calculator.Presentation.ViewModels;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.Interfaces;
 using Genshin_Calculator.Services.MaterialProviders;
-using Genshin_Calculator.Services.Repositories;
+using Genshin_Calculator.Services.State;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;

@@ -1,6 +1,6 @@
 ﻿using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.Services.Interfaces;
+namespace Genshin_Calculator.Services.State;
 
 public interface IInventoryStore
 {

@@ -107,7 +107,7 @@ public static class TextBoxHelper
 
         protected override void OnRender(DrawingContext drawingContext)
         {
-            TextBox textBoxControl = (TextBox)AdornedElement;
+            TextBox textBoxControl = (TextBox)this.AdornedElement;
 
             string placeholderValue = GetPlaceholder(textBoxControl);
 

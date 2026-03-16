@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
+using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.Interfaces;
 using GongSolutions.Wpf.DragDrop;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -145,7 +146,7 @@ public partial class MainViewModel : ObservableRecipient,
 
     private CharacterCardViewModel CreateCharacterViewModel(Character character, List<Material> materials)
     {
-        return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, characterService);
+        return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
     }
 
     private void RefreshAllMaterials()

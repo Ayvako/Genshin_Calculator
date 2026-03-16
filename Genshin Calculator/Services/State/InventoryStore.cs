@@ -1,7 +1,6 @@
 ﻿using Genshin_Calculator.Models;
-using Genshin_Calculator.Services.Interfaces;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Services.State;
 
 public sealed class InventoryStore : IInventoryStore
 {

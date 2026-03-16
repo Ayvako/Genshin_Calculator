@@ -1,5 +1,4 @@
 ﻿using Genshin_Calculator.Models.Enums;
-using Genshin_Calculator.Services.Interfaces;
 
 namespace Genshin_Calculator.Services.MaterialProviders;
 

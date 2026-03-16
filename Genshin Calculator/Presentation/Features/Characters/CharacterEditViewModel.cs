@@ -83,7 +83,7 @@ public partial class CharacterEditViewModel : ObservableObject
     private void Save()
     {
         this.Character.ApplyChangesFrom(this.Editable);
-        characterService.UpdateCharacter(this.Character);
+        this.characterService.UpdateCharacter(this.Character);
         this.RequestClose?.Invoke();
     }
 

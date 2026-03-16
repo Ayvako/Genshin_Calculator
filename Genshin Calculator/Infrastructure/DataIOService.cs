@@ -1,12 +1,13 @@
-﻿using Genshin_Calculator.Models;
-using Genshin_Calculator.Services.Interfaces;
+﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Models;
 using Genshin_Calculator.Services.MaterialProviders;
+using Genshin_Calculator.Services.State;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Infrastructure;
 
 public class DataIOService
 {

@@ -1,7 +1,7 @@
-﻿using Genshin_Calculator.Models;
+﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Models;
 using Genshin_Calculator.Models.Enums;
 using Genshin_Calculator.Presentation;
-using Genshin_Calculator.Services.Interfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
-namespace Genshin_Calculator.Services.Repositories;
+namespace Genshin_Calculator.Infrastructure.Repositories;
 
 public class WpfStaticDataRepository : IStaticDataRepository
 {
@@ -21,7 +21,7 @@ public class WpfStaticDataRepository : IStaticDataRepository
         var assets = json["Characters"]?.ToObject<List<Assets>>()
                      ?? throw new InvalidOperationException("Characters section missing");
 
-        return assets.Select(a => new Character(a.Name, a)).ToList();
+        return [.. assets.Select(a => new Character(a.Name, a))];
     }
 
     public List<Material> GetStaticMaterials()

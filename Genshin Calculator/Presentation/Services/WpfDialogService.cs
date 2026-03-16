@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;
 using Genshin_Calculator.Presentation.Features.Inventory;
-using Genshin_Calculator.Presentation.Features.Main;
 using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.Interfaces;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -56,7 +55,7 @@ public class WpfDialogService : IDialogService
 
     public void ShowCharacterEdit(Character character)
     {
-        var vm = new CharacterEditViewModel(character, characterService);
+        var vm = new CharacterEditViewModel(character, this.characterService);
         var view = new CharacterEditView
         {
             DataContext = vm,

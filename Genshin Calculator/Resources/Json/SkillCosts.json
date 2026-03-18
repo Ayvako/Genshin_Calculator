@@ -1,0 +1,182 @@
+{
+  "LevelCosts": {
+    "2": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Green",
+        "Amount": 3
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "White",
+        "Amount": 6
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 12500
+      }
+    ],
+    "3": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Blue",
+        "Amount": 2
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Green",
+        "Amount": 3
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 17500
+      }
+    ],
+    "4": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Blue",
+        "Amount": 4
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Green",
+        "Amount": 4
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 25000
+      }
+    ],
+    "5": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Blue",
+        "Amount": 6
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Green",
+        "Amount": 6
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 30000
+      }
+    ],
+    "6": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Blue",
+        "Amount": 9
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Green",
+        "Amount": 9
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 37500
+      }
+    ],
+    "7": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Violet",
+        "Amount": 4
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Blue",
+        "Amount": 4
+      },
+      {
+        "Type": "WeeklyBoss",
+        "Rarity": "Orange",
+        "Amount": 1
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 120000
+      }
+    ],
+    "8": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Violet",
+        "Amount": 6
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Blue",
+        "Amount": 6
+      },
+      {
+        "Type": "WeeklyBoss",
+        "Rarity": "Orange",
+        "Amount": 1
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 260000
+      }
+    ],
+    "9": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Violet",
+        "Amount": 12
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Blue",
+        "Amount": 9
+      },
+      {
+        "Type": "WeeklyBoss",
+        "Rarity": "Orange",
+        "Amount": 2
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 450000
+      }
+    ],
+    "10": [
+      {
+        "Type": "SkillMaterial",
+        "Rarity": "Violet",
+        "Amount": 16
+      },
+      {
+        "Type": "Enemy",
+        "Rarity": "Blue",
+        "Amount": 12
+      },
+      {
+        "Type": "WeeklyBoss",
+        "Rarity": "Orange",
+        "Amount": 2
+      },
+      {
+        "Type": "Crown",
+        "Rarity": "Orange",
+        "Amount": 1
+      },
+      {
+        "Type": "Mora",
+        "Rarity": "Blue",
+        "Amount": 700000
+      }
+    ]
+  }
+}

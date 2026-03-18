@@ -412,6 +412,8 @@
     <None Remove="Resources\Json\Exp.json" />
     <None Remove="Resources\Json\Gems.json" />
     <None Remove="Resources\Json\Initializations.json" />
+    <None Remove="Resources\Json\LevelCosts.json" />
+    <None Remove="Resources\Json\SkillCosts.json" />
     <None Remove="Resources\Json\SkillMaterials.json" />
     <None Remove="stylecop.json" />
   </ItemGroup>
@@ -805,6 +807,8 @@
     <Resource Include="Resources\Images\Weapons\sword.png" />
     <Resource Include="Resources\Json\Characters.json" />
     <Resource Include="Resources\Json\Enemies.json" />
+    <Resource Include="Resources\Json\LevelCosts.json" />
+    <Resource Include="Resources\Json\SkillCosts.json" />
   </ItemGroup>
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />

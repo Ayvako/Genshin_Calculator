@@ -50,14 +50,14 @@ public static class MaterialGenerator
         AddUnique(materials, characters, c => c.Assets!.MiniBoss, MaterialTypes.MiniBoss, MaterialRarity.Violet);
         AddUnique(materials, characters, c => c.Assets!.WeeklyBoss, MaterialTypes.WeeklyBoss, MaterialRarity.Orange);
 
-        materials.AddRange(new[]
-        {
-            new Material("CrownOfInsight", MaterialTypes.Other, MaterialRarity.Blue, 0),
+        materials.AddRange(
+        [
+            new Material("CrownOfInsight", MaterialTypes.Crown, MaterialRarity.Blue, 0),
             new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0),
             new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0),
             new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0),
             new Material("HerosWit", MaterialTypes.Exp, MaterialRarity.Violet, 0),
-        });
+        ]);
 
         return materials;
     }

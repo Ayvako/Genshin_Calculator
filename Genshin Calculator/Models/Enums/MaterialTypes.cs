@@ -46,6 +46,11 @@ public enum MaterialTypes
     Mora,
 
     /// <summary>
+    /// Represents the Crown.
+    /// </summary>
+    Crown,
+
+    /// <summary>
     /// Represents other types.
     /// </summary>
     Other,

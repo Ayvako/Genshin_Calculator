@@ -14,14 +14,14 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 {
     private readonly IDialogService dialogService;
 
-    private readonly InventoryService inventoryService;
+    private readonly IInventoryService inventoryService;
 
-    private readonly CharacterService characterService;
+    private readonly ICharacterService characterService;
 
     [ObservableProperty]
     private List<Material> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, IDialogService dialogService, InventoryService inventoryService, CharacterService characterService)
+    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;

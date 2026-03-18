@@ -12,7 +12,7 @@ namespace Genshin_Calculator.Presentation.Features.Characters;
 
 public partial class CharacterSelectorViewModel : ObservableObject
 {
-    private readonly CharacterService characterService;
+    private readonly ICharacterService characterService;
 
     [ObservableProperty]
     private string? searchQuery;
@@ -29,7 +29,7 @@ public partial class CharacterSelectorViewModel : ObservableObject
     [ObservableProperty]
     private bool isSortByRarity = false;
 
-    public CharacterSelectorViewModel(CharacterService characterServise)
+    public CharacterSelectorViewModel(ICharacterService characterServise)
     {
         this.characterService = characterServise;
         var deletedChars = this.characterService.GetCharacters().Where(c => c.Deleted);

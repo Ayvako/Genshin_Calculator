@@ -6,18 +6,13 @@ using System.Linq;
 
 namespace Genshin_Calculator.Services;
 
-public class CharacterService
+public class CharacterService : ICharacterService
 {
     private readonly IInventoryService inventoryService;
-
-    private readonly Dictionary<string, Character> characterByName;
 
     public CharacterService(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
-
-        this.characterByName = this.GetCharacters()
-            .ToDictionary(c => c.Name.ToLowerInvariant(), c => c);
     }
 
     public void UpdateCharacter(Character character)
@@ -25,22 +20,9 @@ public class CharacterService
         WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
     }
 
-    public void ChangePriority(Character character1, Character character2)
-    {
-        (character2.Priority, character1.Priority) = (character1.Priority, character2.Priority);
-        this.UpdateCharacter(character1);
-        this.UpdateCharacter(character2);
-    }
-
     public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
-        this.UpdateCharacter(character);
-    }
-
-    public void SetCharacterActivity(Character character, bool isActive)
-    {
-        character.Activated = isActive;
         this.UpdateCharacter(character);
     }
 
@@ -64,18 +46,6 @@ public class CharacterService
         character.Priority = maxPriority + 1;
 
         this.UpdateCharacter(character);
-    }
-
-    public Character? GetCharacterByName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return null;
-        }
-
-        this.characterByName.TryGetValue(name.ToLowerInvariant(), out var character);
-
-        return character;
     }
 
     public IReadOnlyList<Character> GetCharacters()

@@ -17,9 +17,9 @@ public partial class InventoryViewModel : ObservableObject
 {
     private readonly List<Material> originalMaterials;
 
-    private readonly InventoryService inventoryService;
+    private readonly IInventoryService inventoryService;
 
-    public InventoryViewModel(InventoryService inventoryService)
+    public InventoryViewModel(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
         var inventory = this.inventoryService.GetInventory();

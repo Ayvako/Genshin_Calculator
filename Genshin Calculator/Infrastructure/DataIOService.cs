@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Genshin_Calculator.Infrastructure;
 
-public class DataIOService
+public class DataIOService : IDataIOService
 {
     private readonly IInventoryStore store;
 

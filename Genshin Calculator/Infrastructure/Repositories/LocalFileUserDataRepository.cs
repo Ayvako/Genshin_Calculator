@@ -1,11 +1,12 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
@@ -27,20 +28,71 @@ public class LocalFileUserDataRepository : IUserDataRepository
             Directory.CreateDirectory(directory);
         }
 
-        File.WriteAllText(this.exportFilePath, exportJson.ToString(Formatting.Indented));
-        Console.WriteLine($"💾 Export saved to {this.exportFilePath}");
+        string tempFilePath = this.exportFilePath + ".tmp";
+        string backupFilePath = this.exportFilePath + ".bak";
+        string jsonString = exportJson.ToString(Formatting.Indented);
+
+        try
+        {
+            using (FileStream fs = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
+            using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+            {
+                sw.Write(jsonString);
+                sw.Flush();
+                fs.Flush(true);
+            }
+
+            if (File.Exists(this.exportFilePath))
+            {
+                File.Replace(tempFilePath, this.exportFilePath, backupFilePath, ignoreMetadataErrors: true);
+            }
+            else
+            {
+                File.Move(tempFilePath, this.exportFilePath);
+            }
+
+            Console.WriteLine($"💾 Export saved safely to {this.exportFilePath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error saving export: {ex.Message}");
+
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+        }
     }
 
     public (Inventory? Inventory, List<Character>? Characters) Load()
     {
-        if (!File.Exists(this.exportFilePath))
+        var result = this.TryLoadFile(this.exportFilePath);
+        if (result.Inventory != null || result.Characters != null)
+        {
+            return result;
+        }
+
+        string backupFilePath = this.exportFilePath + ".bak";
+        if (File.Exists(backupFilePath))
+        {
+            Console.WriteLine($"⚠️ Main file corrupted or missing. Attempting to load backup from {backupFilePath}");
+            return this.TryLoadFile(backupFilePath);
+        }
+
+        return (null, null);
+    }
+
+    private (Inventory? Inventory, List<Character>? Characters) TryLoadFile(string filePath)
+    {
+        if (!File.Exists(filePath))
         {
             return (null, null);
         }
 
         try
         {
-            var jsonContent = File.ReadAllText(this.exportFilePath);
+            var jsonContent = File.ReadAllText(filePath);
+
             var exportJson = JObject.Parse(jsonContent);
 
             var importedInventory = exportJson["Inventory"]?.ToObject<Inventory>();
@@ -50,7 +102,7 @@ public class LocalFileUserDataRepository : IUserDataRepository
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"⚠️ Warning: Failed to load user export. {ex.Message}");
+            Console.WriteLine($"⚠️ Warning: Failed to load {filePath}. {ex.Message}");
             return (null, null);
         }
     }

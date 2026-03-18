@@ -14,7 +14,7 @@ public partial class CharacterEditViewModel : ObservableObject
 {
     private readonly ImmutableArray<string> levels = LevelHelper.Levels;
 
-    private readonly CharacterService characterService;
+    private readonly ICharacterService characterService;
 
     [ObservableProperty]
     private bool isPopupOpen;
@@ -22,7 +22,7 @@ public partial class CharacterEditViewModel : ObservableObject
     [ObservableProperty]
     private int maxTalentLevel;
 
-    public CharacterEditViewModel(Character character, CharacterService characterService)
+    public CharacterEditViewModel(Character character, ICharacterService characterService)
     {
         this.characterService = characterService;
         this.Character = character;

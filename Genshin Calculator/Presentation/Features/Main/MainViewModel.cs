@@ -20,18 +20,18 @@ public partial class MainViewModel : ObservableRecipient,
     IRecipient<InventoryChangedMessage>, IDropTarget,
     IRecipient<DimmingMessage>
 {
-    private readonly InventoryService inventoryService;
+    private readonly IInventoryService inventoryService;
 
     private readonly IDialogService dialogService;
 
-    private readonly DataIOService dataIOService;
+    private readonly IDataIOService dataIOService;
 
-    private readonly CharacterService characterService;
+    private readonly ICharacterService characterService;
 
     [ObservableProperty]
     private bool isDimmed;
 
-    public MainViewModel(InventoryService inventoryService, IDialogService dialogService, DataIOService dataIOService, CharacterService characterService)
+    public MainViewModel(IInventoryService inventoryService, IDialogService dialogService, IDataIOService dataIOService, ICharacterService characterService)
     {
         this.inventoryService = inventoryService;
         this.dialogService = dialogService;

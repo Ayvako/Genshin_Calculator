@@ -13,11 +13,11 @@ namespace Genshin_Calculator.Presentation.Services;
 
 public class WpfDialogService : IDialogService
 {
-    private readonly CharacterService characterService;
+    private readonly ICharacterService characterService;
 
-    private readonly InventoryService inventoryService;
+    private readonly IInventoryService inventoryService;
 
-    public WpfDialogService(CharacterService characterService, InventoryService inventoryService)
+    public WpfDialogService(ICharacterService characterService, IInventoryService inventoryService)
     {
         this.characterService = characterService;
         this.inventoryService = inventoryService;

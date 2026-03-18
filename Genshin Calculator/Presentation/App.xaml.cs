@@ -52,6 +52,8 @@ public partial class App : Application
 
             services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
             services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
+            services.AddTransient<ICharacterService, CharacterService>();
+            services.AddTransient<IDataIOService, DataIOService>();
 
             services.AddTransient<IInventoryService, InventoryService>();
 
@@ -91,7 +93,7 @@ public partial class App : Application
         catch (Exception ex)
         {
             MessageBox.Show($"An error occurred during application startup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            this.Shutdown();
+            Environment.Exit(0);
         }
     }
 

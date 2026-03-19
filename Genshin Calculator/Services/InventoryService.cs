@@ -15,7 +15,7 @@ public class InventoryService : IInventoryService
 
     private const int HeroWitXp = 20000;
 
-    private const string AdventurerExperience = "AdventurerExperience";
+    private const string AdventurerExperience = "AdventurersExperience";
 
     private const int AdventurerExperienceXp = 5000;
 
@@ -96,15 +96,62 @@ public class InventoryService : IInventoryService
 
         foreach (var character in activeSortedCharacters)
         {
-            var missingForChar = this.ProcessCharacterRequirements(character, tempInventory, ref totalExpPool);
+            var fullRequirements = this.TotalCost(character);
 
-            if (missingForChar.Count > 0)
+            var missingForChar = this.ProcessCharacterRequirements(character, tempInventory, ref totalExpPool, fullRequirements);
+
+            var missingLookup = missingForChar.ToDictionary(m => m.Name);
+
+            foreach (var req in fullRequirements)
             {
-                result[character] = SortMaterialsForDisplay(missingForChar);
+                if (missingLookup.TryGetValue(req.Name, out var missingItem))
+                {
+                    req.IsCollected = false;
+                    req.Amount = missingItem.Amount;
+                }
+                else
+                {
+                    req.IsCollected = true;
+                }
+            }
+
+            if (fullRequirements.Count > 0)
+            {
+                result[character] = SortMaterialsForDisplay(fullRequirements);
             }
         }
 
         return result;
+    }
+
+    public List<Material> TotalCost(Character character)
+    {
+        var charCost = this.characterUpgrade.GetCharacterCost(character);
+        var skillCost = this.skillUpgrade.GetSkillsCost(character);
+
+        var rawMaterials = charCost.Concat(skillCost);
+        var resultList = new List<Material>();
+        long totalXpAmount = 0;
+
+        foreach (var group in rawMaterials.GroupBy(m => new { m.Name, m.Type, m.Rarity }))
+        {
+            if (group.Key.Type == MaterialTypes.Exp)
+            {
+                totalXpAmount += group.Sum(x => (long)x.Amount);
+            }
+            else
+            {
+                resultList.Add(new Material(group.Key.Name, group.Key.Type, group.Key.Rarity, group.Sum(x => x.Amount)));
+            }
+        }
+
+        if (totalXpAmount > 0)
+        {
+            int heroWitCount = (int)Math.Ceiling((double)totalXpAmount / HeroWitXp);
+            resultList.Add(new Material(HeroWit, MaterialTypes.Exp, MaterialRarity.Violet, heroWitCount));
+        }
+
+        return resultList;
     }
 
     private static List<Material> SortMaterialsForDisplay(List<Material> materials)
@@ -160,13 +207,13 @@ public class InventoryService : IInventoryService
 
     private static void ConsumeExp(Material required, List<Material> missingForChar, ref long totalExpPool)
     {
-        if (totalExpPool >= required.Amount)
+        if (totalExpPool >= required.Amount * HeroWitXp)
         {
-            totalExpPool -= (long)required.Amount;
+            totalExpPool -= (long)required.Amount * HeroWitXp;
             return;
         }
 
-        long shortageXP = (long)required.Amount - totalExpPool;
+        long shortageXP = ((long)required.Amount * HeroWitXp) - totalExpPool;
         int booksNeeded = (int)Math.Ceiling(shortageXP / (float)HeroWitXp);
 
         if (booksNeeded > 0)
@@ -181,12 +228,13 @@ public class InventoryService : IInventoryService
         totalExpPool = 0;
     }
 
-    private List<Material> ProcessCharacterRequirements(Character character, Inventory tempInventory, ref long totalExpPool)
+    private List<Material> ProcessCharacterRequirements(Character character, Inventory tempInventory, ref long totalExpPool, List<Material> fullRequirements)
     {
         var missingForChar = new List<Material>();
-        var requiredMaterials = this.TotalCost(character).OrderByDescending(m => m.Rarity);
 
-        foreach (var required in requiredMaterials)
+        var sortedReqs = fullRequirements.OrderByDescending(m => m.Rarity);
+
+        foreach (var required in sortedReqs)
         {
             switch (required.Type)
             {
@@ -269,15 +317,5 @@ public class InventoryService : IInventoryService
         var provider = this.materialFactory.GetProvider(type);
 
         return provider == null ? throw new ArgumentException($"No provider found for type {type}") : provider.GetMaterial(c, rarity);
-    }
-
-    private List<Material> TotalCost(Character character)
-    {
-        var charCost = this.characterUpgrade.GetCharacterCost(character);
-        var skillCost = this.skillUpgrade.GetSkillsCost(character);
-
-        return [.. charCost.Concat(skillCost)
-            .GroupBy(m => new { m.Name, m.Type, m.Rarity })
-            .Select(g => new Material(g.Key.Name, g.Key.Type, g.Key.Rarity, g.Sum(x => x.Amount)))];
     }
 }

@@ -11,12 +11,17 @@ public partial class Material : ObservableObject
     [ObservableProperty]
     private int amount;
 
+    [JsonIgnore]
+    [ObservableProperty]
+    private bool isCollected;
+
     public Material(string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         this.Name = name;
         this.Type = type;
         this.Amount = amount;
         this.Rarity = rarity;
+        this.IsCollected = false;
     }
 
     public string Name { get; set; }

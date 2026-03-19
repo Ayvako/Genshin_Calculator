@@ -130,13 +130,32 @@
                                 </Button.Template>
 
                                 <Border Margin="4" CornerRadius="10" BorderBrush="Black" BorderThickness="1"
-                                    Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
-                                    <StackPanel Orientation="Vertical">
-                                        <Border Background="Black" CornerRadius="10,10,0,0">
-                                            <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
-                                        </Border>
-                                        <Image Source="{Binding ImagePath}" Width="40" Height="40" />
-                                    </StackPanel>
+                                    Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                                    Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
+
+                                    <Grid>
+                                        <StackPanel Orientation="Vertical">
+                                            <Border Background="Black" CornerRadius="10,10,0,0">
+                                                <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
+                                            </Border>
+                                            <Image Source="{Binding ImagePath}" Width="40" Height="40" Margin="0,0,0,4" />
+                                        </StackPanel>
+
+                                        <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2"
+                                             Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                                            <Ellipse Fill="White" Width="20" Height="20">
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect BlurRadius="3" Color="Black" Opacity="0.5" ShadowDepth="1" />
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;"
+                                                Foreground="#FF22CC22" FontSize="14"
+                                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                FontWeight="Bold" />
+                                        </Grid>
+                                    </Grid>
                                 </Border>
                             </Button>
                         </DataTemplate>

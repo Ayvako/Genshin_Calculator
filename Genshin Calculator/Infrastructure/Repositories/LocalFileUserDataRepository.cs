@@ -34,8 +34,8 @@ public class LocalFileUserDataRepository : IUserDataRepository
 
         try
         {
-            using (FileStream fs = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
-            using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
+            using (FileStream fs = new(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
+            using (StreamWriter sw = new(fs, Encoding.UTF8))
             {
                 sw.Write(jsonString);
                 sw.Flush();

@@ -14,4 +14,6 @@ public interface IInventoryService
     Dictionary<Character, List<Material>> CalculateMissingMaterials(Inventory sourceInventory);
 
     List<Material> GetRelatedMaterials(Character character, Material material);
+
+    List<Material> TotalCost(Character character);
 }

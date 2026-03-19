@@ -5,7 +5,7 @@
     <RootNamespace>Genshin_Calculator</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>True</UseWPF>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="C:\Users\Cat.DESKTOP-TIV5LI1\.nuget\packages\materialdesignthemes\5.3.1-ci1190\contentFiles\any\net8.0-windows7.0\Resources\Noto\NotoSans-Bold.ttf" />

@@ -15,12 +15,6 @@
                     Height="35"
                     Style="{StaticResource RoundedButtonStyle}"
                     Command="{Binding ManageInventoryCommand}" />
-
-            <Button Content="Manage Priority" Padding="0"
-                    Width="150"
-                    Height="35"
-                    Style="{StaticResource RoundedButtonStyle}"
-                    Command="{Binding ManagePriorityCommand}" />
         </WrapPanel>
 
     </Grid>

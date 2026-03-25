@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Inventory.InventoryView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:helpers="clr-namespace:Genshin_Calculator.Presentation.Helpers"
         Title="Inventory Manager" Height="600" Width="720"
         WindowStartupLocation="CenterOwner"
         Background="#222222">
@@ -54,15 +55,15 @@
 
                                 <Border Background="Black" CornerRadius="9,9,0,0">
                                     <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
-                                     Foreground="White"
-                                     Background="Transparent"
-                                     BorderThickness="0"
-                                     TextAlignment="Center"
-                                     FontSize="11"
-                                     FontWeight="Bold"
-                                     CaretBrush="White" />
+                                        helpers:TextBoxExtensions.NumericOnly="True"
+                                        Foreground="White"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        TextAlignment="Center"
+                                        FontSize="11"
+                                        FontWeight="Bold"
+                                        CaretBrush="White" />
                                 </Border>
-
                             </StackPanel>
                         </Border>
                     </DataTemplate>

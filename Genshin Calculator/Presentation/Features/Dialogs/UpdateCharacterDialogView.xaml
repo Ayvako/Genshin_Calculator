@@ -1,0 +1,83 @@
+﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Dialogs.UpdateCharacterDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Подтверждение улучшения" Height="500" Width="450"
+        WindowStartupLocation="CenterOwner" Background="#1E1E1E" Foreground="White">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Затраты на улучшение" FontSize="20" FontWeight="Bold" Margin="0,0,0,15" HorizontalAlignment="Center" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Materials}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#2D2D2D" Margin="0,5" Padding="10" CornerRadius="8">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Source="{Binding TargetMaterial.ImagePath}" Width="40" Height="40" />
+
+                                    <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding TargetMaterial.Name}" FontWeight="Bold" />
+                                        <TextBlock Text="Целевой ресурс" FontSize="10" Opacity="0.6" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding TotalRequired, StringFormat='Всего: {0}'}" HorizontalAlignment="Right" />
+                                        <TextBlock Text="{Binding CraftedAmount, StringFormat='Будет скрафчено: {0}'}"
+                                                   FontSize="11" Foreground="#87CEFA"
+                                                   Visibility="{Binding CraftedAmount, Converter={StaticResource IntToVisibilityConverter}}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Expander Header="Детали алхимии" Margin="0,10,0,0"
+                                          Foreground="#87CEFA" FontSize="12"
+                                          Visibility="{Binding AlchemyCosts.Count, Converter={StaticResource IntToVisibilityConverter}}">
+                                    <ItemsControl ItemsSource="{Binding AlchemyCosts}" Margin="20,5,0,5">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <materialDesign:PackIcon Kind="FlaskOutline" Width="14" Height="14" VerticalAlignment="Center" Foreground="#FFB0B0B0" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="5,0" Opacity="0.8" />
+                                                    <TextBlock Grid.Column="2" Text="{Binding Amount, StringFormat='x{0}'}" FontWeight="Bold" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+            <Button Content="✖" Style="{StaticResource RoundShadowButtonStyle}"
+                        Margin="0,0,15,0" Width="35" Height="35"
+                        Background="#C84646" Foreground="White"
+                        Command="{Binding CancelCommand}" IsCancel="True" />
+
+            <Button Content="✔" Style="{StaticResource RoundShadowButtonStyle}"
+                        Margin="15,0,0,0" Width="35" Height="35"
+                        Background="#419D5F" Foreground="White"
+                        Command="{Binding SaveCommand}" IsDefault="True" />
+        </StackPanel>
+    </Grid>
+</Window>

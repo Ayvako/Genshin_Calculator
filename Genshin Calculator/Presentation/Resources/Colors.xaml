@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="SuccessColor">#419D5F</Color>
+    <Color x:Key="CancelColor">#C84646</Color>
+    <Color x:Key="SurfaceColor">#1E1E1E</Color>
+
+    <SolidColorBrush x:Key="SuccessActionBrush" Color="{StaticResource SuccessColor}" />
+    <SolidColorBrush x:Key="CancelActionBrush" Color="{StaticResource CancelColor}" />
+
+</ResourceDictionary>

@@ -1,8 +1,10 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models.Enums;
 using Newtonsoft.Json;
+using System;
 
 namespace Genshin_Calculator.Models;
 
@@ -11,17 +13,12 @@ public partial class Material : ObservableObject
     [ObservableProperty]
     private int amount;
 
-    [JsonIgnore]
-    [ObservableProperty]
-    private bool isCollected;
-
     public Material(string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         this.Name = name;
         this.Type = type;
         this.Amount = amount;
         this.Rarity = rarity;
-        this.IsCollected = false;
     }
 
     public string Name { get; set; }
@@ -34,6 +31,11 @@ public partial class Material : ObservableObject
 
     [JsonIgnore]
     public Uri ImagePath => ResourcePaths.Material(this.Name);
+
+    partial void OnAmountChanged(int value)
+    {
+        WeakReferenceMessenger.Default.Send(new MaterialAmountChangedMessage(this));
+    }
 
     public override bool Equals(object? obj)
     {

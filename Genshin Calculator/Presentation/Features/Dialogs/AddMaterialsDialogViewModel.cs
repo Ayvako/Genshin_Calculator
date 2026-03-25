@@ -36,7 +36,7 @@ public partial class AddMaterialsDialogViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Close()
+    private void Cancel()
     {
         this.RequestClose?.Invoke();
     }

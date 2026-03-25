@@ -5,8 +5,8 @@ using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
-using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 
@@ -19,9 +19,9 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     private readonly ICharacterService characterService;
 
     [ObservableProperty]
-    private List<Material> requiredMaterials;
+    private List<MaterialRequirementUI> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<Material> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
+    public CharacterCardViewModel(Character character, List<MaterialRequirementUI> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
@@ -72,7 +72,27 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     }
 
     [RelayCommand]
-    private void Ascend() => throw new NotImplementedException();
+    private void Ascend()
+    {
+        var inventory = this.inventoryService.GetInventory();
+        var missingMap = this.inventoryService.CalculateMissingMaterials(inventory);
+
+        if (!missingMap.TryGetValue(this.Character, out var requirements))
+        {
+            return;
+        }
+
+        bool? isConfirmed = this.dialogService.ShowUpdateCharacterDialog(requirements);
+
+        if (isConfirmed == true)
+        {
+            this.inventoryService.Upgrade(this.Character);
+
+            this.characterService.UpdateCharacter(this.Character);
+
+            Debug.WriteLine("Upgrade completed and saved.");
+        }
+    }
 
     [RelayCommand]
     private void ToggleActive()

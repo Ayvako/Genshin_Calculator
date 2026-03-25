@@ -9,9 +9,9 @@ public interface IInventoryService
 
     Inventory GetInventory();
 
-    public void Upgrade(Character character, Inventory inventory);
+    public void Upgrade(Character character);
 
-    Dictionary<Character, List<Material>> CalculateMissingMaterials(Inventory sourceInventory);
+    Dictionary<Character, List<MaterialRequirementUI>> CalculateMissingMaterials(Inventory sourceInventory);
 
     List<Material> GetRelatedMaterials(Character character, Material material);
 }

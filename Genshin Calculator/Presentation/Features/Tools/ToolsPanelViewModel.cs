@@ -20,12 +20,6 @@ public partial class ToolsPanelViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void ManagePriority()
-    {
-        this.dialogService.ShowPriority();
-    }
-
-    [RelayCommand]
     private void ShowCharacterSelector()
     {
         this.dialogService.ShowCharacterSelector();

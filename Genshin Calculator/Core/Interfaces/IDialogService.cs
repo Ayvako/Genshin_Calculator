@@ -1,4 +1,5 @@
 ﻿using Genshin_Calculator.Models;
+using Genshin_Calculator.Services;
 using System.Collections.Generic;
 
 namespace Genshin_Calculator.Core.Interfaces;
@@ -11,7 +12,7 @@ public interface IDialogService
 
     void ShowInventory();
 
-    void ShowPriority();
+    bool ShowUpdateCharacterDialog(List<MaterialRequirementUI> materialRequirementUIs);
 
     void ShowAddMaterialsDialog(List<Material> list);
 }

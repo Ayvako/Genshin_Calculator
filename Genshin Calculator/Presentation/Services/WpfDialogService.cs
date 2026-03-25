@@ -131,8 +131,38 @@ public class WpfDialogService : IDialogService
         window.ShowDialog();
     }
 
-    public void ShowPriority()
+    public bool ShowUpdateCharacterDialog(List<MaterialRequirementUI> materialRequirementUIs)
     {
-        MessageBox.Show("Priority Manager - Coming Soon");
+        var vm = new UpdateCharacterDialogViewModel(materialRequirementUIs);
+        var view = new UpdateCharacterDialogView
+        {
+            DataContext = vm,
+            Owner = Application.Current.MainWindow,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+
+        bool isClosing = false;
+        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
+
+        void SafeClose()
+        {
+            if (!isClosing)
+            {
+                isClosing = true;
+                WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
+
+                if (view.IsVisible)
+                {
+                    view.Close();
+                }
+            }
+        }
+
+        view.Deactivated += (s, e) => SafeClose();
+        vm.RequestClose += () => SafeClose();
+
+        view.ShowDialog();
+
+        return vm.DialogResult ?? false;
     }
 }

@@ -6,6 +6,10 @@ namespace Genshin_Calculator.Presentation.Converters;
 
 public class DimElementConverter : IMultiValueConverter
 {
+    public double TrueOpacity { get; set; } = 0.4;
+
+    public double FalseOpacity { get; set; } = 1.0;
+
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
     {
         bool isChecked = (bool)values[0];
@@ -13,10 +17,10 @@ public class DimElementConverter : IMultiValueConverter
 
         if (count == 0)
         {
-            return 1.0;
+            return this.FalseOpacity;
         }
 
-        return isChecked ? 1.0 : 0.35;
+        return isChecked ? this.FalseOpacity : this.TrueOpacity;
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

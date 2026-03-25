@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Genshin_Calculator.Presentation.Controls.DialogButtonsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+        <Button Content="✖"
+                Style="{StaticResource RoundShadowButtonStyle}"
+                Margin="0,0,15,0" Width="35" Height="35"
+                Background="{StaticResource CancelActionBrush}"
+                Foreground="White"
+                Command="{Binding CancelCommand}"
+                IsCancel="True" />
+
+        <Button Content="✔"
+                Style="{StaticResource RoundShadowButtonStyle}"
+                Margin="15,0,0,0" Width="35" Height="35"
+                Background="{StaticResource SuccessActionBrush}"
+                Foreground="White"
+                Command="{Binding SaveCommand}"
+                IsDefault="True" />
+    </StackPanel>
+</UserControl>

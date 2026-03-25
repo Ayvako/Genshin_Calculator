@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Presentation/Resources/Styles/Styles.xaml" />
+                <ResourceDictionary Source="Resources/Colors.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <conv:RarityToBrushConverter x:Key="RarityToBrushConverter" />
@@ -24,6 +25,7 @@
             <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
 
+            <conv:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

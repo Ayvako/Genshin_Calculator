@@ -118,11 +118,11 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Command="{Binding DataContext.OpenAddItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                CommandParameter="{Binding}"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Padding="0"
-                                Cursor="Hand">
+                                    CommandParameter="{Binding TargetMaterial}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="0"
+                                    Cursor="Hand">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
                                         <ContentPresenter />
@@ -130,19 +130,19 @@
                                 </Button.Template>
 
                                 <Border Margin="4" CornerRadius="10" BorderBrush="Black" BorderThickness="1"
-                                    Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}"
-                                    Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
+                        Background="{Binding TargetMaterial.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                        Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
 
                                     <Grid>
                                         <StackPanel Orientation="Vertical">
                                             <Border Background="Black" CornerRadius="10,10,0,0">
-                                                <TextBlock Text="{Binding Amount}" Foreground="White" TextAlignment="Center" />
+                                                <TextBlock Text="{Binding TotalRequired}" Foreground="White" TextAlignment="Center" />
                                             </Border>
-                                            <Image Source="{Binding ImagePath}" Width="40" Height="40" Margin="0,0,0,4" />
+                                            <Image Source="{Binding TargetMaterial.ImagePath}" Width="40" Height="40" Margin="0,0,0,4" />
                                         </StackPanel>
 
                                         <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2"
-                                             Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                              Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
 
                                             <Ellipse Fill="White" Width="20" Height="20">
                                                 <Ellipse.Effect>
@@ -151,9 +151,9 @@
                                             </Ellipse>
 
                                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;"
-                                                Foreground="#FF22CC22" FontSize="14"
-                                                HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                FontWeight="Bold" />
+                                       Foreground="#FF22CC22" FontSize="14"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       FontWeight="Bold" />
                                         </Grid>
                                     </Grid>
                                 </Border>

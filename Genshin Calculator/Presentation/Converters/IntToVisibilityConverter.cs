@@ -1,28 +1,24 @@
 ﻿using System;
-
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Genshin_Calculator.Presentation.Converters;
 
-public class BoolToOpacityConverter : IValueConverter
+public class IntToVisibilityConverter : IValueConverter
 {
-    public double TrueOpacity { get; set; } = 0.4;
-
-    public double FalseOpacity { get; set; } = 1.0;
-
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is bool isCollected)
+        if (value is int intValue && intValue > 0)
         {
-            return isCollected ? this.TrueOpacity : this.FalseOpacity;
+            return Visibility.Visible;
         }
 
-        return this.FalseOpacity;
+        return Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return Binding.DoNothing;
     }
 }

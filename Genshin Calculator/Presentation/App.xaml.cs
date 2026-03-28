@@ -54,6 +54,8 @@ public partial class App : Application
             services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
             services.AddTransient<ICharacterService, CharacterService>();
             services.AddTransient<IDataIOService, DataIOService>();
+            services.AddTransient<IAlchemyService, AlchemyService>();
+            services.AddTransient<IExperienceService, ExperienceService>();
 
             services.AddTransient<IInventoryService, InventoryService>();
 

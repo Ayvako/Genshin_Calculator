@@ -25,6 +25,7 @@
             <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
 
+            <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
             <conv:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>

@@ -45,6 +45,12 @@ public class ExperienceService : IExperienceService
         }
     }
 
+    public Material ConvertXpToHeroWit(long totalXpAmount)
+    {
+        int heroWitCount = (int)Math.Ceiling((double)totalXpAmount / HeroWitXp);
+        return new Material(HeroWit, MaterialTypes.Exp, MaterialRarity.Violet, heroWitCount);
+    }
+
     private static void DeductExpFromInventory(long xpToConsume, Inventory inventory, MaterialRequirementUI uiMat)
     {
         long remainingXp = xpToConsume;

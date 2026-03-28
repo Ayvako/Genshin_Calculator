@@ -151,7 +151,7 @@ public partial class MainViewModel : ObservableRecipient,
 
     private void RefreshAllMaterials()
     {
-        Genshin_Calculator.Models.Inventory inventory = this.inventoryService.GetInventory();
+        var inventory = this.inventoryService.GetInventory();
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var charVm in this.Characters)

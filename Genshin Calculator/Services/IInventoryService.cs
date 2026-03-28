@@ -9,7 +9,7 @@ public interface IInventoryService
 
     Inventory GetInventory();
 
-    public void Upgrade(Character character);
+    void Upgrade(Character character);
 
     Dictionary<Character, List<MaterialRequirementUI>> CalculateMissingMaterials(Inventory sourceInventory);
 

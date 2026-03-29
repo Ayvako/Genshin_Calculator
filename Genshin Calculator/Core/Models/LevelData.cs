@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public class LevelData
 {

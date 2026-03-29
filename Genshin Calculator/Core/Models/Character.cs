@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Models;
 using Newtonsoft.Json;
 
 namespace Genshin_Calculator.Models;

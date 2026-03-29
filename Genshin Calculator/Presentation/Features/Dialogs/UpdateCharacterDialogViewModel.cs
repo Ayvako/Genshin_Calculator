@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Genshin_Calculator.Models;
+using Genshin_Calculator.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

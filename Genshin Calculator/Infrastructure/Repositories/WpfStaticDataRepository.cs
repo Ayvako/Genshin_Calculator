@@ -1,6 +1,7 @@
 ﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Models.Enums;
 using Genshin_Calculator.Presentation;
 using Newtonsoft.Json.Linq;
 using System;

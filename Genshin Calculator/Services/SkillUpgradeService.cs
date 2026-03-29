@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services.MaterialProviders;
 

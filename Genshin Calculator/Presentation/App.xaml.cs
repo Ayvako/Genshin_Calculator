@@ -1,7 +1,7 @@
 ﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
-using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Main;
 using Genshin_Calculator.Presentation.Features.Tools;
 using Genshin_Calculator.Presentation.Services;

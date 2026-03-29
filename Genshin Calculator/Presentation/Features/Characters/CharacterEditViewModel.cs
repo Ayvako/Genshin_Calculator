@@ -5,6 +5,7 @@ using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Services;
 

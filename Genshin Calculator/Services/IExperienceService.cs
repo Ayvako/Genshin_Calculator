@@ -1,4 +1,5 @@
-﻿using Genshin_Calculator.Models;
+﻿using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Services;
 

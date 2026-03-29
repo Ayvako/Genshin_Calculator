@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Helpers;
-using Genshin_Calculator.Models;
+using Genshin_Calculator.Core.Models;
 
 namespace Genshin_Calculator.Presentation.Features.Characters.Components;
 

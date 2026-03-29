@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
+using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;

@@ -1,5 +1,5 @@
 ﻿using System;
-using Genshin_Calculator.Models.Enums;
+using Genshin_Calculator.Core.Models.Enums;
 
 namespace Genshin_Calculator.Core.Helpers;
 

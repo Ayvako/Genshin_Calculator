@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Genshin_Calculator.Models;
+using System.Collections.Generic;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public class MaterialRequirementUI
 {
     public MaterialRequirementUI(Material targetMaterial, int totalRequired)
     {
-        this.TargetMaterial = targetMaterial;
-        this.TotalRequired = totalRequired;
+        TargetMaterial = targetMaterial;
+        TotalRequired = totalRequired;
     }
 
     public Material TargetMaterial { get; set; }
@@ -22,5 +23,5 @@ public class MaterialRequirementUI
 
     public int MissingAmount { get; set; }
 
-    public bool IsCollected => this.MissingAmount <= 0;
+    public bool IsCollected => MissingAmount <= 0;
 }

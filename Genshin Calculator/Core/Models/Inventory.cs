@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Genshin_Calculator.Models;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public class Inventory
 {
@@ -10,17 +11,17 @@ public class Inventory
 
     public Inventory()
     {
-        this.materialCache = [];
+        materialCache = [];
     }
 
     [JsonIgnore]
-    public IEnumerable<Character> ActiveCharacters => this.Characters.Where(c => c.Activated && !c.Deleted);
+    public IEnumerable<Character> ActiveCharacters => Characters.Where(c => c.Activated && !c.Deleted);
 
     [JsonIgnore]
-    public IEnumerable<Character> DeletedCharacters => this.Characters.Where(c => c.Deleted);
+    public IEnumerable<Character> DeletedCharacters => Characters.Where(c => c.Deleted);
 
     [JsonIgnore]
-    public IEnumerable<Character> NotDeletedCharacters => this.Characters.Where(c => !c.Deleted);
+    public IEnumerable<Character> NotDeletedCharacters => Characters.Where(c => !c.Deleted);
 
     public List<Material> Materials { get; set; } = [];
 
@@ -28,7 +29,7 @@ public class Inventory
 
     public List<Character> GetAllCharacters()
     {
-        return this.Characters;
+        return Characters;
     }
 
     public void AddMaterial(Material material)
@@ -38,15 +39,15 @@ public class Inventory
             return;
         }
 
-        if (this.materialCache.TryGetValue(material.Name, out var existing))
+        if (materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount += material.Amount;
         }
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, material.Amount);
-            this.Materials.Add(newMaterial);
-            this.materialCache[material.Name] = newMaterial;
+            Materials.Add(newMaterial);
+            materialCache[material.Name] = newMaterial;
         }
     }
 
@@ -57,7 +58,7 @@ public class Inventory
             return;
         }
 
-        if (this.materialCache.TryGetValue(material.Name, out var existing))
+        if (materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount -= material.Amount;
 
@@ -69,8 +70,8 @@ public class Inventory
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, 0);
-            this.Materials.Add(newMaterial);
-            this.materialCache[material.Name] = newMaterial;
+            Materials.Add(newMaterial);
+            materialCache[material.Name] = newMaterial;
         }
     }
 
@@ -81,26 +82,26 @@ public class Inventory
             return;
         }
 
-        if (this.materialCache.TryGetValue(material.Name, out var existing))
+        if (materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount = material.Amount;
         }
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, material.Amount);
-            this.Materials.Add(newMaterial);
-            this.materialCache[material.Name] = newMaterial;
+            Materials.Add(newMaterial);
+            materialCache[material.Name] = newMaterial;
         }
     }
 
     public Material? GetMaterial(string name)
     {
-        return this.materialCache.TryGetValue(name, out var material) ? material : null;
+        return materialCache.TryGetValue(name, out var material) ? material : null;
     }
 
     public void RefreshCache()
     {
-        this.materialCache = this.Materials
+        materialCache = Materials
             .GroupBy(m => m.Name)
             .Select(g => g.First())
             .ToDictionary(m => m.Name, m => m);
@@ -110,8 +111,8 @@ public class Inventory
     {
         var clone = new Inventory
         {
-            Characters = [.. this.Characters.Select(c => c.Clone())],
-            Materials = [.. this.Materials.Select(m => m.Clone())],
+            Characters = [.. Characters.Select(c => c.Clone())],
+            Materials = [.. Materials.Select(m => m.Clone())],
         };
         clone.RefreshCache();
         return clone;

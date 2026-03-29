@@ -27,7 +27,7 @@ public class ExperienceService : IExperienceService
              + ((long)(inventory.GetMaterial(WandererAdvice)?.Amount ?? 0) * WandererAdviceXp);
     }
 
-    public void ProcessExpRequirement(Material req, Inventory inventory, ref long totalExpPool, MaterialRequirementUI uiMat)
+    public void ProcessExpRequirement(Material req, Inventory inventory, ref long totalExpPool, MaterialRequirement uiMat)
     {
         long neededXp = (long)req.Amount * HeroWitXp;
 
@@ -52,7 +52,7 @@ public class ExperienceService : IExperienceService
         return new Material(HeroWit, MaterialTypes.Exp, MaterialRarity.Violet, heroWitCount);
     }
 
-    private static void DeductExpFromInventory(long xpToConsume, Inventory inventory, MaterialRequirementUI uiMat)
+    private static void DeductExpFromInventory(long xpToConsume, Inventory inventory, MaterialRequirement uiMat)
     {
         long remainingXp = xpToConsume;
 
@@ -66,7 +66,7 @@ public class ExperienceService : IExperienceService
         }
     }
 
-    private static long ConsumeMaterialByXp(Inventory inventory, MaterialRequirementUI uiMat, string name, int xpValue, MaterialTypes type, MaterialRarity rarity, long remainingXp, bool incrementTakenFromInventory)
+    private static long ConsumeMaterialByXp(Inventory inventory, MaterialRequirement uiMat, string name, int xpValue, MaterialTypes type, MaterialRarity rarity, long remainingXp, bool incrementTakenFromInventory)
     {
         var mat = inventory.GetMaterial(name);
         if (mat == null || mat.Amount <= 0 || remainingXp < xpValue)
@@ -90,7 +90,7 @@ public class ExperienceService : IExperienceService
         return remainingXp;
     }
 
-    private static void ConsumeSingleFallback(Inventory inventory, MaterialRequirementUI uiMat)
+    private static void ConsumeSingleFallback(Inventory inventory, MaterialRequirement uiMat)
     {
         var wand = inventory.GetMaterial(WandererAdvice);
         if (wand != null && wand.Amount > 0)
@@ -116,7 +116,7 @@ public class ExperienceService : IExperienceService
         }
     }
 
-    private static void AddExpSubstituteCost(MaterialRequirementUI uiMat, string name, MaterialTypes type, MaterialRarity rarity, int amount)
+    private static void AddExpSubstituteCost(MaterialRequirement uiMat, string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         var tracked = uiMat.AlchemyCosts.FirstOrDefault(m => m.Name == name);
         if (tracked != null)

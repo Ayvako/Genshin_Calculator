@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Genshin_Calculator.Core.Models;
 
-public class MaterialRequirementUI
+public class MaterialRequirement
 {
-    public MaterialRequirementUI(Material targetMaterial, int totalRequired)
+    public MaterialRequirement(Material targetMaterial, int totalRequired)
     {
         TargetMaterial = targetMaterial;
         TotalRequired = totalRequired;

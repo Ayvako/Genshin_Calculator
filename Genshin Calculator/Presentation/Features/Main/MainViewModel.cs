@@ -145,7 +145,7 @@ public partial class MainViewModel : ObservableRecipient,
         }
     }
 
-    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<MaterialRequirementUI> materials)
+    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<MaterialRequirement> materials)
     {
         return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
     }

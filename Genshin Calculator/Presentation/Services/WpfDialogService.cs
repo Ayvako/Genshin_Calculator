@@ -132,7 +132,7 @@ public class WpfDialogService : IDialogService
         window.ShowDialog();
     }
 
-    public bool ShowUpdateCharacterDialog(List<MaterialRequirementUI> materialRequirementUIs)
+    public bool ShowUpdateCharacterDialog(List<MaterialRequirement> materialRequirementUIs)
     {
         var vm = new UpdateCharacterDialogViewModel(materialRequirementUIs);
         var view = new UpdateCharacterDialogView

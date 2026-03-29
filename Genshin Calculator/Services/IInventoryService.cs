@@ -12,7 +12,7 @@ public interface IInventoryService
 
     void Upgrade(Character character);
 
-    Dictionary<Character, List<MaterialRequirementUI>> CalculateMissingMaterials(Inventory sourceInventory);
+    Dictionary<Character, List<MaterialRequirement>> CalculateMissingMaterials(Inventory sourceInventory);
 
     List<Material> GetRelatedMaterials(Character character, Material material);
 }

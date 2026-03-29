@@ -12,14 +12,14 @@ public partial class UpdateCharacterDialogViewModel : ObservableObject
     [ObservableProperty]
     private bool? dialogResult;
 
-    public UpdateCharacterDialogViewModel(IReadOnlyCollection<MaterialRequirementUI> materialRequirementUIs)
+    public UpdateCharacterDialogViewModel(IReadOnlyCollection<MaterialRequirement> materialRequirementUIs)
     {
         this.Materials = [.. materialRequirementUIs.Where(m => m.TakenFromInventory > 0 || m.CraftedAmount > 0)];
     }
 
     public event Action? RequestClose;
 
-    public IReadOnlyCollection<MaterialRequirementUI> Materials { get; set; }
+    public IReadOnlyCollection<MaterialRequirement> Materials { get; set; }
 
     [RelayCommand]
     private void Save()

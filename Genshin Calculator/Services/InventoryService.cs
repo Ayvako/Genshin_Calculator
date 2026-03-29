@@ -89,10 +89,10 @@ public class InventoryService : IInventoryService
         return names.Select(inventory.GetMaterial).Where(m => m != null).ToList()!;
     }
 
-    public Dictionary<Character, List<MaterialRequirementUI>> CalculateMissingMaterials(Inventory sourceInventory)
+    public Dictionary<Character, List<MaterialRequirement>> CalculateMissingMaterials(Inventory sourceInventory)
     {
         var tempInventory = sourceInventory.Clone();
-        var result = new Dictionary<Character, List<MaterialRequirementUI>>();
+        var result = new Dictionary<Character, List<MaterialRequirement>>();
         long totalExpPool = this.experienceService.CalculateTotalExp(tempInventory);
 
         var activeCharacters = sourceInventory.NotDeletedCharacters
@@ -109,7 +109,7 @@ public class InventoryService : IInventoryService
         return result;
     }
 
-    private static void DeductAvailableMaterials(List<Material> requirements, List<MaterialRequirementUI> uiTracker, Inventory inventory)
+    private static void DeductAvailableMaterials(List<Material> requirements, List<MaterialRequirement> uiTracker, Inventory inventory)
     {
         foreach (var req in requirements)
         {
@@ -131,7 +131,7 @@ public class InventoryService : IInventoryService
         }
     }
 
-    private static List<MaterialRequirementUI> SortMaterialsForDisplay(List<MaterialRequirementUI> materials)
+    private static List<MaterialRequirement> SortMaterialsForDisplay(List<MaterialRequirement> materials)
     {
         return [.. materials
         .OrderBy(m => GetTypePriority(m.TargetMaterial.Type))
@@ -151,7 +151,7 @@ public class InventoryService : IInventoryService
         _ => 50,
     };
 
-    private void ProcessMissingMaterials(Character character, List<Material> requirements, List<MaterialRequirementUI> uiTracker, Inventory inventory, ref long totalExpPool)
+    private void ProcessMissingMaterials(Character character, List<Material> requirements, List<MaterialRequirement> uiTracker, Inventory inventory, ref long totalExpPool)
     {
         foreach (var req in requirements)
         {
@@ -183,10 +183,10 @@ public class InventoryService : IInventoryService
         }
     }
 
-    private List<MaterialRequirementUI> GetRequirementsForCharacter(Character character, Inventory inventory, ref long totalExpPool)
+    private List<MaterialRequirement> GetRequirementsForCharacter(Character character, Inventory inventory, ref long totalExpPool)
     {
         var requirements = this.TotalCost(character).Select(m => m.Clone()).ToList();
-        var uiTracker = requirements.Select(m => new MaterialRequirementUI(m.Clone(), m.Amount)).ToList();
+        var uiTracker = requirements.Select(m => new MaterialRequirement(m.Clone(), m.Amount)).ToList();
 
         DeductAvailableMaterials(requirements, uiTracker, inventory);
         this.ProcessMissingMaterials(character, requirements, uiTracker, inventory, ref totalExpPool);

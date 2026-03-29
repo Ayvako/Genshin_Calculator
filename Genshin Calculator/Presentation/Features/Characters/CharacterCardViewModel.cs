@@ -20,9 +20,9 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     private readonly ICharacterService characterService;
 
     [ObservableProperty]
-    private List<MaterialRequirementUI> requiredMaterials;
+    private List<MaterialRequirement> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<MaterialRequirementUI> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
+    public CharacterCardViewModel(Character character, List<MaterialRequirement> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;

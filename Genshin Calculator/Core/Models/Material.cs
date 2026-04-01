@@ -32,11 +32,6 @@ public partial class Material : ObservableObject
     [JsonIgnore]
     public Uri ImagePath => ResourcePaths.Material(this.Name);
 
-    partial void OnAmountChanged(int value)
-    {
-        WeakReferenceMessenger.Default.Send(new MaterialAmountChangedMessage(this));
-    }
-
     public override bool Equals(object? obj)
     {
         if (obj is not Material item)
@@ -53,4 +48,9 @@ public partial class Material : ObservableObject
     }
 
     public Material Clone() => (Material)this.MemberwiseClone();
+
+    partial void OnAmountChanged(int value)
+    {
+        WeakReferenceMessenger.Default.Send(new MaterialAmountChangedMessage(this));
+    }
 }

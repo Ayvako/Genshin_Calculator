@@ -1,4 +1,5 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
@@ -27,6 +28,12 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        var allResourceNames = typeof(App).Assembly.GetManifestResourceNames();
+        foreach (var name in allResourceNames)
+        {
+            System.Diagnostics.Debug.WriteLine($"Found resource: {name}");
+        }
+
         var services = new ServiceCollection();
 
         var builder = new ConfigurationBuilder()
@@ -36,49 +43,43 @@ public partial class App : Application
         try
         {
             var levelData = LoadResource<LevelData>("Resources/Json/LevelCosts.json");
-            services.AddSingleton(levelData);
-
             var skillData = LoadResource<SkillLevelData>("Resources/Json/SkillCosts.json");
-            services.AddSingleton(skillData);
 
             services.AddSingleton(skillData);
             services.AddSingleton(levelData);
 
-            services.AddSingleton<IStaticDataRepository, WpfStaticDataRepository>();
+            services.AddSingleton<IStaticDataRepository, JsonStaticDataRepository>();
             services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
-            services.AddSingleton<DataIOService>();
-            services.AddSingleton<InventoryService>();
-            services.AddSingleton<CharacterService>();
 
+            services.AddSingleton<DataIOService>();
+            services.AddTransient<IDataIOService, DataIOService>();
+
+            services.AddTransient<IInventoryService, InventoryService>();
+            services.AddTransient<ICharacterService, CharacterService>();
             services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
             services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
-            services.AddTransient<ICharacterService, CharacterService>();
-            services.AddTransient<IDataIOService, DataIOService>();
             services.AddTransient<IAlchemyService, AlchemyService>();
             services.AddTransient<IExperienceService, ExperienceService>();
 
-            services.AddTransient<IInventoryService, InventoryService>();
-
-            services.AddTransient<ToolsPanelViewModel>();
-            services.AddTransient<MainViewModel>();
-
-            services.AddTransient<MainWindow>();
-            services.AddTransient<MainView>();
+            services.AddSingleton<IInventoryStore, InventoryStore>();
+            services.AddSingleton<IDialogService, WpfDialogService>();
 
             services.AddSingleton<GemMaterialProvider>();
             services.AddSingleton<SkillMaterialProvider>();
             services.AddSingleton<EnemyMaterialProvider>();
             services.AddSingleton<ExpMaterialProvider>();
 
-            services.AddSingleton<IMaterialProvider, SkillMaterialProvider>();
-            services.AddSingleton<IMaterialProvider, GemMaterialProvider>();
-            services.AddSingleton<IMaterialProvider, EnemyMaterialProvider>();
-            services.AddSingleton<IMaterialProvider, ExpMaterialProvider>();
+            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<SkillMaterialProvider>());
+            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<GemMaterialProvider>());
+            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<EnemyMaterialProvider>());
+            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<ExpMaterialProvider>());
 
             services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
 
-            services.AddSingleton<IDialogService, WpfDialogService>();
-            services.AddSingleton<IInventoryStore, InventoryStore>();
+            services.AddTransient<MainViewModel>();
+            services.AddTransient<ToolsPanelViewModel>();
+            services.AddTransient<MainWindow>();
+            services.AddTransient<MainView>();
 
             Configuration = builder.Build();
 
@@ -110,16 +111,15 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private static T LoadResource<T>(string relativePath)
+    private static T LoadResource<T>(string path)
     {
-        var uri = new Uri($"pack://application:,,,/{relativePath}");
-        var resourceInfo = Application.GetResourceStream(uri)
-            ?? throw new FileNotFoundException($"Resource not found: {relativePath}");
+        var resourceName = ResourcePaths.ToEmbeddedResource(path);
+        var assembly = typeof(App).Assembly;
+        using Stream? stream = assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException($"Embedded resource not found: {resourceName}");
+        using var reader = new StreamReader(stream);
+        using var jsonReader = new JsonTextReader(reader);
 
-        using var reader = new StreamReader(resourceInfo.Stream);
-        var json = reader.ReadToEnd();
-
-        return JsonConvert.DeserializeObject<T>(json)
-            ?? throw new InvalidOperationException($"Failed to parse JSON: {relativePath}");
+        return new JsonSerializer().Deserialize<T>(jsonReader)
+            ?? throw new InvalidOperationException($"Failed to parse JSON: {path}");
     }
 }

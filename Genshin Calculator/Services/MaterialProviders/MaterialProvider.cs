@@ -5,8 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
-using System.Windows.Resources;
 
 namespace Genshin_Calculator.Services.MaterialProviders;
 
@@ -17,27 +15,12 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected MaterialProvider(string jsonName)
     {
-        this.materials = GetMaterials<Dictionary<TKey, string[]>>(jsonName)
-            ?? throw new InvalidOperationException($"{jsonName}.json not found");
+        var resourceName = ResourcePaths.MaterialsJson(jsonName);
+        this.materials = LoadEmbeddedJson<Dictionary<TKey, string[]>>(resourceName)
+                    ?? throw new InvalidOperationException($"{jsonName}.json not found");
     }
 
     public virtual MaterialTypes SupportedType { get; }
-
-    public static T? GetMaterials<T>(string materials)
-    {
-        var uri = ResourcePaths.MaterialsJson(materials);
-
-        StreamResourceInfo? info = Application.GetResourceStream(uri);
-        if (info == null)
-        {
-            return default;
-        }
-
-        using var reader = new StreamReader(info.Stream);
-        var json = reader.ReadToEnd();
-
-        return JsonConvert.DeserializeObject<T>(json);
-    }
 
     public IEnumerable<string> GetMaterialGroup(Character character)
     {
@@ -65,4 +48,18 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
     protected abstract TKey GetKey(Character character);
 
     protected abstract string Resolve(string[] materials, MaterialRarity rarity);
+
+    private static T? LoadEmbeddedJson<T>(string resourceName)
+    {
+        var assembly = typeof(MaterialProvider<TKey>).Assembly;
+
+        using Stream? stream = assembly.GetManifestResourceStream(resourceName);
+        if (stream == null)
+        {
+            return default;
+        }
+
+        using var reader = new StreamReader(stream);
+        return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+    }
 }

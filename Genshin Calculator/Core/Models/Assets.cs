@@ -8,20 +8,20 @@ public record Assets
 {
     public Assets(string name, WeaponType weapon, Element element, string localSpecialty, string skillMaterials, string enemy, string miniBoss, string weeklyBoss, MaterialRarity rarity)
     {
-        Name = name;
-        LocalSpecialty = localSpecialty;
-        SkillMaterials = skillMaterials;
-        Element = element;
-        Weapon = weapon;
-        Enemy = enemy;
-        MiniBoss = miniBoss;
-        WeeklyBoss = weeklyBoss;
-        Rarity = rarity;
+        this.Name = name;
+        this.LocalSpecialty = localSpecialty;
+        this.SkillMaterials = skillMaterials;
+        this.Element = element;
+        this.Weapon = weapon;
+        this.Enemy = enemy;
+        this.MiniBoss = miniBoss;
+        this.WeeklyBoss = weeklyBoss;
+        this.Rarity = rarity;
     }
 
     public string Name { get; set; }
 
-    public Uri ImagePath => ResourcePaths.Character(Name);
+    public Uri ImagePath => ResourcePaths.Character(this.Name);
 
     public string LocalSpecialty { get; set; }
 

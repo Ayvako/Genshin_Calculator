@@ -425,11 +425,11 @@
     <PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
     <PackageReference Include="MaterialDesignColors" Version="5.3.1-ci1190" />
     <PackageReference Include="MaterialDesignThemes" Version="5.3.1-ci1190" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.12.0-beta1.25218.8">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.100">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-preview.2.26159.112">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -805,10 +805,10 @@
     <Resource Include="Resources\Images\Weapons\claymore.png" />
     <Resource Include="Resources\Images\Weapons\polearm.png" />
     <Resource Include="Resources\Images\Weapons\sword.png" />
-    <Resource Include="Resources\Json\Characters.json" />
-    <Resource Include="Resources\Json\Enemies.json" />
-    <Resource Include="Resources\Json\LevelCosts.json" />
-    <Resource Include="Resources\Json\SkillCosts.json" />
+    <EmbeddedResource Include="Resources\Json\Characters.json" />
+    <EmbeddedResource Include="Resources\Json\Enemies.json" />
+    <EmbeddedResource Include="Resources\Json\LevelCosts.json" />
+    <EmbeddedResource Include="Resources\Json\SkillCosts.json" />
   </ItemGroup>
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Cat.DESKTOP-TIV5LI1\source\repos\Genshin Calculator\Genshin Calculator\.editorconfig" />

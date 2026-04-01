@@ -13,7 +13,7 @@ public partial class AddMaterialsDialogView : Window
 
     private void NumericOnly_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        Regex regex = new Regex("[^0-9]+");
+        Regex regex = new("[^0-9]+");
         e.Handled = regex.IsMatch(e.Text);
     }
 
@@ -22,7 +22,7 @@ public partial class AddMaterialsDialogView : Window
         if (e.DataObject.GetDataPresent(typeof(string)))
         {
             string text = (string)e.DataObject.GetData(typeof(string));
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new("[^0-9]+");
 
             if (regex.IsMatch(text))
             {

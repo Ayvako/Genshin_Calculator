@@ -11,17 +11,17 @@ public class Inventory
 
     public Inventory()
     {
-        materialCache = [];
+        this.materialCache = [];
     }
 
     [JsonIgnore]
-    public IEnumerable<Character> ActiveCharacters => Characters.Where(c => c.Activated && !c.Deleted);
+    public IEnumerable<Character> ActiveCharacters => this.Characters.Where(c => c.Activated && !c.Deleted);
 
     [JsonIgnore]
-    public IEnumerable<Character> DeletedCharacters => Characters.Where(c => c.Deleted);
+    public IEnumerable<Character> DeletedCharacters => this.Characters.Where(c => c.Deleted);
 
     [JsonIgnore]
-    public IEnumerable<Character> NotDeletedCharacters => Characters.Where(c => !c.Deleted);
+    public IEnumerable<Character> NotDeletedCharacters => this.Characters.Where(c => !c.Deleted);
 
     public List<Material> Materials { get; set; } = [];
 
@@ -29,7 +29,7 @@ public class Inventory
 
     public List<Character> GetAllCharacters()
     {
-        return Characters;
+        return this.Characters;
     }
 
     public void AddMaterial(Material material)
@@ -39,15 +39,15 @@ public class Inventory
             return;
         }
 
-        if (materialCache.TryGetValue(material.Name, out var existing))
+        if (this.materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount += material.Amount;
         }
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, material.Amount);
-            Materials.Add(newMaterial);
-            materialCache[material.Name] = newMaterial;
+            this.Materials.Add(newMaterial);
+            this.materialCache[material.Name] = newMaterial;
         }
     }
 
@@ -58,7 +58,7 @@ public class Inventory
             return;
         }
 
-        if (materialCache.TryGetValue(material.Name, out var existing))
+        if (this.materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount -= material.Amount;
 
@@ -70,8 +70,8 @@ public class Inventory
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, 0);
-            Materials.Add(newMaterial);
-            materialCache[material.Name] = newMaterial;
+            this.Materials.Add(newMaterial);
+            this.materialCache[material.Name] = newMaterial;
         }
     }
 
@@ -82,26 +82,26 @@ public class Inventory
             return;
         }
 
-        if (materialCache.TryGetValue(material.Name, out var existing))
+        if (this.materialCache.TryGetValue(material.Name, out var existing))
         {
             existing.Amount = material.Amount;
         }
         else
         {
             var newMaterial = new Material(material.Name, material.Type, material.Rarity, material.Amount);
-            Materials.Add(newMaterial);
-            materialCache[material.Name] = newMaterial;
+            this.Materials.Add(newMaterial);
+            this.materialCache[material.Name] = newMaterial;
         }
     }
 
     public Material? GetMaterial(string name)
     {
-        return materialCache.TryGetValue(name, out var material) ? material : null;
+        return this.materialCache.TryGetValue(name, out var material) ? material : null;
     }
 
     public void RefreshCache()
     {
-        materialCache = Materials
+        this.materialCache = this.Materials
             .GroupBy(m => m.Name)
             .Select(g => g.First())
             .ToDictionary(m => m.Name, m => m);
@@ -111,8 +111,8 @@ public class Inventory
     {
         var clone = new Inventory
         {
-            Characters = [.. Characters.Select(c => c.Clone())],
-            Materials = [.. Materials.Select(m => m.Clone())],
+            Characters = [.. this.Characters.Select(c => c.Clone())],
+            Materials = [.. this.Materials.Select(m => m.Clone())],
         };
         clone.RefreshCache();
         return clone;

@@ -7,8 +7,8 @@ public class MaterialRequirement
 {
     public MaterialRequirement(Material targetMaterial, int totalRequired)
     {
-        TargetMaterial = targetMaterial;
-        TotalRequired = totalRequired;
+        this.TargetMaterial = targetMaterial;
+        this.TotalRequired = totalRequired;
     }
 
     public Material TargetMaterial { get; set; }
@@ -23,5 +23,5 @@ public class MaterialRequirement
 
     public int MissingAmount { get; set; }
 
-    public bool IsCollected => MissingAmount <= 0;
+    public bool IsCollected => this.MissingAmount <= 0;
 }

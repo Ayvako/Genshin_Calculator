@@ -2,23 +2,19 @@
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
-public class WpfStaticDataRepository : IStaticDataRepository
+public class JsonStaticDataRepository : IStaticDataRepository
 {
-    private readonly string initFilesPath = App.Configuration["Paths:InitFiles"] ?? "pack://application:,,,/Resources/Json";
-
     public List<Character> GetBaseCharacters()
     {
-        var json = this.LoadJson("Characters.json");
+        var json = LoadJson("Characters.json");
         var assets = json["Characters"]?.ToObject<List<Assets>>()
                      ?? throw new InvalidOperationException("Characters section missing");
 
@@ -28,24 +24,23 @@ public class WpfStaticDataRepository : IStaticDataRepository
     public List<Material> GetStaticMaterials()
     {
         var materials = new List<Material>();
-        this.LoadTieredGroup(materials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
+        LoadTieredGroup(materials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
         return materials;
     }
 
-    private JObject LoadJson(string fileName)
+    private static JObject LoadJson(string fileName)
     {
-        var fullPath = $"{this.initFilesPath.TrimEnd('/')}/{fileName}";
-        Uri uri = new(fullPath);
-        var info = Application.GetResourceStream(uri)
-                   ?? throw new FileNotFoundException($"Resource not found: {fullPath}");
+        var assembly = typeof(JsonStaticDataRepository).Assembly;
+        var resourceName = $"Genshin_Calculator.Resources.Json.{fileName}";
 
-        using var reader = new StreamReader(info.Stream);
+        using Stream? stream = assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException($"Resource not found: {resourceName}");
+        using var reader = new StreamReader(stream);
         return JObject.Parse(reader.ReadToEnd());
     }
 
-    private void LoadTieredGroup(List<Material> targetList, string fileName, MaterialTypes type, MaterialRarity[] rarities)
+    private static void LoadTieredGroup(List<Material> targetList, string fileName, MaterialTypes type, MaterialRarity[] rarities)
     {
-        var json = this.LoadJson(fileName);
+        var json = LoadJson(fileName);
         foreach (var property in json.Properties())
         {
             var names = property.Value.ToObject<string[]>();

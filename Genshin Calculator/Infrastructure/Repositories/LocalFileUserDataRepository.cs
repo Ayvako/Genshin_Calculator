@@ -67,7 +67,7 @@ public class LocalFileUserDataRepository : IUserDataRepository
 
     public (Inventory? Inventory, List<Character>? Characters) Load()
     {
-        var result = this.TryLoadFile(this.exportFilePath);
+        var result = TryLoadFile(this.exportFilePath);
         if (result.Inventory != null || result.Characters != null)
         {
             return result;
@@ -77,13 +77,13 @@ public class LocalFileUserDataRepository : IUserDataRepository
         if (File.Exists(backupFilePath))
         {
             Console.WriteLine($"⚠️ Main file corrupted or missing. Attempting to load backup from {backupFilePath}");
-            return this.TryLoadFile(backupFilePath);
+            return TryLoadFile(backupFilePath);
         }
 
         return (null, null);
     }
 
-    private (Inventory? Inventory, List<Character>? Characters) TryLoadFile(string filePath)
+    private static (Inventory? Inventory, List<Character>? Characters) TryLoadFile(string filePath)
     {
         if (!File.Exists(filePath))
         {

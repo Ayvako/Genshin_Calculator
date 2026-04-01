@@ -7,6 +7,7 @@ using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;
 using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Services;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -27,143 +28,102 @@ public class WpfDialogService : IDialogService
     public void ShowAddMaterialsDialog(List<Material> list)
     {
         var vm = new AddMaterialsDialogViewModel(list);
-        var view = new AddMaterialsDialogView
-        {
-            DataContext = vm,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-        };
+        var view = CreateDialog<AddMaterialsDialogView>(vm);
 
-        bool isClosing = false;
-        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
+        SetupCloseOnDeactivate(view, onCloseRequested: () => view.Close());
+        vm.RequestClose += () => view.Close();
 
-        void SafeClose()
-        {
-            if (!isClosing)
-            {
-                isClosing = true;
-                WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-                view.Close();
-            }
-        }
-
-        view.Deactivated += (s, e) => SafeClose();
-
-        vm.RequestClose += () => SafeClose();
-
-        view.ShowDialog();
+        ShowDialogWithDimming(view);
     }
 
     public void ShowCharacterEdit(Character character)
     {
         var vm = new CharacterEditViewModel(character, this.characterService);
-        var view = new CharacterEditView
-        {
-            DataContext = vm,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-        };
-        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
+        var view = CreateDialog<CharacterEditView>(vm);
 
-        view.Closed += (s, e) =>
-        {
-            WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-        };
+        vm.RequestClose += () => view.Close();
 
-        vm.RequestClose += () =>
-        {
-            view.Close();
-        };
-
-        view.ShowDialog();
+        ShowDialogWithDimming(view);
     }
 
     public void ShowCharacterSelector()
     {
         var vm = new CharacterSelectorViewModel(this.characterService);
-
-        var window = new CharacterSelectorView
-        {
-            DataContext = vm,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-        };
-
-        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
-
-        window.Closed += (s, e) =>
-        {
-            WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-        };
+        var view = CreateDialog<CharacterSelectorView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
-            window.DialogResult = result;
-            window.Close();
+            view.DialogResult = result;
+            view.Close();
         };
 
-        window.ShowDialog();
+        ShowDialogWithDimming(view);
     }
 
     public void ShowInventory()
     {
         var vm = new InventoryViewModel(this.inventoryService);
-
-        var window = new InventoryView
-        {
-            DataContext = vm,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-        };
-
-        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
-
-        window.Closed += (s, e) =>
-        {
-            WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-        };
+        var view = CreateDialog<InventoryView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
-            window.DialogResult = result;
-            window.Close();
+            view.DialogResult = result;
+            view.Close();
         };
 
-        window.ShowDialog();
+        ShowDialogWithDimming(view);
     }
 
-    public bool ShowUpdateCharacterDialog(List<MaterialRequirement> materialRequirementUIs)
+    public bool ShowUpgradeCharacterDialog(Character character, List<MaterialRequirement> materialRequirementUIs)
     {
-        var vm = new UpdateCharacterDialogViewModel(materialRequirementUIs);
-        var view = new UpdateCharacterDialogView
+        var vm = new UpgradeCharacterDialogViewModel(character, materialRequirementUIs);
+        var view = CreateDialog<UpgradeCharacterDialogView>(vm);
+
+        SetupCloseOnDeactivate(view, onCloseRequested: () => view.Close());
+        vm.RequestClose += () => view.Close();
+
+        ShowDialogWithDimming(view);
+
+        return vm.DialogResult ?? false;
+    }
+
+    private static TWindow CreateDialog<TWindow>(object viewModel)
+        where TWindow : Window, new()
+    {
+        return new TWindow
         {
-            DataContext = vm,
+            DataContext = viewModel,
             Owner = Application.Current.MainWindow,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
+    }
 
-        bool isClosing = false;
+    private static void ShowDialogWithDimming(Window window)
+    {
         WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
+        try
+        {
+            window.ShowDialog();
+        }
+        finally
+        {
+            WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
+        }
+    }
 
-        void SafeClose()
+    private static void SetupCloseOnDeactivate(Window window, Action onCloseRequested)
+    {
+        bool isClosing = false;
+
+        window.Closing += (s, e) => isClosing = true;
+
+        window.Deactivated += (s, e) =>
         {
             if (!isClosing)
             {
                 isClosing = true;
-                WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-
-                if (view.IsVisible)
-                {
-                    view.Close();
-                }
+                onCloseRequested?.Invoke();
             }
-        }
-
-        view.Deactivated += (s, e) => SafeClose();
-        vm.RequestClose += () => SafeClose();
-
-        view.ShowDialog();
-
-        return vm.DialogResult ?? false;
+        };
     }
 }

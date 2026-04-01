@@ -83,7 +83,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
             return;
         }
 
-        bool? isConfirmed = this.dialogService.ShowUpdateCharacterDialog(requirements);
+        bool? isConfirmed = this.dialogService.ShowUpgradeCharacterDialog(this.Character, requirements);
 
         if (isConfirmed == true)
         {

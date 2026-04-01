@@ -2,9 +2,9 @@
 
 namespace Genshin_Calculator.Presentation.Features.Dialogs;
 
-public partial class UpdateCharacterDialogView : Window
+public partial class UpgradeCharacterDialogView : Window
 {
-    public UpdateCharacterDialogView()
+    public UpgradeCharacterDialogView()
     {
         this.InitializeComponent();
     }

@@ -9,6 +9,7 @@ using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation.Services;
@@ -19,6 +20,8 @@ public class WpfDialogService : IDialogService
 
     private readonly IInventoryService inventoryService;
 
+    private int openDialogsCount = 0;
+
     public WpfDialogService(ICharacterService characterService, IInventoryService inventoryService)
     {
         this.characterService = characterService;
@@ -28,28 +31,28 @@ public class WpfDialogService : IDialogService
     public void ShowAddMaterialsDialog(List<Material> list)
     {
         var vm = new AddMaterialsDialogViewModel(list);
-        var view = CreateDialog<AddMaterialsDialogView>(vm);
+        var view = this.CreateDialog<AddMaterialsDialogView>(vm);
 
         SetupCloseOnDeactivate(view, onCloseRequested: () => view.Close());
         vm.RequestClose += () => view.Close();
 
-        ShowDialogWithDimming(view);
+        this.ShowDialogWithDimming(view);
     }
 
     public void ShowCharacterEdit(Character character)
     {
         var vm = new CharacterEditViewModel(character, this.characterService);
-        var view = CreateDialog<CharacterEditView>(vm);
+        var view = this.CreateDialog<CharacterEditView>(vm);
 
         vm.RequestClose += () => view.Close();
 
-        ShowDialogWithDimming(view);
+        this.ShowDialogWithDimming(view);
     }
 
     public void ShowCharacterSelector()
     {
         var vm = new CharacterSelectorViewModel(this.characterService);
-        var view = CreateDialog<CharacterSelectorView>(vm);
+        var view = this.CreateDialog<CharacterSelectorView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
@@ -57,13 +60,13 @@ public class WpfDialogService : IDialogService
             view.Close();
         };
 
-        ShowDialogWithDimming(view);
+        this.ShowDialogWithDimming(view);
     }
 
     public void ShowInventory()
     {
         var vm = new InventoryViewModel(this.inventoryService);
-        var view = CreateDialog<InventoryView>(vm);
+        var view = this.CreateDialog<InventoryView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
@@ -71,44 +74,19 @@ public class WpfDialogService : IDialogService
             view.Close();
         };
 
-        ShowDialogWithDimming(view);
+        this.ShowDialogWithDimming(view);
     }
 
     public bool ShowUpgradeCharacterDialog(Character character, List<MaterialRequirement> materialRequirementUIs)
     {
-        var vm = new UpgradeCharacterDialogViewModel(character, materialRequirementUIs);
-        var view = CreateDialog<UpgradeCharacterDialogView>(vm);
+        var vm = new UpgradeCharacterDialogViewModel(character, materialRequirementUIs, this, this.inventoryService);
+        var view = this.CreateDialog<UpgradeCharacterDialogView>(vm);
 
-        SetupCloseOnDeactivate(view, onCloseRequested: () => view.Close());
         vm.RequestClose += () => view.Close();
 
-        ShowDialogWithDimming(view);
+        this.ShowDialogWithDimming(view);
 
         return vm.DialogResult ?? false;
-    }
-
-    private static TWindow CreateDialog<TWindow>(object viewModel)
-        where TWindow : Window, new()
-    {
-        return new TWindow
-        {
-            DataContext = viewModel,
-            Owner = Application.Current.MainWindow,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-        };
-    }
-
-    private static void ShowDialogWithDimming(Window window)
-    {
-        WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
-        try
-        {
-            window.ShowDialog();
-        }
-        finally
-        {
-            WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
-        }
     }
 
     private static void SetupCloseOnDeactivate(Window window, Action onCloseRequested)
@@ -125,5 +103,42 @@ public class WpfDialogService : IDialogService
                 onCloseRequested?.Invoke();
             }
         };
+    }
+
+    private TWindow CreateDialog<TWindow>(object viewModel)
+        where TWindow : Window, new()
+    {
+        var activeWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+
+        return new TWindow
+        {
+            DataContext = viewModel,
+            Owner = activeWindow ?? Application.Current.MainWindow,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+    }
+
+    private void ShowDialogWithDimming(Window window)
+    {
+        this.openDialogsCount++;
+
+        if (this.openDialogsCount == 1)
+        {
+            WeakReferenceMessenger.Default.Send(new DimmingMessage(true));
+        }
+
+        try
+        {
+            window.ShowDialog();
+        }
+        finally
+        {
+            this.openDialogsCount--;
+
+            if (this.openDialogsCount == 0)
+            {
+                WeakReferenceMessenger.Default.Send(new DimmingMessage(false));
+            }
+        }
     }
 }

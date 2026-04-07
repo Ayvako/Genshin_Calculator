@@ -10,7 +10,7 @@
         SizeToContent="Height"
         WindowStartupLocation="CenterScreen">
 
-    <Border CornerRadius="14,14,0,0" Padding="15" Background="{StaticResource MyGradientBrush}">
+    <Border CornerRadius="14,14,0,0" Background="{StaticResource MyGradientBrush}">
 
         <Grid>
 
@@ -24,12 +24,13 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Border Grid.Row="0" CornerRadius="14,14,0,0" MouseLeftButtonDown="OnMouseLeftButtonDown"
-                Background="{Binding Editable.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}">
-
+            <Border Grid.Row="0"
+                CornerRadius="14,14,0,0"
+                MouseLeftButtonDown="OnMouseLeftButtonDown"
+                Background="{Binding Editable.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                Padding="15">
                 <TextBlock Text="{Binding Editable.Name, FallbackValue='Name'}"
                        HorizontalAlignment="Center"
-                       Margin="0 0 0 12"
                        FontSize="22"
                        FontWeight="Bold"
                        Foreground="White" />
@@ -40,12 +41,8 @@
 
                 <!-- Level -->
                 <StackPanel>
-                    <TextBlock Text="Lv."
-                           Foreground="#EED18C"
-                           FontSize="18"
-                           FontWeight="Bold"
-                           Margin="0 0 0 10"
-                           HorizontalAlignment="Center" />
+                    <TextBlock Text="Lv." Foreground="#EED18C" FontSize="18" FontWeight="Bold"
+                           Margin="0 0 0 10" HorizontalAlignment="Center" />
                     <UniformGrid Columns="2">
                         <charFeatures:LevelSelectorControl Title="Current"
                                                   Level="{Binding Editable.CurrentLevel}"
@@ -81,7 +78,7 @@
             </StackPanel>
 
             <!-- Buttons -->
-            <controls:DialogButtonsControl Grid.Row="2" />
+            <controls:DialogButtonsControl Grid.Row="2" Margin="15,0,15,15" />
         </Grid>
     </Border>
 </Window>

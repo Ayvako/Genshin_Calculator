@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Genshin_Calculator.Presentation.Controls.MaterialRequirementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Button Command="{Binding DataContext.OpenAddItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+            CommandParameter="{Binding TargetMaterial}"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="0"
+            Cursor="Hand">
+        <Button.Template>
+            <ControlTemplate TargetType="Button">
+                <ContentPresenter />
+            </ControlTemplate>
+        </Button.Template>
+
+        <Border Margin="4" CornerRadius="6" BorderBrush="Black" BorderThickness="1"
+                Background="{Binding TargetMaterial.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
+
+            <Grid>
+                <StackPanel Orientation="Vertical">
+                    <Border Background="Black" CornerRadius="5,5,0,0">
+                        <TextBlock Foreground="White" TextAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="{Binding MissingAmount}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsCollected}" Value="True">
+                                            <Setter Property="Text" Value="{Binding TargetMaterial.Amount}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding CraftedAmount, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
+                                            <Setter Property="ToolTip" Value="{Binding CraftedAmount}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+                    <Image Source="{Binding TargetMaterial.ImagePath}" Width="50" Height="40" Margin="0" />
+                </StackPanel>
+
+                <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2"
+                      Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Ellipse Fill="White" Width="20" Height="20">
+                        <Ellipse.Effect>
+                            <DropShadowEffect BlurRadius="3" Color="Black" Opacity="0.5" ShadowDepth="1" />
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;"
+                               Foreground="#FF22CC22" FontSize="14"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontWeight="Bold" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Button>
+</UserControl>

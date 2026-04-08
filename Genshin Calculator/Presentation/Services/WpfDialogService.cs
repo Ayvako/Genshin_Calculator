@@ -77,9 +77,9 @@ public class WpfDialogService : IDialogService
         this.ShowDialogWithDimming(view);
     }
 
-    public bool ShowUpgradeCharacterDialog(Character character, List<MaterialRequirement> materialRequirementUIs)
+    public bool ShowUpgradeCharacterDialog(Character character)
     {
-        var vm = new UpgradeCharacterDialogViewModel(character, materialRequirementUIs, this, this.inventoryService);
+        var vm = new UpgradeCharacterDialogViewModel(character, this, this.inventoryService);
         var view = this.CreateDialog<UpgradeCharacterDialogView>(vm);
 
         vm.RequestClose += () => view.Close();

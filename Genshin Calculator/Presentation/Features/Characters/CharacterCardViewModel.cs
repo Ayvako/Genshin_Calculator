@@ -75,15 +75,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void Ascend()
     {
-        var inventory = this.inventoryService.GetInventory();
-        var missingMap = this.inventoryService.CalculateMissingMaterials(inventory);
-
-        if (!missingMap.TryGetValue(this.Character, out var requirements))
-        {
-            return;
-        }
-
-        bool? isConfirmed = this.dialogService.ShowUpgradeCharacterDialog(this.Character, requirements);
+        bool? isConfirmed = this.dialogService.ShowUpgradeCharacterDialog(this.Character);
 
         if (isConfirmed == true)
         {

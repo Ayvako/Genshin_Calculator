@@ -20,25 +20,38 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     private bool? dialogResult;
 
     [ObservableProperty]
-    private IReadOnlyCollection<MaterialRequirement> materials;
+    private IReadOnlyCollection<MaterialRequirement> materials = [];
 
-    public UpgradeCharacterDialogViewModel(Character character, IReadOnlyCollection<MaterialRequirement> materialRequirementUIs, IDialogService dialogService, IInventoryService inventoryService)
+    [ObservableProperty]
+    private IReadOnlyCollection<Material> materialsToCraft = [];
+
+    public UpgradeCharacterDialogViewModel(
+    Character character,
+    IDialogService dialogService,
+    IInventoryService inventoryService)
     {
         this.Character = character;
-        this.Materials = materialRequirementUIs;
         this.dialogService = dialogService;
         this.inventoryService = inventoryService;
+
+        this.RefreshMaterials();
     }
 
     public event Action? RequestClose;
 
-    public Character Character { get; set; }
+    public Character Character { get; }
 
     [RelayCommand]
     private void Save()
     {
         this.DialogResult = true;
+        this.RequestClose?.Invoke();
+    }
 
+    [RelayCommand]
+    private void Cancel()
+    {
+        this.DialogResult = false;
         this.RequestClose?.Invoke();
     }
 
@@ -47,6 +60,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     {
         var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character, material);
         this.dialogService.ShowAddMaterialsDialog(relatedMaterials);
+
         this.RefreshMaterials();
     }
 
@@ -58,14 +72,21 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
         if (missingMap.TryGetValue(this.Character, out var requirements))
         {
             this.Materials = [.. requirements.Where(m => m.TakenFromInventory > 0 || m.CraftedAmount > 0)];
+
+            this.UpdateMaterialsToCraft();
         }
     }
 
-    [RelayCommand]
-    private void Cancel()
+    private void UpdateMaterialsToCraft()
     {
-        this.DialogResult = false;
+        this.MaterialsToCraft = [.. this.Materials
+            .SelectMany(m => m.AlchemyCosts)
+            .GroupBy(a => a.Name)
+            .Select(g =>
+            {
+                var first = g.First();
 
-        this.RequestClose?.Invoke();
+                return new Material(g.Key, first.Type, first.Rarity, g.Sum(x => x.Amount));
+            })];
     }
 }

@@ -12,7 +12,7 @@ public interface IDialogService
 
     void ShowInventory();
 
-    bool ShowUpgradeCharacterDialog(Character character, List<MaterialRequirement> materialRequirementUIs);
+    bool ShowUpgradeCharacterDialog(Character character);
 
     void ShowAddMaterialsDialog(List<Material> list);
 }

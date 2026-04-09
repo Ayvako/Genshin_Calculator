@@ -1,4 +1,4 @@
-﻿namespace Genshin_Calculator.Infrastructure;
+﻿namespace Genshin_Calculator.Core.Interfaces;
 
 public interface IDataIOService
 {

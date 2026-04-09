@@ -1,4 +1,5 @@
 ﻿using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using Newtonsoft.Json;

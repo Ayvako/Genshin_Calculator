@@ -62,7 +62,7 @@ public partial class App : Application
             services.AddTransient<IExperienceService, ExperienceService>();
 
             services.AddSingleton<IInventoryStore, InventoryStore>();
-            services.AddSingleton<IDialogService, WpfDialogService>();
+            services.AddSingleton<IViewService, ViewService>();
 
             services.AddSingleton<GemMaterialProvider>();
             services.AddSingleton<SkillMaterialProvider>();

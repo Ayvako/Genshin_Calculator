@@ -6,9 +6,9 @@ namespace Genshin_Calculator.Presentation.Features.Tools;
 
 public partial class ToolsPanelViewModel : ObservableRecipient
 {
-    private readonly IDialogService dialogService;
+    private readonly IViewService dialogService;
 
-    public ToolsPanelViewModel(IDialogService dialogService)
+    public ToolsPanelViewModel(IViewService dialogService)
     {
         this.dialogService = dialogService;
     }

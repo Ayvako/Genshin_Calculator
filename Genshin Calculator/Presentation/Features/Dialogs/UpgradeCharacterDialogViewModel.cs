@@ -12,7 +12,7 @@ namespace Genshin_Calculator.Presentation.Features.Dialogs;
 
 public partial class UpgradeCharacterDialogViewModel : ObservableObject
 {
-    private readonly IDialogService dialogService;
+    private readonly IViewService dialogService;
 
     private readonly IInventoryService inventoryService;
 
@@ -27,7 +27,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
 
     public UpgradeCharacterDialogViewModel(
     Character character,
-    IDialogService dialogService,
+    IViewService dialogService,
     IInventoryService inventoryService)
     {
         this.Character = character;

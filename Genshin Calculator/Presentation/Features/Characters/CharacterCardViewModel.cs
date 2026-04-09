@@ -13,7 +13,7 @@ namespace Genshin_Calculator.Presentation.Features.Characters;
 
 public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<CharacterChangedMessage>
 {
-    private readonly IDialogService dialogService;
+    private readonly IViewService dialogService;
 
     private readonly IInventoryService inventoryService;
 
@@ -22,7 +22,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [ObservableProperty]
     private List<MaterialRequirement> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<MaterialRequirement> requiredMaterials, IDialogService dialogService, IInventoryService inventoryService, ICharacterService characterService)
+    public CharacterCardViewModel(Character character, List<MaterialRequirement> requiredMaterials, IViewService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;

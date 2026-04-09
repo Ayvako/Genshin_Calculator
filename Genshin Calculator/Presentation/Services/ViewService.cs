@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;
@@ -14,7 +13,7 @@ using System.Windows;
 
 namespace Genshin_Calculator.Presentation.Services;
 
-public class WpfDialogService : IDialogService
+public class ViewService : IViewService
 {
     private readonly ICharacterService characterService;
 
@@ -22,7 +21,7 @@ public class WpfDialogService : IDialogService
 
     private int openDialogsCount = 0;
 
-    public WpfDialogService(ICharacterService characterService, IInventoryService inventoryService)
+    public ViewService(ICharacterService characterService, IInventoryService inventoryService)
     {
         this.characterService = characterService;
         this.inventoryService = inventoryService;

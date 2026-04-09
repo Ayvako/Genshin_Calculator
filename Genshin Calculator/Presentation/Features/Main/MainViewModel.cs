@@ -23,7 +23,7 @@ public partial class MainViewModel : ObservableRecipient,
 {
     private readonly IInventoryService inventoryService;
 
-    private readonly IDialogService dialogService;
+    private readonly IViewService dialogService;
 
     private readonly IDataIOService dataIOService;
 
@@ -32,7 +32,7 @@ public partial class MainViewModel : ObservableRecipient,
     [ObservableProperty]
     private bool isDimmed;
 
-    public MainViewModel(IInventoryService inventoryService, IDialogService dialogService, IDataIOService dataIOService, ICharacterService characterService)
+    public MainViewModel(IInventoryService inventoryService, IViewService dialogService, IDataIOService dataIOService, ICharacterService characterService)
     {
         this.inventoryService = inventoryService;
         this.dialogService = dialogService;

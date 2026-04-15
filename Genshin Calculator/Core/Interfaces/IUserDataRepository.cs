@@ -6,7 +6,9 @@ namespace Genshin_Calculator.Core.Interfaces;
 
 public interface IUserDataRepository
 {
-    void Save(Inventory inventory, List<Character> characters);
+    bool FileExists { get; }
+
+    void Save(Inventory inventory);
 
     (Inventory? Inventory, List<Character>? Characters) Load();
 }

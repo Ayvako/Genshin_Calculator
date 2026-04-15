@@ -137,8 +137,4 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="StaticData\Json\" />
-    <Folder Include="StaticData\Images\" />
-  </ItemGroup>
 </Project>

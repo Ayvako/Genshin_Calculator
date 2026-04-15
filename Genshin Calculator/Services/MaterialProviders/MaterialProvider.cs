@@ -15,7 +15,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 {
     private readonly Dictionary<TKey, string[]> materials;
 
-    private readonly string basePath = App.Configuration["Paths:StaticData"] ?? "Data/Static";
+    private readonly string basePath = App.Configuration["Paths:GameData"] ?? "Data/GameData";
 
     protected MaterialProvider(string jsonName)
     {

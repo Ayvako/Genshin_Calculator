@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
-public class JsonStaticDataRepository : IStaticDataRepository
+public class JsonGameDataRepository : IDataRepository
 {
-    private readonly string basePath = App.Configuration["Paths:StaticData"] ?? "Data/Static";
+    private readonly string basePath = App.Configuration["Paths:GameData"] ?? "Data/GameData";
 
     public List<Character> GetBaseCharacters()
     {
@@ -37,7 +37,7 @@ public class JsonStaticDataRepository : IStaticDataRepository
 
         if (!File.Exists(filePath))
         {
-            throw new FileNotFoundException($"Файл статических данных не найден: {filePath}");
+            throw new FileNotFoundException($"Static data file not found: {filePath}");
         }
 
         string jsonContent = File.ReadAllText(filePath);

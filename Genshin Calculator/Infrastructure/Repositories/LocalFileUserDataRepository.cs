@@ -15,12 +15,14 @@ public class LocalFileUserDataRepository : IUserDataRepository
 {
     private readonly string exportFilePath = App.Configuration["Paths:ExportFile"] ?? "Data/Export.json";
 
-    public void Save(Inventory inventory, List<Character> characters)
+    public bool FileExists => File.Exists(this.exportFilePath);
+
+    public void Save(Inventory inventory)
     {
         var exportJson = new JObject
         {
             ["Inventory"] = JToken.FromObject(inventory),
-            ["Characters"] = JToken.FromObject(characters),
+            ["Characters"] = JToken.FromObject(inventory.Characters),
         };
 
         var directory = Path.GetDirectoryName(this.exportFilePath);

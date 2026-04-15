@@ -13,14 +13,16 @@ public class DataIOService : IDataIOService
 {
     private readonly IInventoryStore store;
 
-    private readonly IStaticDataRepository staticData;
+    private readonly IDataRepository data;
 
     private readonly IUserDataRepository userData;
 
-    public DataIOService(IInventoryStore store, IStaticDataRepository staticData, IUserDataRepository userData)
+    private bool isSuccessfullyLoaded = false;
+
+    public DataIOService(IInventoryStore store, IDataRepository staticData, IUserDataRepository userData)
     {
         this.store = store;
-        this.staticData = staticData;
+        this.data = staticData;
         this.userData = userData;
     }
 
@@ -28,35 +30,58 @@ public class DataIOService : IDataIOService
     {
         try
         {
-            var characters = this.staticData.GetBaseCharacters();
+            var characters = this.data.GetBaseCharacters();
             var materials = MaterialGenerator.GenerateDynamicMaterials(characters);
-            materials.AddRange(this.staticData.GetStaticMaterials());
+            materials.AddRange(this.data.GetStaticMaterials());
+
+            if (!this.userData.FileExists)
+            {
+                Debug.WriteLine("ℹ️ No save file found. Starting fresh.");
+                this.ApplyData(characters, materials);
+                this.isSuccessfullyLoaded = true;
+                return;
+            }
 
             var (userInventory, userCharacters) = this.userData.Load();
 
-            if (userInventory != null)
+            if (userInventory == null && userCharacters == null)
             {
-                MergeInventories(materials, userInventory);
+                this.isSuccessfullyLoaded = false;
+                Debug.WriteLine("❌ CRITICAL: Save file exists but is corrupted. Saving disabled to prevent data loss.");
             }
-
-            if (userCharacters != null)
+            else
             {
-                UpdateCharacters(characters, userCharacters);
-            }
+                if (userInventory != null)
+                {
+                    MergeInventories(materials, userInventory);
+                }
 
-            this.store.Inventory.Characters = characters;
-            this.store.Inventory.Materials = materials;
-            this.store.Inventory.RefreshCache();
+                if (userCharacters != null)
+                {
+                    UpdateCharacters(characters, userCharacters);
+                }
+
+                this.ApplyData(characters, materials);
+                this.isSuccessfullyLoaded = true;
+                Debug.WriteLine("✅ Data loaded and merged successfully.");
+            }
         }
         catch (Exception ex)
         {
+            this.isSuccessfullyLoaded = false;
             Debug.WriteLine($"❌ Import Error: {ex.Message}");
         }
     }
 
     public void Save()
     {
-        this.userData.Save(this.store.Inventory, this.store.Inventory.Characters);
+        if (!this.isSuccessfullyLoaded)
+        {
+            Debug.WriteLine("⚠️ Save blocked: Data was not loaded successfully. Avoiding data loss.");
+            return;
+        }
+
+        this.userData.Save(this.store.Inventory);
     }
 
     private static void UpdateCharacters(List<Character> baseChars, List<Character> importedChars)
@@ -83,5 +108,12 @@ public class DataIOService : IDataIOService
                 baseMat.Amount = importedMat.Amount;
             }
         }
+    }
+
+    private void ApplyData(List<Character> characters, List<Material> materials)
+    {
+        this.store.Inventory.Characters = characters;
+        this.store.Inventory.Materials = materials;
+        this.store.Inventory.RefreshCache();
     }
 }

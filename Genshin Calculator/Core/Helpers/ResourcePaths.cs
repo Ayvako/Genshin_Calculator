@@ -7,31 +7,33 @@ namespace Genshin_Calculator.Core.Helpers;
 
 public static class ResourcePaths
 {
-    private static string basePath = "Resources/Images";
+    private static string embeddedPath = "Resources/Images";
 
-    public static string ExternalImagesPath { get; set; } = App.Configuration?["Paths:StaticImages"] ?? "Data/Static/Images";
+    public static string ExternalBasePath { get; set; } = App.Configuration?["Paths:GameData"] ?? "Data/GameData";
 
-    public static string BasePath
+    public static string ExternalPath { get; set; } = Path.Combine(ExternalBasePath, "Images");
+
+    public static string EmbeddedPath
     {
-        get => basePath;
-        set => basePath = (value ?? string.Empty).TrimEnd('/', '\\');
+        get => embeddedPath;
+        set => embeddedPath = (value ?? string.Empty).TrimEnd('/', '\\');
     }
 
     public static Uri? Character(string name) => ToLocalFileUri("Characters", $"{name}.png");
 
     public static Uri? Material(string name) => ToLocalFileUri("Materials", $"{name}.png");
 
-    public static Uri Tool(string name) => ToPackUri($"{BasePath}/Tools/{name}.png");
+    public static Uri Tool(string name) => ToPackUri($"{EmbeddedPath}/Tools/{name}.png");
 
-    public static Uri Element(Element name) => ToPackUri($"{BasePath}/Elements/{name}.png");
+    public static Uri Element(Element name) => ToPackUri($"{EmbeddedPath}/Elements/{name}.png");
 
-    public static Uri Weapon(WeaponType name) => ToPackUri($"{BasePath}/Weapons/{name}.png");
+    public static Uri Weapon(WeaponType name) => ToPackUri($"{EmbeddedPath}/Weapons/{name}.png");
 
-    public static Uri Star(MaterialRarity name) => ToPackUri($"{BasePath}/Stars/{name}.png");
+    public static Uri Star(MaterialRarity name) => ToPackUri($"{EmbeddedPath}/Stars/{name}.png");
 
     private static Uri? ToLocalFileUri(string folder, string fileName)
     {
-        string fullPath = Path.GetFullPath(Path.Combine(ExternalImagesPath, folder, fileName));
+        string fullPath = Path.GetFullPath(Path.Combine(ExternalPath, folder, fileName));
 
         if (!File.Exists(fullPath))
         {

@@ -46,7 +46,7 @@ public partial class App : Application
         services.AddSingleton(skillData);
         services.AddSingleton(levelData);
 
-        services.AddSingleton<IStaticDataRepository, JsonStaticDataRepository>();
+        services.AddSingleton<IDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
 
         services.AddSingleton<DataIOService>();

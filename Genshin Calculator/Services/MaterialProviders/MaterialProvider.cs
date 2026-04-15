@@ -2,6 +2,7 @@
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 {
     private readonly Dictionary<TKey, string[]> materials;
 
+    private readonly string basePath = App.Configuration["Paths:StaticData"] ?? "Data/Static";
+
     protected MaterialProvider(string jsonName)
     {
-        var resourceName = ResourcePaths.MaterialsJson(jsonName);
-        this.materials = LoadEmbeddedJson<Dictionary<TKey, string[]>>(resourceName)
-                    ?? throw new InvalidOperationException($"{jsonName}.json not found");
+        this.materials = this.LoadFileJson<Dictionary<TKey, string[]>>($"{jsonName}.json")
+                    ?? throw new InvalidOperationException($"Файл {jsonName}.json не найден или пуст");
     }
 
     public virtual MaterialTypes SupportedType { get; }
@@ -50,17 +52,16 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected abstract string Resolve(string[] materials, MaterialRarity rarity);
 
-    private static T? LoadEmbeddedJson<T>(string resourceName)
+    private T? LoadFileJson<T>(string fileName)
     {
-        var assembly = typeof(MaterialProvider<TKey>).Assembly;
+        var filePath = Path.Combine(this.basePath, "Json", fileName);
 
-        using Stream? stream = assembly.GetManifestResourceStream(resourceName);
-        if (stream == null)
+        if (!File.Exists(filePath))
         {
             return default;
         }
 
-        using var reader = new StreamReader(stream);
-        return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
+        var jsonContent = File.ReadAllText(filePath);
+        return JsonConvert.DeserializeObject<T>(jsonContent);
     }
 }

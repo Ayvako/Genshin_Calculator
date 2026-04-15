@@ -2,6 +2,7 @@
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
+using Genshin_Calculator.Presentation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,11 @@ namespace Genshin_Calculator.Infrastructure.Repositories;
 
 public class JsonStaticDataRepository : IStaticDataRepository
 {
+    private readonly string basePath = App.Configuration["Paths:StaticData"] ?? "Data/Static";
+
     public List<Character> GetBaseCharacters()
     {
-        var json = LoadJson("Characters.json");
+        var json = this.LoadJson("Characters.json");
         var assets = json["Characters"]?.ToObject<List<Assets>>()
                      ?? throw new InvalidOperationException("Characters section missing");
 
@@ -24,23 +27,26 @@ public class JsonStaticDataRepository : IStaticDataRepository
     public List<Material> GetStaticMaterials()
     {
         var materials = new List<Material>();
-        LoadTieredGroup(materials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
+        this.LoadTieredGroup(materials, "Enemies.json", MaterialTypes.Enemy, [MaterialRarity.White, MaterialRarity.Green, MaterialRarity.Blue]);
         return materials;
     }
 
-    private static JObject LoadJson(string fileName)
+    private JObject LoadJson(string fileName)
     {
-        var assembly = typeof(JsonStaticDataRepository).Assembly;
-        var resourceName = $"Genshin_Calculator.Resources.Json.{fileName}";
+        string filePath = Path.Combine(this.basePath, "Json", fileName);
 
-        using Stream? stream = assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException($"Resource not found: {resourceName}");
-        using var reader = new StreamReader(stream);
-        return JObject.Parse(reader.ReadToEnd());
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"Файл статических данных не найден: {filePath}");
+        }
+
+        string jsonContent = File.ReadAllText(filePath);
+        return JObject.Parse(jsonContent);
     }
 
-    private static void LoadTieredGroup(List<Material> targetList, string fileName, MaterialTypes type, MaterialRarity[] rarities)
+    private void LoadTieredGroup(List<Material> targetList, string fileName, MaterialTypes type, MaterialRarity[] rarities)
     {
-        var json = LoadJson(fileName);
+        var json = this.LoadJson(fileName);
         foreach (var property in json.Properties())
         {
             var names = property.Value.ToObject<string[]>();

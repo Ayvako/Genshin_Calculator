@@ -40,64 +40,56 @@ public partial class App : Application
             .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-        try
-        {
-            var levelData = LoadResource<LevelData>("Resources/Json/LevelCosts.json");
-            var skillData = LoadResource<SkillLevelData>("Resources/Json/SkillCosts.json");
+        var levelData = LoadResource<LevelData>("LevelCosts.json");
+        var skillData = LoadResource<SkillLevelData>("SkillCosts.json");
 
-            services.AddSingleton(skillData);
-            services.AddSingleton(levelData);
+        services.AddSingleton(skillData);
+        services.AddSingleton(levelData);
 
-            services.AddSingleton<IStaticDataRepository, JsonStaticDataRepository>();
-            services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
+        services.AddSingleton<IStaticDataRepository, JsonStaticDataRepository>();
+        services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
 
-            services.AddSingleton<DataIOService>();
-            services.AddTransient<IDataIOService, DataIOService>();
+        services.AddSingleton<DataIOService>();
+        services.AddTransient<IDataIOService, DataIOService>();
 
-            services.AddTransient<IInventoryService, InventoryService>();
-            services.AddTransient<ICharacterService, CharacterService>();
-            services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
-            services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
-            services.AddTransient<IAlchemyService, AlchemyService>();
-            services.AddTransient<IExperienceService, ExperienceService>();
+        services.AddTransient<IInventoryService, InventoryService>();
+        services.AddTransient<ICharacterService, CharacterService>();
+        services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();
+        services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
+        services.AddTransient<IAlchemyService, AlchemyService>();
+        services.AddTransient<IExperienceService, ExperienceService>();
 
-            services.AddSingleton<IInventoryStore, InventoryStore>();
-            services.AddSingleton<IViewService, ViewService>();
+        services.AddSingleton<IInventoryStore, InventoryStore>();
+        services.AddSingleton<IViewService, ViewService>();
 
-            services.AddSingleton<GemMaterialProvider>();
-            services.AddSingleton<SkillMaterialProvider>();
-            services.AddSingleton<EnemyMaterialProvider>();
-            services.AddSingleton<ExpMaterialProvider>();
+        services.AddSingleton<GemMaterialProvider>();
+        services.AddSingleton<SkillMaterialProvider>();
+        services.AddSingleton<EnemyMaterialProvider>();
+        services.AddSingleton<ExpMaterialProvider>();
 
-            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<SkillMaterialProvider>());
-            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<GemMaterialProvider>());
-            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<EnemyMaterialProvider>());
-            services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<ExpMaterialProvider>());
+        services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<SkillMaterialProvider>());
+        services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<GemMaterialProvider>());
+        services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<EnemyMaterialProvider>());
+        services.AddSingleton<IMaterialProvider>(sp => sp.GetRequiredService<ExpMaterialProvider>());
 
-            services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
+        services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
 
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<ToolsPanelViewModel>();
-            services.AddTransient<MainWindow>();
-            services.AddTransient<MainView>();
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<ToolsPanelViewModel>();
+        services.AddTransient<MainWindow>();
+        services.AddTransient<MainView>();
 
-            Configuration = builder.Build();
+        Configuration = builder.Build();
 
-            Services = services.BuildServiceProvider();
+        Services = services.BuildServiceProvider();
 
-            var dataIOService = Services.GetRequiredService<DataIOService>();
-            dataIOService.Import();
+        var dataIOService = Services.GetRequiredService<DataIOService>();
+        dataIOService.Import();
 
-            var mainWindow = Services.GetRequiredService<MainWindow>();
+        var mainWindow = Services.GetRequiredService<MainWindow>();
 
-            mainWindow.Show();
-            this.isInitialized = true;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show($"An error occurred during application startup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            Environment.Exit(0);
-        }
+        mainWindow.Show();
+        this.isInitialized = true;
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -111,15 +103,18 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private static T LoadResource<T>(string path)
+    private static T LoadResource<T>(string fileName)
     {
-        var resourceName = ResourcePaths.ToEmbeddedResource(path);
+        var resourceName = $"Genshin_Calculator.Resources.Json.{fileName}";
         var assembly = typeof(App).Assembly;
-        using Stream? stream = assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException($"Embedded resource not found: {resourceName}");
+
+        using Stream? stream = assembly.GetManifestResourceStream(resourceName)
+            ?? throw new FileNotFoundException($"Embedded resource not found: {resourceName}");
+
         using var reader = new StreamReader(stream);
         using var jsonReader = new JsonTextReader(reader);
 
         return new JsonSerializer().Deserialize<T>(jsonReader)
-            ?? throw new InvalidOperationException($"Failed to parse JSON: {path}");
+            ?? throw new InvalidOperationException($"Failed to parse JSON: {fileName}");
     }
 }

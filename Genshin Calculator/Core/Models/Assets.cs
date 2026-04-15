@@ -21,7 +21,7 @@ public record Assets
 
     public string Name { get; set; }
 
-    public Uri ImagePath => ResourcePaths.Character(this.Name);
+    public Uri ImagePath => ResourcePaths.Character(this.Name) ?? new Uri(string.Empty);
 
     public string LocalSpecialty { get; set; }
 

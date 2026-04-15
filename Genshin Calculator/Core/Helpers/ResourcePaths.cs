@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using Genshin_Calculator.Core.Models.Enums;
+using Genshin_Calculator.Presentation;
 
 namespace Genshin_Calculator.Core.Helpers;
 
@@ -7,15 +9,17 @@ public static class ResourcePaths
 {
     private static string basePath = "Resources/Images";
 
+    public static string ExternalImagesPath { get; set; } = App.Configuration?["Paths:StaticImages"] ?? "Data/Static/Images";
+
     public static string BasePath
     {
         get => basePath;
         set => basePath = (value ?? string.Empty).TrimEnd('/', '\\');
     }
 
-    public static Uri Character(string name) => ToPackUri($"{BasePath}/Characters/{name}.png");
+    public static Uri? Character(string name) => ToLocalFileUri("Characters", $"{name}.png");
 
-    public static Uri Material(string name) => ToPackUri($"{BasePath}/Materials/{name}.png");
+    public static Uri? Material(string name) => ToLocalFileUri("Materials", $"{name}.png");
 
     public static Uri Tool(string name) => ToPackUri($"{BasePath}/Tools/{name}.png");
 
@@ -25,14 +29,16 @@ public static class ResourcePaths
 
     public static Uri Star(MaterialRarity name) => ToPackUri($"{BasePath}/Stars/{name}.png");
 
-    public static string MaterialsJson(string name)
+    private static Uri? ToLocalFileUri(string folder, string fileName)
     {
-        return $"Genshin_Calculator.Resources.Json.{name}.json";
-    }
+        string fullPath = Path.GetFullPath(Path.Combine(ExternalImagesPath, folder, fileName));
 
-    public static string ToEmbeddedResource(string relativePath)
-    {
-        return "Genshin_Calculator." + relativePath.Replace("/", ".").Replace("\\", ".");
+        if (!File.Exists(fullPath))
+        {
+            return null;
+        }
+
+        return new Uri(fullPath, UriKind.Absolute);
     }
 
     private static Uri ToPackUri(string relativePath)

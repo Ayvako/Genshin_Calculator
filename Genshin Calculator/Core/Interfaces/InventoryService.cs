@@ -40,16 +40,16 @@ public class InventoryService : IInventoryService
 
     public void Upgrade(Character character)
     {
-        var tempInventory = GetInventory().Clone();
-        long totalExpPool = experienceService.CalculateTotalExp(tempInventory);
+        var tempInventory = this.GetInventory().Clone();
+        long totalExpPool = this.experienceService.CalculateTotalExp(tempInventory);
 
-        var requirements = GetRequirementsForCharacter(character, tempInventory, ref totalExpPool);
+        var requirements = this.GetRequirementsForCharacter(character, tempInventory, ref totalExpPool);
 
         if (requirements.All(m => m.IsCollected))
         {
-            Inventory realInventory = GetInventory();
-            long realExpPool = experienceService.CalculateTotalExp(realInventory);
-            GetRequirementsForCharacter(character, realInventory, ref realExpPool);
+            Inventory realInventory = this.GetInventory();
+            long realExpPool = this.experienceService.CalculateTotalExp(realInventory);
+            this.GetRequirementsForCharacter(character, realInventory, ref realExpPool);
 
             character.CurrentLevel = character.DesiredLevel;
             character.AutoAttack.CurrentLevel = character.AutoAttack.DesiredLevel;
@@ -64,18 +64,18 @@ public class InventoryService : IInventoryService
         }
     }
 
-    public Inventory GetInventory() => store.Inventory;
+    public Inventory GetInventory() => this.store.Inventory;
 
     public IReadOnlyList<Character> GetCharacters()
     {
-        return GetInventory().Characters;
+        return this.GetInventory().Characters;
     }
 
     public List<Material> GetRelatedMaterials(Character character, Material material)
     {
-        IMaterialProvider? provider = materialFactory.GetProvider(material.Type);
+        IMaterialProvider? provider = this.materialFactory.GetProvider(material.Type);
 
-        var inventory = GetInventory();
+        var inventory = this.GetInventory();
 
         if (provider == null)
         {
@@ -91,7 +91,7 @@ public class InventoryService : IInventoryService
     {
         var tempInventory = sourceInventory.Clone();
         var result = new Dictionary<Character, List<MaterialRequirement>>();
-        long totalExpPool = experienceService.CalculateTotalExp(tempInventory);
+        long totalExpPool = this.experienceService.CalculateTotalExp(tempInventory);
 
         var activeCharacters = sourceInventory.NotDeletedCharacters
             .Where(c => c.Activated)
@@ -100,7 +100,7 @@ public class InventoryService : IInventoryService
 
         foreach (var character in activeCharacters)
         {
-            var uiTracker = GetRequirementsForCharacter(character, tempInventory, ref totalExpPool);
+            var uiTracker = this.GetRequirementsForCharacter(character, tempInventory, ref totalExpPool);
             result[character] = SortMaterialsForDisplay(uiTracker);
         }
 
@@ -164,16 +164,16 @@ public class InventoryService : IInventoryService
             if (req.Type == MaterialTypes.Exp)
             {
                 int neededBeforeConsume = req.Amount;
-                experienceService.ProcessExpRequirement(req, inventory, ref totalExpPool, uiMat);
+                this.experienceService.ProcessExpRequirement(req, inventory, ref totalExpPool, uiMat);
                 uiMat.CraftedAmount = neededBeforeConsume - req.Amount - uiMat.TakenFromInventory;
                 uiMat.MissingAmount = req.Amount;
                 continue;
             }
 
-            if (alchemyService.IsCraftable(req.Type))
+            if (this.alchemyService.IsCraftable(req.Type))
             {
                 int neededBeforeCraft = req.Amount;
-                req.Amount = alchemyService.ProcessCrafting(inventory, character, req.Type, req.Rarity, req.Amount, uiMat.AlchemyCosts);
+                req.Amount = this.alchemyService.ProcessCrafting(inventory, character, req.Type, req.Rarity, req.Amount, uiMat.AlchemyCosts);
                 uiMat.CraftedAmount = neededBeforeCraft - req.Amount;
             }
 
@@ -183,19 +183,19 @@ public class InventoryService : IInventoryService
 
     private List<MaterialRequirement> GetRequirementsForCharacter(Character character, Inventory inventory, ref long totalExpPool)
     {
-        var requirements = TotalCost(character).Select(m => m.Clone()).ToList();
+        var requirements = this.TotalCost(character).Select(m => m.Clone()).ToList();
         var uiTracker = requirements.Select(m => new MaterialRequirement(m.Clone(), m.Amount)).ToList();
 
         DeductAvailableMaterials(requirements, uiTracker, inventory);
-        ProcessMissingMaterials(character, requirements, uiTracker, inventory, ref totalExpPool);
+        this.ProcessMissingMaterials(character, requirements, uiTracker, inventory, ref totalExpPool);
 
         return uiTracker;
     }
 
     private List<Material> TotalCost(Character character)
     {
-        var charCost = characterUpgrade.GetCharacterCost(character);
-        var skillCost = skillUpgrade.GetSkillsCost(character);
+        var charCost = this.characterUpgrade.GetCharacterCost(character);
+        var skillCost = this.skillUpgrade.GetSkillsCost(character);
         var rawMaterials = charCost.Concat(skillCost);
         var resultList = new List<Material>();
         long totalXpAmount = 0;
@@ -214,7 +214,7 @@ public class InventoryService : IInventoryService
 
         if (totalXpAmount > 0)
         {
-            resultList.Add(experienceService.ConvertXpToHeroWit(totalXpAmount));
+            resultList.Add(this.experienceService.ConvertXpToHeroWit(totalXpAmount));
         }
 
         return resultList;

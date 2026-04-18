@@ -37,7 +37,7 @@ public static class ResourcePaths
 
         if (!File.Exists(fullPath))
         {
-            return null;
+            return ToPackUri($"{embeddedPath}/Placeholder.png");
         }
 
         return new Uri(fullPath, UriKind.Absolute);

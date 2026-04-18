@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Infrastructure;
 
@@ -26,8 +27,10 @@ public class DataIOService : IDataIOService
         this.userData = userData;
     }
 
-    public void Import()
+    public async Task ImportAsync()
     {
+        var updater = new DataUpdateService();
+        await updater.UpdateAllDataAsync();
         try
         {
             var characters = this.data.GetBaseCharacters();

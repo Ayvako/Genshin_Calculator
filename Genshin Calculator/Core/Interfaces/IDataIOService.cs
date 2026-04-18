@@ -1,8 +1,10 @@
-﻿namespace Genshin_Calculator.Core.Interfaces;
+﻿using System.Threading.Tasks;
+
+namespace Genshin_Calculator.Core.Interfaces;
 
 public interface IDataIOService
 {
-    void Import();
+    Task ImportAsync();
 
     void Save();
 }

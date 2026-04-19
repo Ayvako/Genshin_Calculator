@@ -1,5 +1,4 @@
-﻿using Genshin_Calculator.Core.Helpers;
-using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
@@ -14,7 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
@@ -45,20 +43,16 @@ public partial class App : Application
 
         try
         {
-            // Получаем сервис импорта
             var dataIOService = Services.GetRequiredService<IDataIOService>();
-
-            // Асинхронно обновляем данные из GitHub и импортируем их
-            // Это то, ради чего мы делали метод асинхронным
             await dataIOService.ImportAsync();
 
-            // Создаем и показываем главное окно
             var mainWindow = Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
+            this.isInitialized = true;
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Ошибка при запуске приложения: {ex.Message}", "Критическая ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Error starting the application: {ex.Message}", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
             this.Shutdown();
         }
     }
@@ -67,7 +61,7 @@ public partial class App : Application
     {
         if (this.isInitialized)
         {
-            var dataService = Services.GetService<DataIOService>();
+            var dataService = Services.GetService<IDataIOService>();
             dataService?.Save();
         }
 
@@ -102,8 +96,7 @@ public partial class App : Application
         services.AddSingleton<IDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
 
-        services.AddSingleton<DataIOService>();
-        services.AddTransient<IDataIOService, DataIOService>();
+        services.AddSingleton<IDataIOService, DataIOService>();
         services.AddTransient<IInventoryService, InventoryService>();
         services.AddTransient<ICharacterService, CharacterService>();
         services.AddTransient<ISkillUpgradeService, SkillUpgradeService>();

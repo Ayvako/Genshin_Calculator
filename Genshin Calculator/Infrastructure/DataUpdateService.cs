@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ public class DataUpdateService
             await this.UpdateJsonFile("Json/Enemies.json");
 
             await this.SyncImagesFromJson("Json/Characters.json", "Characters");
-
         }
         catch (Exception ex)
         {
@@ -84,9 +84,9 @@ public class DataUpdateService
             byte[] data = await this.httpClient.GetByteArrayAsync(url);
             await File.WriteAllBytesAsync(localPath, data);
         }
-        catch
+        catch (Exception ex)
         {
-
+            Debug.WriteLine($"Failed to download file {url}: {ex.Message}");
         }
     }
 }

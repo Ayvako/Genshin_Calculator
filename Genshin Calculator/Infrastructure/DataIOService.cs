@@ -41,7 +41,7 @@ public class DataIOService : IDataIOService
             {
                 Debug.WriteLine("ℹ️ No save file found. Starting fresh.");
                 this.ApplyData(characters, materials);
-                this.isSuccessfullyLoaded = true;
+                isSuccessfullyLoaded = true;
                 return;
             }
 
@@ -49,7 +49,7 @@ public class DataIOService : IDataIOService
 
             if (userInventory == null && userCharacters == null)
             {
-                this.isSuccessfullyLoaded = false;
+                isSuccessfullyLoaded = false;
                 Debug.WriteLine("❌ CRITICAL: Save file exists but is corrupted. Saving disabled to prevent data loss.");
             }
             else
@@ -65,20 +65,20 @@ public class DataIOService : IDataIOService
                 }
 
                 this.ApplyData(characters, materials);
-                this.isSuccessfullyLoaded = true;
+                isSuccessfullyLoaded = true;
                 Debug.WriteLine("✅ Data loaded and merged successfully.");
             }
         }
         catch (Exception ex)
         {
-            this.isSuccessfullyLoaded = false;
+            isSuccessfullyLoaded = false;
             Debug.WriteLine($"❌ Import Error: {ex.Message}");
         }
     }
 
     public void Save()
     {
-        if (!this.isSuccessfullyLoaded)
+        if (!isSuccessfullyLoaded)
         {
             Debug.WriteLine("⚠️ Save blocked: Data was not loaded successfully. Avoiding data loss.");
             return;

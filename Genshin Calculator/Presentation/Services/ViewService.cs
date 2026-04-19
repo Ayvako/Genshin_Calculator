@@ -5,7 +5,6 @@ using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;
 using Genshin_Calculator.Presentation.Features.Inventory;
-using Genshin_Calculator.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +29,7 @@ public class ViewService : IViewService
     public void ShowAddMaterialsDialog(List<Material> list)
     {
         var vm = new AddMaterialsDialogViewModel(list);
-        var view = this.CreateDialog<AddMaterialsDialogView>(vm);
+        var view = CreateDialog<AddMaterialsDialogView>(vm);
 
         SetupCloseOnDeactivate(view, onCloseRequested: () => view.Close());
         vm.RequestClose += () => view.Close();
@@ -41,7 +40,7 @@ public class ViewService : IViewService
     public void ShowCharacterEdit(Character character)
     {
         var vm = new CharacterEditViewModel(character, this.characterService);
-        var view = this.CreateDialog<CharacterEditView>(vm);
+        var view = CreateDialog<CharacterEditView>(vm);
 
         vm.RequestClose += () => view.Close();
 
@@ -51,7 +50,7 @@ public class ViewService : IViewService
     public void ShowCharacterSelector()
     {
         var vm = new CharacterSelectorViewModel(this.characterService);
-        var view = this.CreateDialog<CharacterSelectorView>(vm);
+        var view = CreateDialog<CharacterSelectorView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
@@ -65,7 +64,7 @@ public class ViewService : IViewService
     public void ShowInventory()
     {
         var vm = new InventoryViewModel(this.inventoryService);
-        var view = this.CreateDialog<InventoryView>(vm);
+        var view = CreateDialog<InventoryView>(vm);
 
         vm.CloseRequested += (s, result) =>
         {
@@ -79,7 +78,7 @@ public class ViewService : IViewService
     public bool ShowUpgradeCharacterDialog(Character character)
     {
         var vm = new UpgradeCharacterDialogViewModel(character, this, this.inventoryService);
-        var view = this.CreateDialog<UpgradeCharacterDialogView>(vm);
+        var view = CreateDialog<UpgradeCharacterDialogView>(vm);
 
         vm.RequestClose += () => view.Close();
 
@@ -104,7 +103,7 @@ public class ViewService : IViewService
         };
     }
 
-    private TWindow CreateDialog<TWindow>(object viewModel)
+    private static TWindow CreateDialog<TWindow>(object viewModel)
         where TWindow : Window, new()
     {
         var activeWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);

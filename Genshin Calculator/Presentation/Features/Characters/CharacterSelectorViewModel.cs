@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Services;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 

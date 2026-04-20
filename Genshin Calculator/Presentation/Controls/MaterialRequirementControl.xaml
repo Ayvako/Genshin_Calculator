@@ -8,51 +8,99 @@
             BorderThickness="0"
             Padding="0"
             Cursor="Hand">
+
         <Button.Template>
             <ControlTemplate TargetType="Button">
-                <ContentPresenter />
+                <Border x:Name="Root"
+                        Width="64"
+                        Height="64"
+                        CornerRadius="10"
+                        Margin="4"
+                        BorderBrush="#2F323A"
+                        BorderThickness="1"
+                        Background="{Binding TargetMaterial.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                        Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
+
+                    <Grid>
+
+                        <!-- Внутренний контейнер -->
+                        <Border Margin="3"
+                                CornerRadius="8"
+                                Background="#22000000"
+                                ClipToBounds="True">
+
+                            <!-- ВАЖНО: НЕ РАСТЯГИВАЕМ -->
+                            <Viewbox Stretch="Uniform">
+                                <Image Source="{Binding TargetMaterial.ImagePath}"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Viewbox>
+                        </Border>
+
+                        <!-- Количество -->
+                        <Border VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Margin="4"
+                                Padding="4,1"
+                                CornerRadius="6"
+                                Background="#AA000000">
+
+                            <TextBlock Foreground="White"
+                                       FontSize="11"
+                                       FontWeight="Bold">
+
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="{Binding MissingAmount}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCollected}" Value="True">
+                                                <Setter Property="Text" Value="{Binding TargetMaterial.Amount}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+
+                            </TextBlock>
+                        </Border>
+
+                        <!-- Галочка -->
+                        <Grid HorizontalAlignment="Right"
+                              VerticalAlignment="Bottom"
+                              Margin="3"
+                              Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                            <Ellipse Fill="#EEFFFFFF"
+                                     Width="18"
+                                     Height="18">
+                                <Ellipse.Effect>
+                                    <DropShadowEffect BlurRadius="4"
+                                                      Opacity="0.4"
+                                                      ShadowDepth="1" />
+                                </Ellipse.Effect>
+                            </Ellipse>
+
+                            <TextBlock Text="✔"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       Foreground="#2ECC71"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+
+                    </Grid>
+                </Border>
+
+                <!-- Hover эффект -->
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="Root" Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.06" ScaleY="1.06" />
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+
             </ControlTemplate>
         </Button.Template>
-
-        <Border Margin="4" CornerRadius="6" BorderBrush="Black" BorderThickness="1"
-                Background="{Binding TargetMaterial.Rarity, Converter={StaticResource RarityToBrushConverter}}"
-                Opacity="{Binding IsCollected, Converter={StaticResource BoolToOpacityConverter}}">
-
-            <Grid>
-                <StackPanel Orientation="Vertical">
-                    <Border Background="Black" CornerRadius="5,5,0,0">
-                        <TextBlock Foreground="White" TextAlignment="Center">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Text" Value="{Binding MissingAmount}" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCollected}" Value="True">
-                                            <Setter Property="Text" Value="{Binding TargetMaterial.Amount}" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding CraftedAmount, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
-                                            <Setter Property="ToolTip" Value="{Binding CraftedAmount}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Border>
-                    <Image Source="{Binding TargetMaterial.ImagePath}" Width="50" Height="40" Margin="0" />
-                </StackPanel>
-
-                <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,2,2"
-                      Visibility="{Binding IsCollected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Ellipse Fill="White" Width="20" Height="20">
-                        <Ellipse.Effect>
-                            <DropShadowEffect BlurRadius="3" Color="Black" Opacity="0.5" ShadowDepth="1" />
-                        </Ellipse.Effect>
-                    </Ellipse>
-                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;"
-                               Foreground="#FF22CC22" FontSize="14"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               FontWeight="Bold" />
-                </Grid>
-            </Grid>
-        </Border>
     </Button>
 </UserControl>

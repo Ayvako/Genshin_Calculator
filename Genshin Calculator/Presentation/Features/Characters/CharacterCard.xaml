@@ -3,164 +3,217 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
-             Width="350" MinWidth="350" MaxWidth="712" Margin="5">
+             xmlns:characters="clr-namespace:Genshin_Calculator.Presentation.Features.Characters"
 
-    <!-- Основная рамка карточки -->
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=characters:CharacterCardViewModel}"
 
-    <Border x:Name="Root" CornerRadius="10" BorderBrush="Black" BorderThickness="1"  Margin="1" Background="{StaticResource MyGradientBrush}">
-        <Border.Effect>
-            <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="11" Opacity="0.75" />
-        </Border.Effect>
-        <Grid>
+             Width="380"
+             MinWidth="350"
+             MaxWidth="720"
+             Margin="6">
 
-            <StackPanel>
-                <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
-                <Border
-                CornerRadius="10,10,0,0"
-                Background="{Binding Character.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}">
+    <UserControl.Resources>
+        <DropShadowEffect x:Key="CardShadow"
+                          Color="Black"
+                          Direction="270"
+                          ShadowDepth="0"
+                          BlurRadius="18"
+                          Opacity="0.45" />
 
-                    <Grid Margin="6">
+        <Style x:Key="InfoLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#CBBFA9" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
 
+        <Style x:Key="InfoValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F2F2F2" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="PillStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Background" Value="#1F2228" />
+            <Setter Property="BorderBrush" Value="#343840" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Margin" Value="4,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid ClipToBounds="True">
+
+        <Border x:Name="Root"
+            CornerRadius="16"
+            BorderBrush="#24262C"
+            BorderThickness="1"
+            Background="#181A1F"
+            Margin="1"
+            Effect="{StaticResource CardShadow}">
+
+            <Grid ClipToBounds="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <Border Grid.Row="0"
+                    CornerRadius="16,16,0,0"
+                    Background="{Binding Character.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}">
+
+                    <Grid Margin="10,9">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- Левая панель -->
-                        <StackPanel Grid.Column="0" Orientation="Horizontal"
-                                Style="{StaticResource HoverButtonPanelStyle}">
-                            <Button Command="{Binding EditCommand}" Style="{StaticResource IconButtonStyle}" Margin="0,0,10,0">
-                                <materialDesign:PackIcon Kind="PencilOutline" Width="22" Height="22" />
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Command="{Binding EditCommand}"
+                                Style="{StaticResource IconButtonStyle}"
+                                Margin="0,0,8,0">
+                                <materialDesign:PackIcon Kind="PencilOutline" Width="20" Height="20" />
                             </Button>
 
-                            <Button Command="{Binding AscendCommand}" Style="{StaticResource IconButtonStyle}">
-                                <materialDesign:PackIcon Kind="StarOutline" Width="22" Height="22" />
+                            <Button Command="{Binding AscendCommand}"
+                                Style="{StaticResource IconButtonStyle}">
+                                <materialDesign:PackIcon Kind="StarOutline" Width="20" Height="20" />
                             </Button>
                         </StackPanel>
 
-                        <!-- Имя персонажа -->
-                        <TextBlock Grid.Column="1"
-                           Text="{Binding Name, FallbackValue=Title}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="18"
-                           Foreground="#FFCCCCCC" />
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name, FallbackValue=Title}"
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
 
-                        <!-- Правая панель -->
-                        <StackPanel Orientation="Horizontal" Grid.Column="2"
-                                Style="{StaticResource HoverButtonPanelStyle}">
-
-                            <Button Command="{Binding ToggleActiveCommand}" Style="{StaticResource IconButtonStyle}" Margin="0,0,10,0">
-                                <materialDesign:PackIcon Kind="Power" Width="22" Height="22" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Command="{Binding ToggleActiveCommand}"
+                                Style="{StaticResource IconButtonStyle}"
+                                Margin="0,0,8,0">
+                                <materialDesign:PackIcon Kind="Power" Width="20" Height="20" />
                             </Button>
-                            <Button Command="{Binding RemoveCommand}" Style="{StaticResource IconButtonStyle}">
-                                <materialDesign:PackIcon Kind="DeleteOutline" Width="22" Height="22" />
+
+                            <Button Command="{Binding RemoveCommand}"
+                                Style="{StaticResource IconButtonStyle}">
+                                <materialDesign:PackIcon Kind="DeleteOutline" Width="20" Height="20" />
                             </Button>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Панель информации -->
-                <Grid Margin="0,4">
+                <!-- Main content -->
+                <Grid Grid.Row="1" Margin="12,12,12,8">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="104" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Grid Width="96" Height="96" ClipToBounds="True">
-                        <Border Background="{Binding Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}" CornerRadius="10" />
-                        <Border CornerRadius="10" ClipToBounds="True">
+                    <!-- Character image -->
+                    <Grid Width="104" Height="104" ClipToBounds="True">
+                        <Border Background="{Binding Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                            CornerRadius="14" />
+                        <Border CornerRadius="14"
+                            Margin="3"
+                            Background="#22111111"
+                            ClipToBounds="True">
                             <Image Source="{Binding Assets.ImagePath}"
-                                                Stretch="UniformToFill" />
+                               Stretch="UniformToFill"
+                               RenderOptions.BitmapScalingMode="HighQuality" />
                         </Border>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" Margin="8" VerticalAlignment="Center">
-                        <!-- Уровень -->
-                        <StackPanel Orientation="Vertical" Margin="0,0,0,4">
-                            <TextBlock Text="Levels" Foreground="#FFECE5D8" FontWeight="Bold" FontSize="14" TextAlignment="Center" />
-                            <TextBlock Foreground="#FFCCCCCC" FontWeight="Bold" FontSize="14" TextAlignment="Center">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} → {1}">
-                                        <Binding Path="CurrentLevel" FallbackValue="1" />
-                                        <Binding Path="DesiredLevel" FallbackValue="90" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </StackPanel>
+                    <!-- Stats -->
+                    <StackPanel Grid.Column="1"
+                            Margin="12,2,0,0"
+                            VerticalAlignment="Center">
 
-                        <!-- Таланты -->
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="Talents" Foreground="#FFECE5D8" FontWeight="Bold" FontSize="14" TextAlignment="Center" />
-                            <TextBlock Foreground="#FFCCCCCC" FontWeight="Bold" FontSize="14" TextAlignment="Center">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} → {1}&#x0a;{2} → {3}&#x0a;{4} → {5}">
-                                        <Binding Path="AutoAttack.CurrentLevel" FallbackValue="1" />
-                                        <Binding Path="AutoAttack.DesiredLevel" FallbackValue="10" />
-                                        <Binding Path="Elemental.CurrentLevel" FallbackValue="1" />
-                                        <Binding Path="Elemental.DesiredLevel" FallbackValue="1" />
-                                        <Binding Path="Burst.CurrentLevel" FallbackValue="1" />
-                                        <Binding Path="Burst.DesiredLevel" FallbackValue="1" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-                        </StackPanel>
+                        <Border Style="{StaticResource PillStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Levels" Style="{StaticResource InfoLabelStyle}" />
+                                <TextBlock Style="{StaticResource InfoValueStyle}">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} → {1}">
+                                            <Binding Path="CurrentLevel" FallbackValue="1" />
+                                            <Binding Path="DesiredLevel" FallbackValue="90" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource PillStyle}" Margin="0,8,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Talents" Style="{StaticResource InfoLabelStyle}" />
+                                <TextBlock Style="{StaticResource InfoValueStyle}">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} → {1}&#x0a;{2} → {3}&#x0a;{4} → {5}">
+                                            <Binding Path="AutoAttack.CurrentLevel" FallbackValue="1" />
+                                            <Binding Path="AutoAttack.DesiredLevel" FallbackValue="10" />
+                                            <Binding Path="Elemental.CurrentLevel" FallbackValue="1" />
+                                            <Binding Path="Elemental.DesiredLevel" FallbackValue="10" />
+                                            <Binding Path="Burst.CurrentLevel" FallbackValue="1" />
+                                            <Binding Path="Burst.DesiredLevel" FallbackValue="10" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
 
-                <!-- Панель ресурсов -->
-                <ItemsControl ItemsSource="{Binding RequiredMaterials}" Margin="0,6,0,0">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                <!-- Resources -->
+                <Border Grid.Row="2"
+                    Margin="12,0,12,12"
+                    CornerRadius="14"
+                    Background="#20232A"
+                    BorderBrush="#2D3139"
+                    BorderThickness="1"
+                    Padding="8">
+                    <ItemsControl ItemsSource="{Binding RequiredMaterials}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <controls:MaterialRequirementControl />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:MaterialRequirementControl Margin="4" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
 
-            </StackPanel>
+            </Grid>
+        </Border>
+        <Border Panel.ZIndex="1000"
+            Background="#88000000"
+            CornerRadius="16"
+            IsHitTestVisible="False">
 
-            <Rectangle x:Name="InactiveMask" Fill="Black" RadiusX="10" RadiusY="10" IsHitTestVisible="False">
-                <Rectangle.Style>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Opacity" Value="0" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsActivated}" Value="False">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
 
-                    <Style TargetType="Rectangle">
-                        <Setter Property="Opacity" Value="0" />
-
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsActivated}" Value="False">
-                                <DataTrigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                 To="0.5"
-                                                 Duration="0:0:0.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.EnterActions>
-
-                                <DataTrigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                 To="0"
-                                                 Duration="0:0:0.3" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </DataTrigger.ExitActions>
-                            </DataTrigger>
-                        </Style.Triggers>
-
-                    </Style>
-                </Rectangle.Style>
-            </Rectangle>
-        </Grid>
-
-    </Border>
-
+        </Border>
+    </Grid>
 </UserControl>

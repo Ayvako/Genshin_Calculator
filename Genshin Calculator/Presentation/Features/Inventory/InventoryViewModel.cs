@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
+using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,9 @@ public partial class InventoryViewModel : ObservableObject
 
     private readonly IInventoryService inventoryService;
 
+    [ObservableProperty]
+    private FilterOption? selectedFilter;
+
     public InventoryViewModel(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
@@ -27,15 +31,46 @@ public partial class InventoryViewModel : ObservableObject
         var clonedMaterials = inventory.Materials.Select(m => m.Clone()).ToList();
         this.originalMaterials = inventory.Materials;
         this.Materials = new ObservableCollection<Material>(clonedMaterials);
+
         this.MaterialsView = CollectionViewSource.GetDefaultView(this.Materials);
         this.MaterialsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Material.Type)));
+        this.MaterialsView.Filter = this.FilterMaterials;
+
+        this.SelectedFilter = this.FilterOptions[0];
     }
 
     public event EventHandler<bool>? CloseRequested;
 
+    public List<FilterOption> FilterOptions { get; } =
+    [
+        new FilterOption { Value = null }, .. Enum.GetValues<MaterialTypes>().Select(x => new FilterOption { Value = x })
+    ];
+
     public ObservableCollection<Material> Materials { get; }
 
     public ICollectionView MaterialsView { get; }
+
+    partial void OnSelectedFilterChanged(FilterOption? value)
+    {
+        MaterialsView.Refresh();
+    }
+
+    private bool FilterMaterials(object obj)
+    {
+        var filterValue = this.SelectedFilter?.Value;
+
+        if (filterValue == null)
+        {
+            return true;
+        }
+
+        if (obj is Material material)
+        {
+            return material.Type == filterValue;
+        }
+
+        return false;
+    }
 
     [RelayCommand]
     private void Cancel()

@@ -38,6 +38,13 @@ public class InventoryService : IInventoryService
         this.alchemyService = alchemyService;
     }
 
+    public static List<MaterialRequirement> SortMaterialsForDisplay(List<MaterialRequirement> materials)
+    {
+        return [.. materials
+        .OrderBy(m => GetTypePriority(m.TargetMaterial.Type))
+        .ThenBy(m => m.TargetMaterial.Rarity)];
+    }
+
     public void Upgrade(Character character)
     {
         var tempInventory = this.GetInventory().Clone();
@@ -107,6 +114,34 @@ public class InventoryService : IInventoryService
         return result;
     }
 
+    public List<Material> TotalCost(Character character)
+    {
+        var charCost = this.characterUpgrade.GetCharacterCost(character);
+        var skillCost = this.skillUpgrade.GetSkillsCost(character);
+        var rawMaterials = charCost.Concat(skillCost);
+        var resultList = new List<Material>();
+        long totalXpAmount = 0;
+
+        foreach (var group in rawMaterials.GroupBy(m => new { m.Name, m.Type, m.Rarity }))
+        {
+            if (group.Key.Type == MaterialTypes.Exp)
+            {
+                totalXpAmount += group.Sum(x => (long)x.Amount);
+            }
+            else
+            {
+                resultList.Add(new Material(group.Key.Name, group.Key.Type, group.Key.Rarity, group.Sum(x => x.Amount)));
+            }
+        }
+
+        if (totalXpAmount > 0)
+        {
+            resultList.Add(this.experienceService.ConvertXpToHeroWit(totalXpAmount));
+        }
+
+        return resultList;
+    }
+
     private static void DeductAvailableMaterials(List<Material> requirements, List<MaterialRequirement> uiTracker, Inventory inventory)
     {
         foreach (var req in requirements)
@@ -127,13 +162,6 @@ public class InventoryService : IInventoryService
                 inventory.SetMaterial(new Material(inStock.Name, inStock.Type, inStock.Rarity, inStock.Amount - taken));
             }
         }
-    }
-
-    private static List<MaterialRequirement> SortMaterialsForDisplay(List<MaterialRequirement> materials)
-    {
-        return [.. materials
-        .OrderBy(m => GetTypePriority(m.TargetMaterial.Type))
-        .ThenBy(m => m.TargetMaterial.Rarity)];
     }
 
     private static int GetTypePriority(MaterialTypes type) => type switch
@@ -190,33 +218,5 @@ public class InventoryService : IInventoryService
         this.ProcessMissingMaterials(character, requirements, uiTracker, inventory, ref totalExpPool);
 
         return uiTracker;
-    }
-
-    private List<Material> TotalCost(Character character)
-    {
-        var charCost = this.characterUpgrade.GetCharacterCost(character);
-        var skillCost = this.skillUpgrade.GetSkillsCost(character);
-        var rawMaterials = charCost.Concat(skillCost);
-        var resultList = new List<Material>();
-        long totalXpAmount = 0;
-
-        foreach (var group in rawMaterials.GroupBy(m => new { m.Name, m.Type, m.Rarity }))
-        {
-            if (group.Key.Type == MaterialTypes.Exp)
-            {
-                totalXpAmount += group.Sum(x => (long)x.Amount);
-            }
-            else
-            {
-                resultList.Add(new Material(group.Key.Name, group.Key.Type, group.Key.Rarity, group.Sum(x => x.Amount)));
-            }
-        }
-
-        if (totalXpAmount > 0)
-        {
-            resultList.Add(this.experienceService.ConvertXpToHeroWit(totalXpAmount));
-        }
-
-        return resultList;
     }
 }

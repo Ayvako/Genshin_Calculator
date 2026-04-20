@@ -7,7 +7,6 @@ namespace Genshin_Calculator.Presentation.Helpers;
 
 public static partial class TextBoxExtensions
 {
-
     public static readonly DependencyProperty NumericOnlyProperty =
         DependencyProperty.RegisterAttached(
             "NumericOnly",

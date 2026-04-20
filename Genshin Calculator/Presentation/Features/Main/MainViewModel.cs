@@ -16,8 +16,9 @@ namespace Genshin_Calculator.Presentation.Features.Main;
 public partial class MainViewModel : ObservableRecipient,
     IRecipient<CharacterChangedMessage>,
     IRecipient<RefreshMaterialsRequestMessage>,
-    IRecipient<InventoryChangedMessage>, IDropTarget,
-    IRecipient<DimmingMessage>
+    IRecipient<InventoryChangedMessage>,
+    IRecipient<DimmingMessage>,
+    IDropTarget
 {
     private readonly IInventoryService inventoryService;
 
@@ -30,7 +31,11 @@ public partial class MainViewModel : ObservableRecipient,
     [ObservableProperty]
     private bool isDimmed;
 
-    public MainViewModel(IInventoryService inventoryService, IViewService dialogService, IDataIOService dataIOService, ICharacterService characterService)
+    public MainViewModel(
+        IInventoryService inventoryService,
+        IViewService dialogService,
+        IDataIOService dataIOService,
+        ICharacterService characterService)
     {
         this.inventoryService = inventoryService;
         this.dialogService = dialogService;
@@ -39,6 +44,7 @@ public partial class MainViewModel : ObservableRecipient,
 
         this.IsActive = true;
         this.RefreshCharacters();
+        this.RefreshMaterialsAndSave();
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; } = [];
@@ -69,11 +75,9 @@ public partial class MainViewModel : ObservableRecipient,
         }
 
         this.Characters.Move(oldIndex, newIndex);
-
         this.UpdatePriorities();
 
-        this.RefreshAllMaterials();
-        this.dataIOService.Save();
+        this.RefreshMaterialsAndSave();
     }
 
     public void Receive(CharacterChangedMessage message)
@@ -82,42 +86,28 @@ public partial class MainViewModel : ObservableRecipient,
 
         if (character.Deleted)
         {
-            var vm = this.Characters.FirstOrDefault(c => c.Character == character);
-            if (vm != null)
+            if (this.RemoveCharacter(character))
             {
-                this.Characters.Remove(vm);
-                this.RefreshAllMaterials();
+                this.RefreshMaterialsAndSave();
             }
 
             return;
         }
 
-        if (this.Characters.All(c => c.Character != character))
+        if (!this.Characters.Any(c => c.Character == character))
         {
             this.RefreshCharacters();
             return;
         }
 
-        this.RefreshAllMaterials();
-        this.dataIOService.Save();
+        this.RefreshMaterialsAndSave();
     }
 
-    public void Receive(InventoryChangedMessage message)
-    {
-        this.RefreshAllMaterials();
-        this.dataIOService.Save();
-    }
+    public void Receive(InventoryChangedMessage message) => this.RefreshMaterialsAndSave();
 
-    public void Receive(RefreshMaterialsRequestMessage message)
-    {
-        this.RefreshAllMaterials();
-        this.dataIOService.Save();
-    }
+    public void Receive(RefreshMaterialsRequestMessage message) => this.RefreshMaterialsAndSave();
 
-    public void Receive(DimmingMessage message)
-    {
-        this.IsDimmed = message.IsEnabled;
-    }
+    public void Receive(DimmingMessage message) => this.IsDimmed = message.IsEnabled;
 
     private void UpdatePriorities()
     {
@@ -130,22 +120,20 @@ public partial class MainViewModel : ObservableRecipient,
     private void RefreshCharacters()
     {
         this.Characters.Clear();
+
         var inventory = this.inventoryService.GetInventory();
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
-        var sortedChars = inventory.NotDeletedCharacters.OrderBy(c => c.Priority);
-
-        foreach (var character in sortedChars)
+        foreach (var character in inventory.NotDeletedCharacters.OrderBy(c => c.Priority))
         {
-            var materials = missingByCharacter.GetValueOrDefault(character) ?? [];
-            var charVm = this.CreateCharacterViewModel(character, materials);
-            this.Characters.Add(charVm);
+            this.Characters.Add(this.CreateCharacterViewModel(character, this.GetMaterials(character, missingByCharacter)));
         }
     }
 
-    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<MaterialRequirement> materials)
+    private void RefreshMaterialsAndSave()
     {
-        return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
+        this.RefreshAllMaterials();
+        this.dataIOService.Save();
     }
 
     private void RefreshAllMaterials()
@@ -155,7 +143,41 @@ public partial class MainViewModel : ObservableRecipient,
 
         foreach (var charVm in this.Characters)
         {
-            charVm.RequiredMaterials = missingByCharacter.GetValueOrDefault(charVm.Character) ?? [];
+            charVm.RequiredMaterials = InventoryService.SortMaterialsForDisplay(this.GetMaterials(charVm.Character, missingByCharacter));
         }
+    }
+
+    private List<MaterialRequirement> GetMaterials(Character character, Dictionary<Character, List<MaterialRequirement>> missingByCharacter)
+    {
+        if (!character.Activated)
+        {
+            return [.. this.inventoryService
+                .TotalCost(character)
+                .Select(m => new MaterialRequirement(m, m.Amount)
+                {
+                    MissingAmount = m.Amount,
+                    TakenFromInventory = 0,
+                    CraftedAmount = 0,
+                })];
+        }
+
+        return missingByCharacter.TryGetValue(character, out var value) ? value : [];
+    }
+
+    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<MaterialRequirement> materials)
+    {
+        return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
+    }
+
+    private bool RemoveCharacter(Character character)
+    {
+        var vm = this.Characters.FirstOrDefault(c => c.Character == character);
+        if (vm is null)
+        {
+            return false;
+        }
+
+        this.Characters.Remove(vm);
+        return true;
     }
 }

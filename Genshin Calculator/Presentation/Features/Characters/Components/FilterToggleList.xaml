@@ -1,7 +1,61 @@
 ﻿<UserControl x:Class="Genshin_Calculator.Presentation.Features.Characters.Components.FilterToggleList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Name="root">
+             x:Name="root"
+
+             xmlns:сomponents="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=сomponents:FilterToggleList}"
+
+             SnapsToDevicePixels="True"
+             UseLayoutRounding="True">
+
+    <UserControl.Resources>
+        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="bd"
+                                CornerRadius="6"
+                                Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd"
+                                        Property="Background"
+                                        Value="#20FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Image">
+            <Setter Property="Width" Value="32" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Opacity">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource DimElementConverter}">
+                        <Binding Path="IsChecked" RelativeSource="{RelativeSource AncestorType=ToggleButton}" />
+                        <Binding Path="SelectedItems.Count" ElementName="root" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding Items, ElementName=root}">
         <ItemsControl.ItemsPanel>
@@ -12,13 +66,9 @@
 
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <ToggleButton Command="{Binding ToggleCommand, ElementName=root}"
-                              CommandParameter="{Binding}"
-                              Margin="4" Width="36" Height="36"
-                              Background="Transparent"
-                              Focusable="False"
-                              BorderThickness="0"
-                              Cursor="Hand">
+                <ToggleButton Style="{StaticResource FilterToggleButtonStyle}"
+                              Command="{Binding ToggleCommand, ElementName=root}"
+                              CommandParameter="{Binding}">
                     <ToggleButton.IsChecked>
                         <MultiBinding Converter="{StaticResource ContainsConverter}" Mode="OneWay">
                             <Binding Path="SelectedItems" ElementName="root" />
@@ -26,51 +76,16 @@
                         </MultiBinding>
                     </ToggleButton.IsChecked>
 
-                    <ToggleButton.Template>
-                        <ControlTemplate TargetType="ToggleButton">
-                            <Border x:Name="bd"
-                                CornerRadius="6"
-                                Background="Transparent">
-                                <ContentPresenter
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center" />
-                            </Border>
-
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="bd"
-                                        Property="Background"
-                                        Value="#20FFFFFF" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </ToggleButton.Template>
-
-                    <Image Width="32" Height="32">
+                    <Image>
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource IconProxyConverter}">
                                 <Binding Path="." />
                                 <Binding Path="IconConverter" ElementName="root" />
                             </MultiBinding>
                         </Image.Source>
-
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Setter Property="Opacity" Value="1" />
-                                <Setter Property="Opacity">
-                                    <Setter.Value>
-                                        <MultiBinding Converter="{StaticResource DimElementConverter}">
-                                            <Binding Path="IsChecked" RelativeSource="{RelativeSource AncestorType=ToggleButton}" />
-                                            <Binding Path="SelectedItems.Count" ElementName="root" />
-                                        </MultiBinding>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Image.Style>
                     </Image>
                 </ToggleButton>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
-
 </UserControl>

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Genshin_Calculator.Presentation.Features.Characters.Components;
 
@@ -67,12 +69,6 @@ public partial class LevelSelectorControl : UserControl
     }
 
     [RelayCommand]
-    public void TogglePopup()
-    {
-        this.IsPopupOpen = !this.IsPopupOpen;
-    }
-
-    [RelayCommand]
     public void SelectLevel(string level)
     {
         this.Level = level ?? string.Empty;
@@ -98,6 +94,15 @@ public partial class LevelSelectorControl : UserControl
         if (index > 0)
         {
             this.Level = LevelHelper.Levels[index - 1];
+        }
+    }
+
+    private void TogglePopupButtonPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (this.IsPopupOpen)
+        {
+            this.IsPopupOpen = false;
+            e.Handled = true;
         }
     }
 }

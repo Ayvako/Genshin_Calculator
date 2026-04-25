@@ -45,6 +45,7 @@
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="BorderThickness" Value="0" />
                         <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Top" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="ListBoxItem">
@@ -54,7 +55,6 @@
                         </Setter>
                     </Style>
                 </ListBox.ItemContainerStyle>
-
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <charFeatures:CharacterCardControl />

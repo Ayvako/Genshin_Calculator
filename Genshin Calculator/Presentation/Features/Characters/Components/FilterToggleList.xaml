@@ -26,17 +26,31 @@
                     <ControlTemplate TargetType="ToggleButton">
                         <Border x:Name="bd"
                                 CornerRadius="6"
-                                Background="Transparent">
+                                Background="Transparent"
+                                BorderBrush="Transparent"
+                                BorderThickness="1.5">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd"
-                                        Property="Background"
-                                        Value="#20FFFFFF" />
+                                <Setter TargetName="bd" Property="Background" Value="#20FFFFFF" />
                             </Trigger>
+
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#25C8A865" />
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#90C8A865" />
+                            </Trigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="bd" Property="Background" Value="#40C8A865" />
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#BCC8A865" />
+                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>

@@ -37,7 +37,7 @@
 
             <Button Style="{StaticResource LevelActionButtonStyle}"
                     Command="{Binding DecreaseLevelCommand, ElementName=root}"
-                    IsEnabled="{Binding Level, ElementName=root, Converter={StaticResource LevelGreaterThanOneConverter}}">
+                    IsEnabled="{Binding Level, ElementName=root, Converter={StaticResource GreaterThanConverter}, ConverterParameter=1}">
                 <TextBlock Text="-" Margin="0,-8,0,0" FontSize="28" />
             </Button>
 

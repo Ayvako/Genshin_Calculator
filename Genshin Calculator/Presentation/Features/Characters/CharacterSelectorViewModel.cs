@@ -53,6 +53,10 @@ public partial class CharacterSelectorViewModel : ObservableObject
         MaterialRarity.Violet, MaterialRarity.Orange
     ];
 
+    public bool IsVioletRaritySelected => this.SelectedCharactersRarities.Contains(MaterialRarity.Violet);
+
+    public bool IsOrangeRaritySelected => this.SelectedCharactersRarities.Contains(MaterialRarity.Orange);
+
     partial void OnIsSortByRarityChanged(bool value) => ApplyFilter();
 
     partial void OnSearchQueryChanged(string? value) => ApplyFilter();
@@ -61,7 +65,11 @@ public partial class CharacterSelectorViewModel : ObservableObject
 
     partial void OnSelectedWeaponsChanged(ObservableCollection<WeaponType> value) => ApplyFilter();
 
-    partial void OnSelectedCharactersRaritiesChanged(ObservableCollection<MaterialRarity> value) => ApplyFilter();
+    partial void OnSelectedCharactersRaritiesChanged(ObservableCollection<MaterialRarity> value)
+    {
+        this.NotifyRaritySelectionChanged();
+        this.ApplyFilter();
+    }
 
     private void ApplyFilter()
     {
@@ -126,6 +134,7 @@ public partial class CharacterSelectorViewModel : ObservableObject
             this.SelectedCharactersRarities.Add(e);
         }
 
+        this.NotifyRaritySelectionChanged();
         this.ApplyFilter();
     }
 
@@ -151,5 +160,11 @@ public partial class CharacterSelectorViewModel : ObservableObject
     private void Cancel()
     {
         this.CloseRequested?.Invoke(this, true);
+    }
+
+    private void NotifyRaritySelectionChanged()
+    {
+        this.OnPropertyChanged(nameof(this.IsVioletRaritySelected));
+        this.OnPropertyChanged(nameof(this.IsOrangeRaritySelected));
     }
 }

@@ -10,12 +10,12 @@
             </ResourceDictionary.MergedDictionaries>
 
             <conv:RarityToBrushConverter x:Key="RarityToBrushConverter" />
-            <conv:LevelGreaterThanOneConverter x:Key="LevelGreaterThanOneConverter" />
+
             <conv:LevelLessThanConverter x:Key="LevelLessThanConverter" />
+            <conv:GreaterThanConverter x:Key="GreaterThanConverter" />
 
             <conv:ElementToIconConverter x:Key="ElementToIconConverter" />
             <conv:WeaponToIconConverter x:Key="WeaponToIconConverter" />
-            <conv:RarityStarToIconConverter x:Key="RarityStarToIconConverter" />
 
             <conv:ContainsConverter x:Key="ContainsConverter" />
             <conv:DimElementConverter x:Key="DimElementConverter" />
@@ -24,9 +24,6 @@
 
             <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
-
-            <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
-            <conv:IntToVisibilityConverter x:Key="IntToVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

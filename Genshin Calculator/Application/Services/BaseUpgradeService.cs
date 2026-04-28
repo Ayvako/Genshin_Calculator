@@ -4,7 +4,7 @@ using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using System.Collections.Generic;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public abstract class BaseUpgradeService
 {
@@ -32,7 +32,7 @@ public abstract class BaseUpgradeService
         string name = template.Type switch
         {
             MaterialTypes.Gem or MaterialTypes.Enemy or MaterialTypes.SkillMaterial or MaterialTypes.Exp
-                => this.providerFactory.GetProvider(template.Type)?.GetMaterial(character, template.Rarity) ?? "Unknown",
+                => providerFactory.GetProvider(template.Type)?.GetMaterial(character, template.Rarity) ?? "Unknown",
 
             MaterialTypes.LocalSpecialty => character.Assets?.LocalSpecialty ?? "Unknown",
             MaterialTypes.MiniBoss => character.Assets?.MiniBoss ?? "Unknown",

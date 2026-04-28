@@ -1,7 +1,7 @@
 ﻿using Genshin_Calculator.Core.Models.Enums;
 using System;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public static class MaterialNaming
 {

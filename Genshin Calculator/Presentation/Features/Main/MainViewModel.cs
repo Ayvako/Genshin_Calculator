@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Genshin_Calculator.Application.Services;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Core.Models;

@@ -2,7 +2,7 @@
 
 namespace Genshin_Calculator.Presentation.Features.Inventory;
 
-public class FilterOption
+public class InventoryFilterOption
 {
     public MaterialTypes? Value { get; set; }
 

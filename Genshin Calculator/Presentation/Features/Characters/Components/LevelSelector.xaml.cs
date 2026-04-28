@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;

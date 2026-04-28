@@ -21,7 +21,7 @@ public partial class InventoryViewModel : ObservableObject
     private readonly IInventoryService inventoryService;
 
     [ObservableProperty]
-    private FilterOption? selectedFilter;
+    private InventoryFilterOption? selectedFilter;
 
     public InventoryViewModel(IInventoryService inventoryService)
     {
@@ -41,16 +41,16 @@ public partial class InventoryViewModel : ObservableObject
 
     public event EventHandler<bool>? CloseRequested;
 
-    public List<FilterOption> FilterOptions { get; } =
+    public List<InventoryFilterOption> FilterOptions { get; } =
     [
-        new FilterOption { Value = null }, .. Enum.GetValues<MaterialTypes>().Select(x => new FilterOption { Value = x })
+        new InventoryFilterOption { Value = null }, .. Enum.GetValues<MaterialTypes>().Select(x => new InventoryFilterOption { Value = x })
     ];
 
     public ObservableCollection<Material> Materials { get; }
 
     public ICollectionView MaterialsView { get; }
 
-    partial void OnSelectedFilterChanged(FilterOption? value)
+    partial void OnSelectedFilterChanged(InventoryFilterOption? value)
     {
         MaterialsView.Refresh();
     }

@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public abstract class MaterialProvider<TKey> : IMaterialProvider
     where TKey : notnull
@@ -18,7 +18,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected MaterialProvider(string jsonName)
     {
-        this.materials = this.LoadFileJson<Dictionary<TKey, string[]>>($"{jsonName}.json")
+        materials = LoadFileJson<Dictionary<TKey, string[]>>($"{jsonName}.json")
                     ?? throw new InvalidOperationException($"Файл {jsonName}.json не найден или пуст");
     }
 
@@ -26,8 +26,8 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public IEnumerable<string> GetMaterialGroup(Character character)
     {
-        var key = this.GetKey(character);
-        if (this.materials.TryGetValue(key, out var group))
+        var key = GetKey(character);
+        if (materials.TryGetValue(key, out var group))
         {
             return group;
         }
@@ -37,14 +37,14 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public string GetMaterial(Character character, MaterialRarity rarity)
     {
-        var key = this.GetKey(character);
+        var key = GetKey(character);
 
-        if (!this.materials.TryGetValue(key, out var materialSet))
+        if (!materials.TryGetValue(key, out var materialSet))
         {
             throw new KeyNotFoundException($"Material group '{key}' not found");
         }
 
-        return this.Resolve(materialSet, rarity);
+        return Resolve(materialSet, rarity);
     }
 
     protected abstract TKey GetKey(Character character);
@@ -53,7 +53,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     private T? LoadFileJson<T>(string fileName)
     {
-        var filePath = Path.Combine(this.basePath, "Json", fileName);
+        var filePath = Path.Combine(basePath, "Json", fileName);
 
         if (!File.Exists(filePath))
         {

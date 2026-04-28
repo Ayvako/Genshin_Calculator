@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public static class MaterialGenerator
 {

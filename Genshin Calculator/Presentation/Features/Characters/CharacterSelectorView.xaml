@@ -406,7 +406,22 @@
                                                     <Border IsHitTestVisible="False"
                                                         CornerRadius="0,0,14,14"
                                                         Background="{StaticResource PortraitVignetteBrush}" />
+
+                                                    <Border Width="24" Height="24"
+                                                        Margin="5,0,0,5"
+                                                        CornerRadius="6"
+                                                        Background="#88000000"
+                                                        HorizontalAlignment="Left"
+                                                        VerticalAlignment="Top"
+                                                        IsHitTestVisible="False">
+                                                        <Image Source="{Binding Assets.Element, Converter={StaticResource ElementToIconConverter}}"
+                                                            Width="16" Height="16"
+                                                            HorizontalAlignment="Center"
+                                                            VerticalAlignment="Center"
+                                                            RenderOptions.BitmapScalingMode="HighQuality" />
+                                                    </Border>
                                                 </Grid>
+
                                             </Border>
 
                                         </Grid>

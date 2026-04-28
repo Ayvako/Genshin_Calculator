@@ -61,7 +61,7 @@
                                                                     <DataTrigger Binding="{Binding IsCollected}" Value="True">
                                                                         <Setter Property="Text" Value="{Binding TargetMaterial.Amount}" />
                                                                     </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding CraftedAmount, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
+                                                                    <DataTrigger Binding="{Binding CraftedAmount, Converter={StaticResource GreaterThanConverter}, ConverterParameter=0}" Value="True">
                                                                         <Setter Property="ToolTip" Value="{Binding CraftedAmount}" />
                                                                     </DataTrigger>
                                                                 </Style.Triggers>

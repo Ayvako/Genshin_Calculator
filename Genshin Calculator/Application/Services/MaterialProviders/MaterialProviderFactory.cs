@@ -3,7 +3,7 @@ using Genshin_Calculator.Core.Models.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public class MaterialProviderFactory : IMaterialProviderFactory
 {
@@ -15,5 +15,5 @@ public class MaterialProviderFactory : IMaterialProviderFactory
     }
 
     public IMaterialProvider? GetProvider(MaterialTypes materialType) =>
-        this.providers.GetValueOrDefault(materialType);
+        providers.GetValueOrDefault(materialType);
 }

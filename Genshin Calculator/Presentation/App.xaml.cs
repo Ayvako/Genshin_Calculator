@@ -1,23 +1,20 @@
-﻿using Genshin_Calculator.Core.Interfaces;
-using Genshin_Calculator.Core.Models;
+﻿using Genshin_Calculator.Application.Internal;
+using Genshin_Calculator.Application.Services;
+using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
 using Genshin_Calculator.Presentation.Features.Main;
 using Genshin_Calculator.Presentation.Features.Tools;
 using Genshin_Calculator.Presentation.Services;
-using Genshin_Calculator.Services;
-using Genshin_Calculator.Services.MaterialProviders;
-using Genshin_Calculator.Services.State;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
 
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     private bool isInitialized = false;
 
@@ -68,34 +65,16 @@ public partial class App : Application
         base.OnExit(e);
     }
 
-    private static T LoadResource<T>(string fileName)
-    {
-        var resourceName = $"Genshin_Calculator.Resources.Json.{fileName}";
-        var assembly = typeof(App).Assembly;
-
-        using Stream? stream = assembly.GetManifestResourceStream(resourceName)
-            ?? throw new FileNotFoundException($"Embedded resource not found: {resourceName}");
-
-        using var reader = new StreamReader(stream);
-        using var jsonReader = new JsonTextReader(reader);
-
-        return new JsonSerializer().Deserialize<T>(jsonReader)
-            ?? throw new InvalidOperationException($"Failed to parse JSON: {fileName}");
-    }
-
     private static void ConfigureServices(IServiceCollection services)
     {
+        services.AddHttpClient();
         services.AddSingleton(Configuration);
-
-        var levelData = LoadResource<LevelData>("LevelCosts.json");
-        var skillData = LoadResource<SkillLevelData>("SkillCosts.json");
-
-        services.AddSingleton(levelData);
-        services.AddSingleton(skillData);
 
         services.AddSingleton<IDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
+        services.AddSingleton<IEmbeddedDataRepository, EmbeddedResourceRepository>();
 
+        services.AddSingleton<DataUpdateService>();
         services.AddSingleton<IDataIOService, DataIOService>();
         services.AddTransient<IInventoryService, InventoryService>();
         services.AddTransient<ICharacterService, CharacterService>();
@@ -104,7 +83,7 @@ public partial class App : Application
         services.AddTransient<IAlchemyService, AlchemyService>();
         services.AddTransient<IExperienceService, ExperienceService>();
 
-        services.AddSingleton<IInventoryStore, InventoryStore>();
+        services.AddSingleton<InventoryStore>();
         services.AddSingleton<IViewService, ViewService>();
 
         services.AddSingleton<GemMaterialProvider>();

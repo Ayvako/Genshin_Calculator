@@ -2,7 +2,7 @@
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public sealed class EnemyMaterialProvider : MaterialProvider<string>
 {

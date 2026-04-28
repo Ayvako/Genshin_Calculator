@@ -106,12 +106,12 @@ public class ViewService : IViewService
     private static TWindow CreateDialog<TWindow>(object viewModel)
         where TWindow : Window, new()
     {
-        var activeWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+        var activeWindow = App.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
 
         return new TWindow
         {
             DataContext = viewModel,
-            Owner = activeWindow ?? Application.Current.MainWindow,
+            Owner = activeWindow ?? App.Current.MainWindow,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
         };
     }

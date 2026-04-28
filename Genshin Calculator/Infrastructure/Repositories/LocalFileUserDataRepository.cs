@@ -1,19 +1,24 @@
-﻿using System;
+﻿using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Models;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Genshin_Calculator.Core.Interfaces;
-using Genshin_Calculator.Core.Models;
-using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
 public class LocalFileUserDataRepository : IUserDataRepository
 {
-    private readonly string exportFilePath = App.Configuration["Paths:ExportFile"] ?? "Data/Export.json";
+    private readonly string exportFilePath;
+
+    public LocalFileUserDataRepository(IConfiguration config)
+    {
+        this.exportFilePath = config["Paths:ExportFile"] ?? "Data/Export.json";
+    }
 
     public bool FileExists => File.Exists(this.exportFilePath);
 

@@ -4,7 +4,7 @@ using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Genshin_Calculator.Services.MaterialProviders;
+namespace Genshin_Calculator.Application.Services.MaterialProviders;
 
 public sealed class SkillMaterialProvider : IMaterialProvider
 {

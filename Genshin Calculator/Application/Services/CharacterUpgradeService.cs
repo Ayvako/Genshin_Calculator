@@ -6,7 +6,7 @@ using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeService
 {
@@ -14,10 +14,10 @@ public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeServ
 
     private readonly LevelData levelData;
 
-    public CharacterUpgradeService(IMaterialProviderFactory factory, LevelData levelData)
+    public CharacterUpgradeService(IMaterialProviderFactory factory, IEmbeddedDataRepository embeddedData)
         : base(factory)
     {
-        this.levelData = levelData;
+        this.levelData = embeddedData.GetLevelCosts();
     }
 
     public List<Material> GetCharacterCost(Character character)
@@ -36,17 +36,17 @@ public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeServ
 
         foreach (var level in levelsInRange)
         {
-            if (this.levelData.BaseCosts.TryGetValue(level, out int expAmount))
+            if (levelData.BaseCosts.TryGetValue(level, out int expAmount))
             {
                 AddToTotal(totalMaterials, new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, expAmount));
                 AddToTotal(totalMaterials, new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, expAmount / 5));
             }
 
-            if (this.levelData.AscensionCosts.TryGetValue(level, out var templates))
+            if (levelData.AscensionCosts.TryGetValue(level, out var templates))
             {
                 foreach (var t in templates)
                 {
-                    AddToTotal(totalMaterials, this.ResolveMaterial(character, t));
+                    AddToTotal(totalMaterials, ResolveMaterial(character, t));
                 }
             }
         }

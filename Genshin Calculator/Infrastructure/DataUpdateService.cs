@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,9 +13,15 @@ public class DataUpdateService
 {
     private const string GitHubRawBase = "https://raw.githubusercontent.com/Ayvako/Genshin_Calculator/master/Genshin%20Calculator/GameData";
 
-    private readonly HttpClient httpClient = new();
+    private readonly HttpClient httpClient;
 
-    private readonly string localBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data/GameData");
+    private readonly string localBase;
+
+    public DataUpdateService(IHttpClientFactory httpClientFactory, IConfiguration config)
+    {
+        this.httpClient = httpClientFactory.CreateClient();
+        this.localBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config["Paths:GameData"] ?? "Data/GameData");
+    }
 
     public async Task UpdateAllDataAsync()
     {

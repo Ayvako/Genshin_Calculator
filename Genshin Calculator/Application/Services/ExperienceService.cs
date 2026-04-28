@@ -5,7 +5,7 @@ using Genshin_Calculator.Models;
 using System;
 using System.Linq;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public class ExperienceService : IExperienceService
 {
@@ -23,9 +23,9 @@ public class ExperienceService : IExperienceService
 
     public long CalculateTotalExp(Inventory inventory)
     {
-        return ((long)(inventory.GetMaterial(HeroWit)?.Amount ?? 0) * HeroWitXp)
-             + ((long)(inventory.GetMaterial(AdventurerExperience)?.Amount ?? 0) * AdventurerExperienceXp)
-             + ((long)(inventory.GetMaterial(WandererAdvice)?.Amount ?? 0) * WandererAdviceXp);
+        return (long)(inventory.GetMaterial(HeroWit)?.Amount ?? 0) * HeroWitXp
+             + (long)(inventory.GetMaterial(AdventurerExperience)?.Amount ?? 0) * AdventurerExperienceXp
+             + (long)(inventory.GetMaterial(WandererAdvice)?.Amount ?? 0) * WandererAdviceXp;
     }
 
     public void ProcessExpRequirement(Material req, Inventory inventory, ref long totalExpPool, MaterialRequirement uiMat)

@@ -2,7 +2,7 @@
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Presentation;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,12 @@ namespace Genshin_Calculator.Infrastructure.Repositories;
 
 public class JsonGameDataRepository : IDataRepository
 {
-    private readonly string basePath = App.Configuration["Paths:GameData"] ?? "Data/GameData";
+    private readonly string basePath;
+
+    public JsonGameDataRepository(IConfiguration config)
+    {
+        this.basePath = config["Paths:GameData"] ?? "Data/GameData";
+    }
 
     public List<Character> GetBaseCharacters()
     {

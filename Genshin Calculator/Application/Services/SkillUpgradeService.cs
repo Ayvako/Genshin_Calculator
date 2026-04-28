@@ -3,25 +3,25 @@ using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public class SkillUpgradeService : BaseUpgradeService, ISkillUpgradeService
 {
     private readonly SkillLevelData skillData;
 
-    public SkillUpgradeService(IMaterialProviderFactory factory, SkillLevelData skillData)
+    public SkillUpgradeService(IMaterialProviderFactory factory, IEmbeddedDataRepository embeddedData)
         : base(factory)
     {
-        this.skillData = skillData;
+        this.skillData = embeddedData.GetSkillCosts();
     }
 
     public List<Material> GetSkillsCost(Character character)
     {
         var totalMaterials = new Dictionary<string, Material>();
 
-        this.AddSkillCost(character, character.AutoAttack, totalMaterials);
-        this.AddSkillCost(character, character.Elemental, totalMaterials);
-        this.AddSkillCost(character, character.Burst, totalMaterials);
+        AddSkillCost(character, character.AutoAttack, totalMaterials);
+        AddSkillCost(character, character.Elemental, totalMaterials);
+        AddSkillCost(character, character.Burst, totalMaterials);
 
         return [.. totalMaterials.Values];
     }
@@ -30,11 +30,11 @@ public class SkillUpgradeService : BaseUpgradeService, ISkillUpgradeService
     {
         for (int i = skill.CurrentLevel + 1; i <= skill.DesiredLevel; i++)
         {
-            if (this.skillData.LevelCosts.TryGetValue(i, out var templates))
+            if (skillData.LevelCosts.TryGetValue(i, out var templates))
             {
                 foreach (var t in templates)
                 {
-                    AddToTotal(total, this.ResolveMaterial(character, t));
+                    AddToTotal(total, ResolveMaterial(character, t));
                 }
             }
         }

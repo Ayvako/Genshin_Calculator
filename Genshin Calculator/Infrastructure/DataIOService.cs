@@ -1,7 +1,8 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Application.Internal;
+using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
-using Genshin_Calculator.Services.MaterialProviders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,9 +11,11 @@ using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Infrastructure;
 
-public class DataIOService : IDataIOService
+internal class DataIOService : IDataIOService
 {
-    private readonly IInventoryStore store;
+    private readonly DataUpdateService updater;
+
+    private readonly InventoryStore store;
 
     private readonly IDataRepository data;
 
@@ -20,17 +23,17 @@ public class DataIOService : IDataIOService
 
     private bool isSuccessfullyLoaded = false;
 
-    public DataIOService(IInventoryStore store, IDataRepository staticData, IUserDataRepository userData)
+    public DataIOService(InventoryStore store, IDataRepository staticData, IUserDataRepository userData, DataUpdateService updater)
     {
         this.store = store;
         this.data = staticData;
         this.userData = userData;
+        this.updater = updater;
     }
 
     public async Task ImportAsync()
     {
-        var updater = new DataUpdateService();
-        await updater.UpdateAllDataAsync();
+        await this.updater.UpdateAllDataAsync();
         try
         {
             var characters = this.data.GetBaseCharacters();

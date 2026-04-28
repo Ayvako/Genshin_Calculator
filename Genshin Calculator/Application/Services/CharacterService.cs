@@ -5,7 +5,7 @@ using Genshin_Calculator.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Genshin_Calculator.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public class CharacterService : ICharacterService
 {
@@ -24,14 +24,14 @@ public class CharacterService : ICharacterService
     public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Reset();
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public void AddCharacter(Character character)
@@ -39,18 +39,18 @@ public class CharacterService : ICharacterService
         character.Deleted = false;
         character.Activated = true;
 
-        var allCharacters = this.GetCharacters();
+        var allCharacters = GetCharacters();
         int maxPriority = allCharacters.Any()
             ? allCharacters.Max(c => c.Priority)
             : 0;
 
         character.Priority = maxPriority + 1;
 
-        this.UpdateCharacter(character);
+        UpdateCharacter(character);
     }
 
     public IReadOnlyList<Character> GetCharacters()
     {
-        return this.inventoryService.GetCharacters();
+        return inventoryService.GetCharacters();
     }
 }

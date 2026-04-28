@@ -35,9 +35,6 @@ public partial class Character : ObservableObject
     {
         this.Name = name;
         this.Assets = assets;
-
-        // Later set names based on character data
-
         this.AutoAttack = new Skill() { Name = "AutoAttack" };
         this.Elemental = new Skill() { Name = "Elemental" };
         this.Burst = new Skill() { Name = "Burst" };

@@ -8,99 +8,292 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=inventory:InventoryViewModel}"
         Title="Inventory Manager"
-        Height="760"
-        Width="1000"
+        Height="780"
+        Width="1060"
         MinHeight="650"
-        MinWidth="850"
+        MinWidth="880"
         WindowStartupLocation="CenterOwner"
-        Background="#121214"
+        Background="#0D0E14"
         FontFamily="Segoe UI"
-        TextElement.Foreground="#F2F2F2">
+        TextElement.Foreground="#EAE6D8">
 
     <Window.Resources>
+
+        <!-- ═══ Brushes ═══ -->
         <LinearGradientBrush x:Key="WindowBgBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#17181C" Offset="0" />
-            <GradientStop Color="#101114" Offset="1" />
+            <GradientStop Color="#0D0E14" Offset="0" />
+            <GradientStop Color="#111318" Offset="1" />
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="PanelBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#24262C" Offset="0" />
-            <GradientStop Color="#1A1B20" Offset="1" />
+            <GradientStop Color="#1A1C24" Offset="0" />
+            <GradientStop Color="#14151C" Offset="1" />
         </LinearGradientBrush>
 
-        <DropShadowEffect x:Key="SoftShadow" BlurRadius="18" ShadowDepth="0" Opacity="0.35" Color="Black" />
+        <LinearGradientBrush x:Key="HeaderGoldBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#C8A84B" Offset="0" />
+            <GradientStop Color="#E8D07A" Offset="0.5" />
+            <GradientStop Color="#C8A84B" Offset="1" />
+        </LinearGradientBrush>
 
-        <Style TargetType="TextBlock" x:Key="SectionTitleStyle">
-            <Setter Property="Foreground" Value="#D9C08A" />
-            <Setter Property="FontSize" Value="18" />
+        <LinearGradientBrush x:Key="SaveBtnBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#3A8C5C" Offset="0" />
+            <GradientStop Color="#4DB87A" Offset="1" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CancelBtnBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#8C3A3A" Offset="0" />
+            <GradientStop Color="#C05050" Offset="1" />
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="GoldAccentBrush" Color="#C8A84B" />
+        <SolidColorBrush x:Key="GoldSubtleBrush" Color="#4A3D1A" />
+        <SolidColorBrush x:Key="CardBorderBrush" Color="#2E3140" />
+        <SolidColorBrush x:Key="InputBgBrush" Color="#1E2030" />
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#8A8FA8" />
+
+        <!-- ═══ Shadows ═══ -->
+        <DropShadowEffect x:Key="SoftShadow"   BlurRadius="20" ShadowDepth="0" Opacity="0.5"  Color="Black" />
+        <DropShadowEffect x:Key="GoldGlow"      BlurRadius="14" ShadowDepth="0" Opacity="0.45" Color="#C8A84B" />
+        <DropShadowEffect x:Key="BtnShadow"     BlurRadius="16" ShadowDepth="2" Opacity="0.55" Color="Black" />
+        <DropShadowEffect x:Key="CardShadow"    BlurRadius="12" ShadowDepth="0" Opacity="0.6"  Color="Black" />
+
+        <!-- ═══ Typography ═══ -->
+        <Style x:Key="WindowTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="22" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource HeaderGoldBrush}" />
+            <Setter Property="Effect"     Value="{StaticResource GoldGlow}" />
+        </Style>
+
+        <Style x:Key="WindowSubtitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}" />
+            <Setter Property="Margin"     Value="0,2,0,0" />
+        </Style>
+
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#D4B86A" />
+            <Setter Property="FontSize"   Value="13" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
-        <Style TargetType="Border" x:Key="InventoryCardStyle">
-            <Setter Property="CornerRadius" Value="12" />
+        <!-- ═══ Cards ═══ -->
+        <Style x:Key="InventoryCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius"   Value="10" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#33363D" />
-            <Setter Property="Background" Value="#2A2D33" />
-            <Setter Property="Effect" Value="{StaticResource SoftShadow}" />
-            <Setter Property="Margin" Value="6" />
+            <Setter Property="BorderBrush"    Value="{StaticResource CardBorderBrush}" />
+            <Setter Property="Background"     Value="#2A2D3A" />
+            <Setter Property="Effect"         Value="{StaticResource CardShadow}" />
+            <Setter Property="Margin"         Value="5" />
         </Style>
 
-        <Style TargetType="TextBox" x:Key="AmountBoxStyle">
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+        <!-- ═══ Amount TextBox ═══ -->
+        <Style x:Key="AmountBoxStyle" TargetType="TextBox">
+            <Setter Property="Foreground"               Value="#FEFEFE" />
+            <Setter Property="Background"               Value="Transparent" />
+            <Setter Property="BorderThickness"          Value="0" />
+            <Setter Property="FontSize"                 Value="13" />
+            <Setter Property="FontWeight"               Value="Bold" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="CaretBrush" Value="White" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+            <Setter Property="Padding"                  Value="0" />
+            <Setter Property="CaretBrush"               Value="#C8A84B" />
         </Style>
+
+        <!-- ═══ Search TextBox ═══ -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Foreground"      Value="#D0D4E0" />
+            <Setter Property="Background"      Value="{StaticResource InputBgBrush}" />
+            <Setter Property="BorderBrush"     Value="#2E3140" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="Padding"         Value="12,8" />
+            <Setter Property="CaretBrush"      Value="#C8A84B" />
+            <Setter Property="SelectionBrush"  Value="#4A3D1A" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#C8A84B" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#5A5E70" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══ Scrollbar ═══ -->
+        <Style x:Key="ScrollThumbStyle" TargetType="Thumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border CornerRadius="4" Background="#3A3E55" Margin="2,0" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width"      Value="8" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollThumbStyle}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══ Action Buttons ═══ -->
+        <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Foreground"      Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize"        Value="13" />
+            <Setter Property="FontWeight"      Value="SemiBold" />
+            <Setter Property="Cursor"          Value="Hand" />
+            <Setter Property="Effect"          Value="{StaticResource BtnShadow}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.85" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Opacity" Value="0.7" />
+                                <Setter TargetName="Root" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.97" ScaleY="0.97" CenterX="60" CenterY="20" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ═══ Divider ═══ -->
+        <Style x:Key="GoldDividerStyle" TargetType="Rectangle">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Fill"   Value="{StaticResource HeaderGoldBrush}" />
+            <Setter Property="Margin" Value="0,10,0,14" />
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+
     </Window.Resources>
 
+    <!-- ═══════════════════════════════════════
+         ROOT
+    ════════════════════════════════════════ -->
     <Grid Background="{StaticResource WindowBgBrush}">
-        <Border Margin="18"
-                CornerRadius="18"
-                Background="{StaticResource PanelBrush}"
-                BorderBrush="#2E3138"
+
+        <!-- Outer glow border -->
+        <Border Margin="14"
+                CornerRadius="16"
+                BorderBrush="#2A2E40"
                 BorderThickness="1"
-                Padding="18"
+                Background="{StaticResource PanelBrush}"
                 Effect="{StaticResource SoftShadow}">
 
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <!-- Header  -->
                     <RowDefinition Height="Auto" />
+                    <!-- Divider -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Toolbar -->
+                    <RowDefinition Height="*" />
+                    <!-- Content -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Footer  -->
                 </Grid.RowDefinitions>
 
-                <!-- Header -->
-                <Grid Grid.Row="0" Margin="0,0,0,16">
+                <!-- ── HEADER ── -->
+                <Grid Grid.Row="0" Margin="22,20,22,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Title block -->
+                    <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Border Width="28" Height="28"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#C8A84B" Offset="0" />
+                                        <GradientStop Color="#E8D07A" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Border.RenderTransform>
+                                    <RotateTransform Angle="45" CenterX="14" CenterY="14" />
+                                </Border.RenderTransform>
+                            </Border>
+                            <TextBlock Text="INVENTORY" Style="{StaticResource WindowTitleStyle}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+
+                <!-- ── GOLD DIVIDER ── -->
+                <Rectangle Grid.Row="1" Style="{StaticResource GoldDividerStyle}" Margin="22,12,22,0" />
+
+                <!-- ── TOOLBAR: Search + Filter ── -->
+                <Grid Grid.Row="2" Margin="22,0,22,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="14" />
                         <ColumnDefinition Width="220" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox Grid.Column="1"
+                    <!-- Filter ComboBox -->
+                    <ComboBox Grid.Column="2"
                               ItemsSource="{Binding FilterOptions}"
                               SelectedItem="{Binding SelectedFilter}"
-                              HorizontalAlignment="Right"
                               VerticalAlignment="Center"
-                              Width="210"
-                              Padding="10,7"
-                              Background="#23252B"
-                              Foreground="White"
-                              BorderBrush="#3A3E46"
+                              Padding="12,8"
+                              Background="{StaticResource InputBgBrush}"
+                              Foreground="#D0D4E0"
+                              BorderBrush="#2E3140"
                               BorderThickness="1"
                               Style="{StaticResource ComboBoxStyle}"
                               ItemContainerStyle="{StaticResource ComboBoxItemStyle}" />
                 </Grid>
 
-                <!-- Content -->
-                <ScrollViewer Grid.Row="1"
+                <!-- ── CONTENT: Material Cards ── -->
+                <ScrollViewer Grid.Row="3"
                               VerticalScrollBarVisibility="Auto"
                               HorizontalScrollBarVisibility="Disabled"
-                              Padding="0,0,2,0">
+                              Padding="16,0,16,0">
                     <ItemsControl ItemsSource="{Binding MaterialsView}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -108,97 +301,179 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 
+                        <!-- Group headers -->
                         <ItemsControl.GroupStyle>
                             <GroupStyle>
                                 <GroupStyle.ContainerStyle>
                                     <Style TargetType="{x:Type GroupItem}">
-                                        <Setter Property="Margin" Value="0,0,0,18" />
+                                        <Setter Property="Margin" Value="0,0,0,16" />
                                     </Style>
                                 </GroupStyle.ContainerStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <Border Margin="2,8,2,8" Padding="10,6" CornerRadius="10" Background="#202228">
-                                            <TextBlock Text="{Binding Name}"
-                                                       Style="{StaticResource SectionTitleStyle}" />
-                                        </Border>
+                                        <Grid Margin="6,10,6,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Gold left accent bar -->
+                                            <Border Grid.Column="0"
+                                                    Width="3"
+                                                    CornerRadius="2"
+                                                    Margin="0,0,10,0">
+                                                <Border.Background>
+                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                        <GradientStop Color="#E8D07A" Offset="0" />
+                                                        <GradientStop Color="#6A5018" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Border.Background>
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Name}"
+                                                           Style="{StaticResource SectionTitleStyle}" />
+                                                <Rectangle Height="1" Fill="#2E3140" Margin="0,5,0,0" />
+                                            </StackPanel>
+                                        </Grid>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
                             </GroupStyle>
                         </ItemsControl.GroupStyle>
 
+                        <!-- Item template -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource InventoryCardStyle}"
-                                    Width="70"
-                                    Height="95"
-                                    Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}"
-                                    ToolTipService.InitialShowDelay="150"
-                                    ToolTipService.ShowDuration="60000">
+                                        Width="80"
+                                        Height="108"
+                                        Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                                        ToolTipService.InitialShowDelay="150"
+                                        ToolTipService.ShowDuration="60000">
 
+                                    <!-- Tooltip -->
                                     <Border.ToolTip>
                                         <ToolTip Placement="Mouse"
-                                            Background="Transparent"
-                                            BorderThickness="0">
-
-                                            <Border Width="220"
-                                                Padding="12"
-                                                CornerRadius="12"
-                                                Background="#1E2026"
-                                                BorderBrush="#3A3E46"
-                                                BorderThickness="1">
-
+                                                 Background="Transparent"
+                                                 BorderThickness="0">
+                                            <Border Width="230"
+                                                    Padding="14"
+                                                    CornerRadius="12"
+                                                    Background="#16182A"
+                                                    BorderBrush="#3A3E55"
+                                                    BorderThickness="1">
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="Black" />
+                                                </Border.Effect>
                                                 <StackPanel>
+                                                    <!-- Name header -->
                                                     <Border CornerRadius="8"
-                                                        Padding="6"
-                                                        Margin="0,0,0,8"
-                                                        Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                                                            Padding="8"
+                                                            Margin="0,0,0,10"
+                                                            Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
                                                         <TextBlock Text="{Binding Name}"
-                                                            FontSize="15"
-                                                            FontWeight="Bold"
-                                                            Foreground="White"
-                                                            TextAlignment="Center" />
+                                                                   FontSize="14"
+                                                                   FontWeight="Bold"
+                                                                   Foreground="White"
+                                                                   TextAlignment="Center"
+                                                                   TextWrapping="Wrap" />
                                                     </Border>
 
-                                                    <StackPanel Orientation="Horizontal" Margin="0,4">
-                                                        <TextBlock Text="Количество:"
-                                                            Foreground="#AAB0B6"
-                                                            FontSize="13" />
-                                                        <TextBlock Text="{Binding Amount}"
-                                                            Margin="6,0,0,0"
-                                                            FontWeight="SemiBold"
-                                                            FontSize="13" />
-                                                    </StackPanel>
+                                                    <!-- Quantity row -->
+                                                    <Grid Margin="0,3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Quantity"
+                                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                                   FontSize="12" VerticalAlignment="Center" />
+                                                        <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
+                                                                   Margin="8,0" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding Amount}"
+                                                                   Foreground="#E8D07A"
+                                                                   FontWeight="SemiBold"
+                                                                   FontSize="13" VerticalAlignment="Center" />
+                                                    </Grid>
 
-                                                    <StackPanel Orientation="Horizontal" Margin="0,2">
-                                                        <TextBlock Text="Редкость:"
-                                                            Foreground="#AAB0B6"
-                                                            FontSize="13" />
-                                                        <TextBlock Text="{Binding Rarity}"
-                                                            Margin="6,0,0,0"
-                                                            FontWeight="SemiBold"
-                                                            FontSize="13" />
-                                                    </StackPanel>
+                                                    <!-- Rarity row -->
+                                                    <Grid Margin="0,3">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Rarity"
+                                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                                   FontSize="12" VerticalAlignment="Center" />
+                                                        <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
+                                                                   Margin="8,0" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Column="2" Text="{Binding Rarity}"
+                                                                   Foreground="#E8D07A"
+                                                                   FontWeight="SemiBold"
+                                                                   FontSize="13" VerticalAlignment="Center" />
+                                                    </Grid>
                                                 </StackPanel>
                                             </Border>
                                         </ToolTip>
                                     </Border.ToolTip>
 
+                                    <!-- Card body -->
                                     <Grid>
+                                        <!-- Subtle inner top-light effect -->
+                                        <Border VerticalAlignment="Top"
+                                                CornerRadius="10,10,0,0"
+                                                Height="30"
+                                                Opacity="0.18">
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="White" Offset="0" />
+                                                    <GradientStop Color="Transparent" Offset="1" />
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+
+                                        <!-- Item image -->
                                         <Image Source="{Binding ImagePath}"
-                                            Width="50"
-                                            Height="50"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Margin="0,10,0,0"
-                                            RenderOptions.BitmapScalingMode="HighQuality" />
+                                               Width="58"
+                                               Height="58"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Top"
+                                               Margin="0,10,0,0"
+                                               RenderOptions.BitmapScalingMode="HighQuality" />
+
+                                        <!-- Star dots by rarity -->
+                                        <ItemsControl HorizontalAlignment="Center"
+                                                      VerticalAlignment="Top"
+                                                      Margin="0,70,0,0"
+                                                      ItemsSource="{Binding Rarity}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Ellipse Width="5" Height="5"
+                                                             Fill="#E8D07A"
+                                                             Margin="1,0"
+                                                             Opacity="0.9" />
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+
+                                        <!-- Amount input -->
                                         <Border VerticalAlignment="Bottom"
-                                            Margin="10"
-                                            Background="#66000000"
-                                            CornerRadius="8"
-                                            Padding="4,2">
+                                                Margin="8,0,8,8"
+                                                CornerRadius="6"
+                                                Padding="4,3">
+                                            <Border.Background>
+                                                <SolidColorBrush Color="#000000" Opacity="0.55" />
+                                            </Border.Background>
                                             <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
-                                                helpers:TextBoxExtensions.NumericOnly="True"
-                                                Style="{StaticResource AmountBoxStyle}" />
+                                                     helpers:TextBoxExtensions.NumericOnly="True"
+                                                     Style="{StaticResource AmountBoxStyle}" />
                                         </Border>
                                     </Grid>
                                 </Border>
@@ -207,36 +482,54 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <!-- Footer buttons -->
-                <StackPanel Grid.Row="2"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            Margin="0,18,0,0">
+                <!-- ── FOOTER ── -->
+                <Border Grid.Row="4"
+                        BorderBrush="#22253A"
+                        BorderThickness="0,1,0,0"
+                        Margin="0,12,0,0"
+                        Padding="22,14,22,18">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <Button Content="✖"
-                            Command="{Binding CancelCommand}"
-                            Width="52"
-                            Height="52"
-                            Margin="0,0,14,0"
-                            Foreground="White"
-                            Background="#C84E4E"
-                            BorderThickness="0"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Style="{StaticResource RoundShadowButtonStyle}" />
+                        <!-- Buttons -->
+                        <StackPanel Grid.Column="1"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
 
-                    <Button Content="✔"
-                            Command="{Binding SaveCommand}"
-                            Width="52"
-                            Height="52"
-                            Margin="14,0,0,0"
-                            Foreground="White"
-                            Background="#4BA66B"
-                            BorderThickness="0"
-                            FontSize="18"
-                            FontWeight="Bold"
-                            Style="{StaticResource RoundShadowButtonStyle}" />
-                </StackPanel>
+                            <Button Command="{Binding CancelCommand}"
+                                    Width="120"
+                                    Height="40"
+                                    Margin="0,0,10,0"
+                                    Background="{StaticResource CancelBtnBrush}"
+                                    Padding="14,0"
+                                    Style="{StaticResource ActionButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="✖"  FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Отмена" FontSize="13" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding SaveCommand}"
+                                    Width="130"
+                                    Height="40"
+                                    Background="{StaticResource SaveBtnBrush}"
+                                    Padding="14,0"
+                                    Style="{StaticResource ActionButtonStyle}">
+                                <Button.Effect>
+                                    <DropShadowEffect BlurRadius="14" ShadowDepth="0" Opacity="0.5" Color="#3A8C5C" />
+                                </Button.Effect>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="✔"  FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Сохранить" FontSize="13" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
             </Grid>
         </Border>
     </Grid>

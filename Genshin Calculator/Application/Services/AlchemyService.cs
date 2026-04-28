@@ -1,4 +1,5 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
@@ -31,7 +32,7 @@ public class AlchemyService : IAlchemyService
         }
 
         int tierIndex = chain.IndexOf(targetRarity);
-        return ProcessTier(inventory, character, type, chain, tierIndex, amountNeeded, alchemyTracker);
+        return this.ProcessTier(inventory, character, type, chain, tierIndex, amountNeeded, alchemyTracker);
     }
 
     private static List<MaterialRarity> GetRarityChain(MaterialTypes type) => type switch
@@ -51,7 +52,7 @@ public class AlchemyService : IAlchemyService
         }
 
         MaterialRarity currentRarity = chain[tierIndex];
-        string name = GetMaterialName(character, type, currentRarity);
+        string name = this.GetMaterialName(character, type, currentRarity);
         var itemInStock = inventory.GetMaterial(name);
         int available = itemInStock?.Amount ?? 0;
 
@@ -67,7 +68,7 @@ public class AlchemyService : IAlchemyService
             return amountNeeded;
         }
 
-        return CraftMissingItems(inventory, character, type, chain, tierIndex, amountNeeded, alchemyTracker);
+        return this.CraftMissingItems(inventory, character, type, chain, tierIndex, amountNeeded, alchemyTracker);
     }
 
     private int CraftMissingItems(Inventory inventory, Character character, MaterialTypes type, List<MaterialRarity> chain, int tierIndex, int amountNeeded, List<Material> alchemyTracker)
@@ -75,9 +76,9 @@ public class AlchemyService : IAlchemyService
         while (amountNeeded > 0)
         {
             int[] cost = new int[tierIndex];
-            if (TryGatherComponents(inventory, character, type, chain, tierIndex - 1, 3, cost))
+            if (this.TryGatherComponents(inventory, character, type, chain, tierIndex - 1, 3, cost))
             {
-                ApplyCraftingCost(inventory, character, type, chain, cost, alchemyTracker);
+                this.ApplyCraftingCost(inventory, character, type, chain, cost, alchemyTracker);
                 amountNeeded--;
             }
             else
@@ -98,7 +99,7 @@ public class AlchemyService : IAlchemyService
                 continue;
             }
 
-            string tName = GetMaterialName(character, type, chain[i]);
+            string tName = this.GetMaterialName(character, type, chain[i]);
             var mat = inventory.GetMaterial(tName);
 
             if (mat != null)
@@ -130,7 +131,7 @@ public class AlchemyService : IAlchemyService
             return false;
         }
 
-        string tName = GetMaterialName(character, type, chain[tIndex]);
+        string tName = this.GetMaterialName(character, type, chain[tIndex]);
         int stock = inventory.GetMaterial(tName)?.Amount ?? 0;
         int avail = stock - cost[tIndex];
 
@@ -148,7 +149,7 @@ public class AlchemyService : IAlchemyService
 
         if (tIndex > 0)
         {
-            return TryGatherComponents(inventory, character, type, chain, tIndex - 1, needed * 3, cost);
+            return this.TryGatherComponents(inventory, character, type, chain, tIndex - 1, needed * 3, cost);
         }
 
         return false;
@@ -156,7 +157,7 @@ public class AlchemyService : IAlchemyService
 
     private string GetMaterialName(Character c, MaterialTypes type, MaterialRarity rarity)
     {
-        var provider = materialFactory.GetProvider(type);
+        var provider = this.materialFactory.GetProvider(type);
         return provider == null ? throw new ArgumentException($"No provider found for type {type}") : provider.GetMaterial(c, rarity);
     }
 }

@@ -1,8 +1,7 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
-using System.Collections.Generic;
 
 namespace Genshin_Calculator.Application.Services;
 
@@ -15,24 +14,12 @@ public abstract class BaseUpgradeService
         this.providerFactory = providerFactory;
     }
 
-    protected static void AddToTotal(Dictionary<string, Material> total, Material mat)
-    {
-        if (total.TryGetValue(mat.Name, out var existing))
-        {
-            existing.Amount += mat.Amount;
-        }
-        else
-        {
-            total[mat.Name] = new Material(mat.Name, mat.Type, mat.Rarity, mat.Amount);
-        }
-    }
-
     protected Material ResolveMaterial(Character character, TemplateItem template)
     {
         string name = template.Type switch
         {
             MaterialTypes.Gem or MaterialTypes.Enemy or MaterialTypes.SkillMaterial or MaterialTypes.Exp
-                => providerFactory.GetProvider(template.Type)?.GetMaterial(character, template.Rarity) ?? "Unknown",
+                => this.providerFactory.GetProvider(template.Type)?.GetMaterial(character, template.Rarity) ?? "Unknown",
 
             MaterialTypes.LocalSpecialty => character.Assets?.LocalSpecialty ?? "Unknown",
             MaterialTypes.MiniBoss => character.Assets?.MiniBoss ?? "Unknown",

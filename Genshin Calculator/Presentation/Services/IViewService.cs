@@ -1,7 +1,7 @@
 ﻿using Genshin_Calculator.Models;
 using System.Collections.Generic;
 
-namespace Genshin_Calculator.Core.Interfaces;
+namespace Genshin_Calculator.Presentation.Services;
 
 public interface IViewService
 {

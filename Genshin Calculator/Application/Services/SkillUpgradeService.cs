@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
@@ -19,9 +20,9 @@ public class SkillUpgradeService : BaseUpgradeService, ISkillUpgradeService
     {
         var totalMaterials = new Dictionary<string, Material>();
 
-        AddSkillCost(character, character.AutoAttack, totalMaterials);
-        AddSkillCost(character, character.Elemental, totalMaterials);
-        AddSkillCost(character, character.Burst, totalMaterials);
+        this.AddSkillCost(character, character.AutoAttack, totalMaterials);
+        this.AddSkillCost(character, character.Elemental, totalMaterials);
+        this.AddSkillCost(character, character.Burst, totalMaterials);
 
         return [.. totalMaterials.Values];
     }
@@ -30,11 +31,11 @@ public class SkillUpgradeService : BaseUpgradeService, ISkillUpgradeService
     {
         for (int i = skill.CurrentLevel + 1; i <= skill.DesiredLevel; i++)
         {
-            if (skillData.LevelCosts.TryGetValue(i, out var templates))
+            if (this.skillData.LevelCosts.TryGetValue(i, out var templates))
             {
                 foreach (var t in templates)
                 {
-                    AddToTotal(total, ResolveMaterial(character, t));
+                    MaterialMerger.AddToTotal(total, this.ResolveMaterial(character, t));
                 }
             }
         }

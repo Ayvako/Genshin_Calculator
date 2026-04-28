@@ -24,14 +24,14 @@ public class CharacterService : ICharacterService
     public void ToggleCharacterActivity(Character character)
     {
         character.Activated = !character.Activated;
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public void DeleteCharacter(Character character)
     {
         character.Deleted = true;
         character.Reset();
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public void AddCharacter(Character character)
@@ -39,18 +39,18 @@ public class CharacterService : ICharacterService
         character.Deleted = false;
         character.Activated = true;
 
-        var allCharacters = GetCharacters();
+        var allCharacters = this.GetCharacters();
         int maxPriority = allCharacters.Any()
             ? allCharacters.Max(c => c.Priority)
             : 0;
 
         character.Priority = maxPriority + 1;
 
-        UpdateCharacter(character);
+        this.UpdateCharacter(character);
     }
 
     public IReadOnlyList<Character> GetCharacters()
     {
-        return inventoryService.GetCharacters();
+        return this.inventoryService.GetCharacters();
     }
 }

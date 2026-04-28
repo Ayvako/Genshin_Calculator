@@ -3,7 +3,7 @@ using System.IO;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Presentation;
 
-namespace Genshin_Calculator.Core.Helpers;
+namespace Genshin_Calculator.Infrastructure.Helpers;
 
 public static class ResourcePaths
 {

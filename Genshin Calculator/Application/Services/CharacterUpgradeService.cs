@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
@@ -36,17 +37,17 @@ public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeServ
 
         foreach (var level in levelsInRange)
         {
-            if (levelData.BaseCosts.TryGetValue(level, out int expAmount))
+            if (this.levelData.BaseCosts.TryGetValue(level, out int expAmount))
             {
-                AddToTotal(totalMaterials, new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, expAmount));
-                AddToTotal(totalMaterials, new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, expAmount / 5));
+                MaterialMerger.AddToTotal(totalMaterials, new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, expAmount));
+                MaterialMerger.AddToTotal(totalMaterials, new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, expAmount / 5));
             }
 
-            if (levelData.AscensionCosts.TryGetValue(level, out var templates))
+            if (this.levelData.AscensionCosts.TryGetValue(level, out var templates))
             {
                 foreach (var t in templates)
                 {
-                    AddToTotal(totalMaterials, ResolveMaterial(character, t));
+                    MaterialMerger.AddToTotal(totalMaterials, this.ResolveMaterial(character, t));
                 }
             }
         }

@@ -1,6 +1,6 @@
 ﻿using System;
-using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models.Enums;
+using Genshin_Calculator.Infrastructure.Helpers;
 
 namespace Genshin_Calculator.Core.Models;
 

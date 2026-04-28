@@ -2,8 +2,8 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
-using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models.Enums;
+using Genshin_Calculator.Infrastructure.Helpers;
 
 namespace Genshin_Calculator.Presentation.Converters;
 

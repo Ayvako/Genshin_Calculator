@@ -1,5 +1,4 @@
-﻿using Genshin_Calculator.Core.Interfaces;
-using Genshin_Calculator.Core.Models.Enums;
+﻿using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation;
 using Newtonsoft.Json;
@@ -18,7 +17,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     protected MaterialProvider(string jsonName)
     {
-        materials = LoadFileJson<Dictionary<TKey, string[]>>($"{jsonName}.json")
+        this.materials = this.LoadFileJson<Dictionary<TKey, string[]>>($"{jsonName}.json")
                     ?? throw new InvalidOperationException($"Файл {jsonName}.json не найден или пуст");
     }
 
@@ -26,8 +25,8 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public IEnumerable<string> GetMaterialGroup(Character character)
     {
-        var key = GetKey(character);
-        if (materials.TryGetValue(key, out var group))
+        var key = this.GetKey(character);
+        if (this.materials.TryGetValue(key, out var group))
         {
             return group;
         }
@@ -37,14 +36,14 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     public string GetMaterial(Character character, MaterialRarity rarity)
     {
-        var key = GetKey(character);
+        var key = this.GetKey(character);
 
-        if (!materials.TryGetValue(key, out var materialSet))
+        if (!this.materials.TryGetValue(key, out var materialSet))
         {
             throw new KeyNotFoundException($"Material group '{key}' not found");
         }
 
-        return Resolve(materialSet, rarity);
+        return this.Resolve(materialSet, rarity);
     }
 
     protected abstract TKey GetKey(Character character);
@@ -53,7 +52,7 @@ public abstract class MaterialProvider<TKey> : IMaterialProvider
 
     private T? LoadFileJson<T>(string fileName)
     {
-        var filePath = Path.Combine(basePath, "Json", fileName);
+        var filePath = Path.Combine(this.basePath, "Json", fileName);
 
         if (!File.Exists(filePath))
         {

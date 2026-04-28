@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Core.Models.Enums;
+using Genshin_Calculator.Infrastructure.Helpers;
 using Newtonsoft.Json;
 using System;
 

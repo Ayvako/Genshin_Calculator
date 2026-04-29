@@ -118,6 +118,17 @@
                                 Style="{StaticResource LevelValueButtonStyle}"
                                 Command="{Binding SelectLevelCommand, ElementName=root}"
                                 CommandParameter="90" />
+                        <WrapPanel>
+                            <Button Content="95"
+                                Style="{StaticResource LevelValueButtonStyle}"
+                                Command="{Binding SelectLevelCommand, ElementName=root}"
+                                CommandParameter="95" />
+                            <Button Content="100"
+                                Style="{StaticResource LevelValueButtonStyle}"
+                                Command="{Binding SelectLevelCommand, ElementName=root}"
+                                CommandParameter="100" />
+                        </WrapPanel>
+
                     </StackPanel>
                 </Border>
             </Popup>

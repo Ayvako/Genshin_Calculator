@@ -52,7 +52,8 @@ public static class MaterialGenerator
 
         materials.AddRange(
         [
-            new Material("CrownOfInsight", MaterialTypes.Crown, MaterialRarity.Blue, 0),
+            new Material("StellaFortuna", MaterialTypes.StellaFortuna, MaterialRarity.Orange, 0),
+            new Material("CrownOfInsight", MaterialTypes.Crown, MaterialRarity.Orange, 0),
             new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0),
             new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0),
             new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0),

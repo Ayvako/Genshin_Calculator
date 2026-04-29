@@ -24,7 +24,7 @@ public abstract class BaseUpgradeService
             MaterialTypes.LocalSpecialty => character.Assets?.LocalSpecialty ?? "Unknown",
             MaterialTypes.MiniBoss => character.Assets?.MiniBoss ?? "Unknown",
             MaterialTypes.WeeklyBoss => character.Assets?.WeeklyBoss ?? "Unknown Boss",
-
+            MaterialTypes.StellaFortuna => "StellaFortuna",
             MaterialTypes.Crown => "CrownOfInsight",
             MaterialTypes.Mora => "Mora",
             _ => "Unknown",

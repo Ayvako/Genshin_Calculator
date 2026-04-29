@@ -27,6 +27,7 @@ public class DataUpdateService
     {
         try
         {
+            await this.SyncFolderViaApi("Images/Materials");
             await this.UpdateJsonFile("Json/Characters.json");
             await this.UpdateJsonFile("Json/Enemies.json");
 
@@ -35,6 +36,50 @@ public class DataUpdateService
         catch (Exception ex)
         {
             Console.WriteLine($"Error Update: {ex.Message}");
+        }
+    }
+
+    private async Task SyncFolderViaApi(string folderRelativePath)
+    {
+        try
+        {
+            string apiUrl = $"https://api.github.com/repos/Ayvako/Genshin_Calculator/contents/Genshin%20Calculator/GameData/{folderRelativePath}";
+
+            if (!this.httpClient.DefaultRequestHeaders.Contains("User-Agent"))
+            {
+                this.httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+            }
+
+            string response = await this.httpClient.GetStringAsync(apiUrl);
+            var files = JArray.Parse(response);
+
+            foreach (var file in files)
+            {
+                string type = file["type"]?.ToString();
+                if (type != "file")
+                {
+                    continue;
+                }
+
+                string fileName = file["name"]?.ToString();
+                string downloadUrl = file["download_url"]?.ToString();
+
+                if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(downloadUrl))
+                {
+                    continue;
+                }
+
+                string localFilePath = Path.Combine(this.localBase, folderRelativePath, fileName);
+
+                if (!File.Exists(localFilePath))
+                {
+                    await this.DownloadFile(downloadUrl, localFilePath);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to sync folder {folderRelativePath}: {ex.Message}");
         }
     }
 

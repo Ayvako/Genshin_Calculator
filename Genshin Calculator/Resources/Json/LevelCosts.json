@@ -242,6 +242,20 @@
         "Type": "Mora",
         "Amount": 120000
       }
+    ],
+    "95": [
+      {
+        "Type": "StellaFortuna",
+        "Rarity": "Orange",
+        "Amount": 1
+      }
+    ],
+    "100": [
+      {
+        "Type": "StellaFortuna",
+        "Rarity": "Orange",
+        "Amount": 2
+      }
     ]
   }
 }

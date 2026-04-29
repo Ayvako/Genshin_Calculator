@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="GameData\Images\Materials\StellaFortuna.png" />
     <None Remove="Resources\Images\Elements\anemo.png" />
     <None Remove="Resources\Images\Elements\cryo.png" />
     <None Remove="Resources\Images\Elements\dendro.png" />
@@ -47,6 +48,7 @@
     <None Remove="Resources\Images\Elements\geo.png" />
     <None Remove="Resources\Images\Elements\hydro.png" />
     <None Remove="Resources\Images\Elements\pyro.png" />
+    <None Remove="Resources\Images\Placeholder.png" />
     <None Remove="Resources\Images\Stars\4.png" />
     <None Remove="Resources\Images\Stars\5.png" />
     <None Remove="Resources\Images\Stars\Orange.png" />
@@ -105,6 +107,7 @@
     <Resource Include="Resources\Images\Weapons\claymore.png" />
     <Resource Include="Resources\Images\Weapons\polearm.png" />
     <Resource Include="Resources\Images\Weapons\sword.png" />
+    <Resource Include="Resources\Images\Placeholder.png" />
     <EmbeddedResource Include="Resources\Json\LevelCosts.json" />
     <EmbeddedResource Include="Resources\Json\SkillCosts.json" />
   </ItemGroup>

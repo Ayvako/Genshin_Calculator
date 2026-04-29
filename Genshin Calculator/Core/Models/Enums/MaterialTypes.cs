@@ -46,9 +46,14 @@ public enum MaterialTypes
     Mora,
 
     /// <summary>
-    /// Represents the Crown.
+    /// Represents the Crowns.
     /// </summary>
     Crown,
+
+    /// <summary>
+    /// Represents the StellaFortunes.
+    /// </summary>
+    StellaFortuna,
 
     /// <summary>
     /// Represents other types.

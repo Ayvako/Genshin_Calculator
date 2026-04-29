@@ -12,6 +12,7 @@
         Width="1060"
         MinHeight="650"
         MinWidth="880"
+        WindowStyle="None"
         WindowStartupLocation="CenterOwner"
         Background="#0D0E14"
         FontFamily="Segoe UI"

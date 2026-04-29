@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Genshin_Calculator.Models;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,26 @@ public class DataUpdateService
         this.localBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config["Paths:GameData"] ?? "Data/GameData");
     }
 
-    public async Task UpdateAllDataAsync()
+    public async Task UpdateAllDataAsync(IProgress<(string Message, double Percent)>? progress = null)
     {
         try
         {
-            await this.SyncFolderViaApi("Images/Materials");
+            progress?.Report(("Syncing characters data...", 10));
+            await Task.Delay(200);
+
             await this.UpdateJsonFile("Json/Characters.json");
+
+            progress?.Report(("Syncing enemies data...", 20));
+            await Task.Delay(200);
             await this.UpdateJsonFile("Json/Enemies.json");
 
-            await this.SyncImagesFromJson("Json/Characters.json", "Characters");
+            progress?.Report(("Syncing material images...", 21));
+            await Task.Delay(200);
+            await this.SyncFolderViaApi("Images/Materials", progress, fromPercent: 21, toPercent: 70);
+
+            progress?.Report(("Syncing character images...", 71));
+            await Task.Delay(200);
+            await this.SyncImagesFromJson("Json/Characters.json", progress, fromPercent: 71, toPercent: 95);
         }
         catch (Exception ex)
         {
@@ -39,7 +51,61 @@ public class DataUpdateService
         }
     }
 
-    private async Task SyncFolderViaApi(string folderRelativePath)
+    private async Task SyncImagesFromJson(
+    string jsonRelativePath,
+    IProgress<(string Message, double Percent)>? progress = null,
+    double fromPercent = 0,
+    double toPercent = 100)
+    {
+        string localJsonPath = Path.Combine(this.localBase, jsonRelativePath);
+        if (!File.Exists(localJsonPath))
+        {
+            return;
+        }
+
+        var json = JObject.Parse(await File.ReadAllTextAsync(localJsonPath));
+        var characters = json["Characters"]?.ToObject<List<JObject>>();
+        if (characters == null)
+        {
+            return;
+        }
+
+        var toDownload = new List<(string Name, string Url, string LocalPath)>();
+
+        foreach (var character in characters)
+        {
+            string name = character["Name"]?.ToString();
+            if (string.IsNullOrEmpty(name))
+            {
+                continue;
+            }
+
+            string imgRelative = $"Images/Characters/{name}.png";
+            string localImgPath = Path.Combine(this.localBase, imgRelative);
+
+            if (!File.Exists(localImgPath))
+            {
+                toDownload.Add((name, $"{GitHubRawBase}/{imgRelative}", localImgPath));
+            }
+        }
+
+        if (toDownload.Count == 0)
+        {
+            progress?.Report(($"All characters are up to date...", toPercent));
+            await Task.Delay(200);
+            return;
+        }
+
+        for (int i = 0; i < toDownload.Count; i++)
+        {
+            var (name, url, localPath) = toDownload[i];
+            double percent = fromPercent + ((i + 1.0) / toDownload.Count * (toPercent - fromPercent));
+            progress?.Report(($"Downloading: {name}.png ({i + 1}/{toDownload.Count})", percent));
+            await this.DownloadFile(url, localPath);
+        }
+    }
+
+    private async Task SyncFolderViaApi(string folderRelativePath, IProgress<(string Message, double Percent)>? progress = null, double fromPercent = 0, double toPercent = 100)
     {
         try
         {
@@ -53,10 +119,11 @@ public class DataUpdateService
             string response = await this.httpClient.GetStringAsync(apiUrl);
             var files = JArray.Parse(response);
 
+            var filesToDownload = new List<(string FileName, string DownloadUrl, string LocalPath)>();
+
             foreach (var file in files)
             {
-                string type = file["type"]?.ToString();
-                if (type != "file")
+                if (file["type"]?.ToString() != "file")
                 {
                     continue;
                 }
@@ -70,11 +137,25 @@ public class DataUpdateService
                 }
 
                 string localFilePath = Path.Combine(this.localBase, folderRelativePath, fileName);
-
                 if (!File.Exists(localFilePath))
                 {
-                    await this.DownloadFile(downloadUrl, localFilePath);
+                    filesToDownload.Add((fileName, downloadUrl, localFilePath));
                 }
+            }
+
+            if (filesToDownload.Count == 0)
+            {
+                progress?.Report(("All materials are up to date...", toPercent));
+                await Task.Delay(200);
+                return;
+            }
+
+            for (int i = 0; i < filesToDownload.Count; i++)
+            {
+                var (fileName, downloadUrl, localPath) = filesToDownload[i];
+                double percent = fromPercent + ((i + 1.0) / filesToDownload.Count * (toPercent - fromPercent));
+                progress?.Report(($"Downloading: {fileName} ({i + 1}/{filesToDownload.Count})", percent));
+                await this.DownloadFile(downloadUrl, localPath);
             }
         }
         catch (Exception ex)
@@ -92,40 +173,6 @@ public class DataUpdateService
 
         string content = await this.httpClient.GetStringAsync(url);
         await File.WriteAllTextAsync(localPath, content);
-    }
-
-    private async Task SyncImagesFromJson(string jsonRelativePath, string category)
-    {
-        string localJsonPath = Path.Combine(this.localBase, jsonRelativePath);
-        if (!File.Exists(localJsonPath))
-        {
-            return;
-        }
-
-        var json = JObject.Parse(await File.ReadAllTextAsync(localJsonPath));
-        var characters = json["Characters"]?.ToObject<List<JObject>>();
-
-        if (characters == null)
-        {
-            return;
-        }
-
-        foreach (var character in characters)
-        {
-            string name = character["Name"]?.ToString();
-            if (string.IsNullOrEmpty(name))
-            {
-                continue;
-            }
-
-            string imgRelative = $"Images/{category}/{name}.png";
-            string localImgPath = Path.Combine(this.localBase, imgRelative);
-
-            if (!File.Exists(localImgPath))
-            {
-                await this.DownloadFile($"{GitHubRawBase}/{imgRelative}", localImgPath);
-            }
-        }
     }
 
     private async Task DownloadFile(string url, string localPath)

@@ -135,7 +135,7 @@
 
             <Button Style="{StaticResource LevelActionButtonStyle}"
                     Command="{Binding IncreaseLevelCommand, ElementName=root}"
-                    IsEnabled="{Binding Level, ElementName=root, Converter={StaticResource LevelLessThanConverter}, ConverterParameter=90}">
+                    IsEnabled="{Binding Level, ElementName=root, Converter={StaticResource LevelLessThanConverter}, ConverterParameter=100}">
                 <TextBlock Text="+" Margin="0,-8,0,0" FontSize="28" />
             </Button>
 

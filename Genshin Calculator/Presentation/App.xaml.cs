@@ -5,11 +5,13 @@ using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
 using Genshin_Calculator.Presentation.Features.Main;
+using Genshin_Calculator.Presentation.Features.Splash;
 using Genshin_Calculator.Presentation.Features.Tools;
 using Genshin_Calculator.Presentation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
@@ -37,12 +39,15 @@ public partial class App : System.Windows.Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        var splash = new SplashWindow();
+        splash.Show();
 
         try
         {
-            var dataIOService = Services.GetRequiredService<IDataIOService>();
-            await dataIOService.ImportAsync();
+            var progress = new SplashProgress(splash);
 
+            var dataIOService = Services.GetRequiredService<IDataIOService>();
+            await dataIOService.ImportAsync(progress);
             var mainWindow = Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
             this.isInitialized = true;
@@ -51,6 +56,10 @@ public partial class App : System.Windows.Application
         {
             MessageBox.Show($"Error starting the application: {ex.Message}", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
             this.Shutdown();
+        }
+        finally
+        {
+            splash.Close();
         }
     }
 

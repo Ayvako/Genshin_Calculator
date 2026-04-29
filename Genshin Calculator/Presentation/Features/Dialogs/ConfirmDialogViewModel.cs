@@ -6,9 +6,11 @@ namespace Genshin_Calculator.Presentation.Features.Dialogs;
 
 public partial class ConfirmDialogViewModel : ObservableObject
 {
-    [ObservableProperty] private string title;
+    [ObservableProperty]
+    private string title;
 
-    [ObservableProperty] private string message;
+    [ObservableProperty]
+    private string message;
 
     public ConfirmDialogViewModel(string title, string message)
     {

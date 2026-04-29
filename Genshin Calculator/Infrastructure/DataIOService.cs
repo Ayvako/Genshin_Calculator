@@ -31,22 +31,39 @@ internal class DataIOService : IDataIOService
         this.updater = updater;
     }
 
-    public async Task ImportAsync()
+    public async Task ImportAsync(IProgress<(string Message, double Percent)>? progress = null)
     {
-        await this.updater.UpdateAllDataAsync();
+        progress?.Report(("Checking for updates...", 5));
+        await Task.Delay(200);
+
+        await this.updater.UpdateAllDataAsync(progress);
+
+        progress?.Report(("Loading game data...", 96));
+        await Task.Delay(200);
+
         try
         {
             var characters = this.data.GetBaseCharacters();
             var materials = MaterialGenerator.GenerateDynamicMaterials(characters);
-            materials.AddRange(this.data.GetStaticMaterials());
+            var staticMaterials = this.data.GetStaticMaterials();
+            materials.AddRange(staticMaterials);
 
             if (!this.userData.FileExists)
             {
-                Debug.WriteLine("ℹ️ No save file found. Starting fresh.");
+                progress?.Report(("Starting fresh...", 98));
+                await Task.Delay(200);
+
                 this.ApplyData(characters, materials);
                 this.isSuccessfullyLoaded = true;
+
+                progress?.Report(("Done!", 100));
+                await Task.Delay(200);
+
                 return;
             }
+
+            progress?.Report(("Merging save data...", 98));
+            await Task.Delay(200);
 
             var (userInventory, userCharacters) = this.userData.Load();
 
@@ -69,7 +86,8 @@ internal class DataIOService : IDataIOService
 
                 this.ApplyData(characters, materials);
                 this.isSuccessfullyLoaded = true;
-                Debug.WriteLine("✅ Data loaded and merged successfully.");
+                progress?.Report(("Done!", 100));
+                await Task.Delay(200);
             }
         }
         catch (Exception ex)

@@ -6,7 +6,6 @@ using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Genshin_Calculator.Application.Services;
@@ -50,28 +49,14 @@ internal sealed class InventoryService : IInventoryService
 
     public void Upgrade(Character character)
     {
-        var tempInventory = this.GetInventory().Clone();
-        long totalExpPool = this.experienceService.CalculateTotalExp(tempInventory);
+        Inventory realInventory = this.GetInventory();
+        long realExpPool = this.experienceService.CalculateTotalExp(realInventory);
+        this.GetRequirementsForCharacter(character, realInventory, ref realExpPool);
 
-        var requirements = this.GetRequirementsForCharacter(character, tempInventory, ref totalExpPool);
-
-        if (requirements.All(m => m.IsCollected))
-        {
-            Inventory realInventory = this.GetInventory();
-            long realExpPool = this.experienceService.CalculateTotalExp(realInventory);
-            this.GetRequirementsForCharacter(character, realInventory, ref realExpPool);
-
-            character.CurrentLevel = character.DesiredLevel;
-            character.AutoAttack.CurrentLevel = character.AutoAttack.DesiredLevel;
-            character.Elemental.CurrentLevel = character.Elemental.DesiredLevel;
-            character.Burst.CurrentLevel = character.Burst.DesiredLevel;
-
-            Debug.WriteLine($"{character.Name}: Upgraded successfully.");
-        }
-        else
-        {
-            Debug.WriteLine($"{character.Name}: Cannot upgrade, missing materials.");
-        }
+        character.CurrentLevel = character.DesiredLevel;
+        character.AutoAttack.CurrentLevel = character.AutoAttack.DesiredLevel;
+        character.Elemental.CurrentLevel = character.Elemental.DesiredLevel;
+        character.Burst.CurrentLevel = character.Burst.DesiredLevel;
     }
 
     public Inventory GetInventory() => this.store.Inventory;

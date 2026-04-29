@@ -26,6 +26,17 @@ public class ViewService : IViewService
         this.inventoryService = inventoryService;
     }
 
+    public bool ShowConfirm(string title, string message)
+    {
+        var vm = new ConfirmDialogViewModel(title, message);
+        var view = CreateDialog<ConfirmDialogView>(vm);
+
+        vm.RequestClose += () => view.Close();
+
+        this.ShowDialogWithDimming(view);
+        return vm.Result;
+    }
+
     public void ShowAddMaterialsDialog(List<Material> list)
     {
         var vm = new AddMaterialsDialogViewModel(list);

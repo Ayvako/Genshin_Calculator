@@ -12,7 +12,7 @@ namespace Genshin_Calculator.Presentation.Features.Dialogs;
 
 public partial class UpgradeCharacterDialogViewModel : ObservableObject
 {
-    private readonly IViewService dialogService;
+    private readonly IViewService viewService;
 
     private readonly IInventoryService inventoryService;
 
@@ -31,7 +31,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     IInventoryService inventoryService)
     {
         this.Character = character;
-        this.dialogService = dialogService;
+        this.viewService = dialogService;
         this.inventoryService = inventoryService;
 
         this.RefreshMaterials();
@@ -44,6 +44,20 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     [RelayCommand]
     private void Save()
     {
+        bool hasMissingMaterials = this.Materials.Any(m => !m.IsCollected);
+
+        if (hasMissingMaterials)
+        {
+            bool confirmed = this.viewService.ShowConfirm(
+                "Confirm",
+                "You don't have enough materials. Do you really want to continue upgrade?");
+
+            if (!confirmed)
+            {
+                return;
+            }
+        }
+
         this.DialogResult = true;
         this.RequestClose?.Invoke();
     }
@@ -59,7 +73,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     private void OpenAddItem(Material material)
     {
         var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character, material);
-        this.dialogService.ShowAddMaterialsDialog(relatedMaterials);
+        this.viewService.ShowAddMaterialsDialog(relatedMaterials);
 
         this.RefreshMaterials();
     }
@@ -71,7 +85,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
 
         if (missingMap.TryGetValue(this.Character, out var requirements))
         {
-            this.Materials = [.. requirements.Where(m => m.TakenFromInventory > 0 || m.CraftedAmount > 0)];
+            this.Materials = [.. requirements];
 
             this.UpdateMaterialsToCraft();
         }

@@ -14,4 +14,6 @@ public interface IViewService
     bool ShowUpgradeCharacterDialog(Character character);
 
     void ShowAddMaterialsDialog(List<Material> list);
+
+    bool ShowConfirm(string title, string message);
 }

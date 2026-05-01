@@ -31,19 +31,19 @@ public class DataUpdateService
             progress?.Report(("Syncing characters data...", 10));
             await Task.Delay(200);
 
-            await this.UpdateJsonFile("Json/Characters.json");
+            await this.UpdateJsonFileAsync("Json/Characters.json");
 
             progress?.Report(("Syncing enemies data...", 20));
             await Task.Delay(200);
-            await this.UpdateJsonFile("Json/Enemies.json");
+            await this.UpdateJsonFileAsync("Json/Enemies.json");
 
             progress?.Report(("Syncing material images...", 21));
             await Task.Delay(200);
-            await this.SyncFolderViaApi("Images/Materials", progress, fromPercent: 21, toPercent: 70);
+            await this.SyncFolderViaApiAsync("Images/Materials", progress, fromPercent: 21, toPercent: 70);
 
             progress?.Report(("Syncing character images...", 71));
             await Task.Delay(200);
-            await this.SyncImagesFromJson("Json/Characters.json", progress, fromPercent: 71, toPercent: 95);
+            await this.SyncImagesFromJsonAsync("Json/Characters.json", progress, fromPercent: 71, toPercent: 95);
         }
         catch (Exception ex)
         {
@@ -51,7 +51,7 @@ public class DataUpdateService
         }
     }
 
-    private async Task SyncImagesFromJson(
+    private async Task SyncImagesFromJsonAsync(
     string jsonRelativePath,
     IProgress<(string Message, double Percent)>? progress = null,
     double fromPercent = 0,
@@ -101,11 +101,11 @@ public class DataUpdateService
             var (name, url, localPath) = toDownload[i];
             double percent = fromPercent + ((i + 1.0) / toDownload.Count * (toPercent - fromPercent));
             progress?.Report(($"Downloading: {name}.png ({i + 1}/{toDownload.Count})", percent));
-            await this.DownloadFile(url, localPath);
+            await this.DownloadFileAsync(url, localPath);
         }
     }
 
-    private async Task SyncFolderViaApi(string folderRelativePath, IProgress<(string Message, double Percent)>? progress = null, double fromPercent = 0, double toPercent = 100)
+    private async Task SyncFolderViaApiAsync(string folderRelativePath, IProgress<(string Message, double Percent)>? progress = null, double fromPercent = 0, double toPercent = 100)
     {
         try
         {
@@ -155,7 +155,7 @@ public class DataUpdateService
                 var (fileName, downloadUrl, localPath) = filesToDownload[i];
                 double percent = fromPercent + ((i + 1.0) / filesToDownload.Count * (toPercent - fromPercent));
                 progress?.Report(($"Downloading: {fileName} ({i + 1}/{filesToDownload.Count})", percent));
-                await this.DownloadFile(downloadUrl, localPath);
+                await this.DownloadFileAsync(downloadUrl, localPath);
             }
         }
         catch (Exception ex)
@@ -164,7 +164,7 @@ public class DataUpdateService
         }
     }
 
-    private async Task UpdateJsonFile(string relativePath)
+    private async Task UpdateJsonFileAsync(string relativePath)
     {
         string url = $"{GitHubRawBase}/{relativePath}";
         string localPath = Path.Combine(this.localBase, relativePath);
@@ -175,7 +175,7 @@ public class DataUpdateService
         await File.WriteAllTextAsync(localPath, content);
     }
 
-    private async Task DownloadFile(string url, string localPath)
+    private async Task DownloadFileAsync(string url, string localPath)
     {
         try
         {

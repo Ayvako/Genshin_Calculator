@@ -24,6 +24,8 @@
 
             <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <conv:BoolToOpacityConverter x:Key="BoolToOpacityConverter" />
+            <conv:CachedImageConverter x:Key="CachedImageConverter" />
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

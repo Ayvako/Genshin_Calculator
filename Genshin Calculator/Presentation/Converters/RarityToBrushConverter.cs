@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -8,10 +9,20 @@ namespace Genshin_Calculator.Presentation.Converters;
 
 public class RarityToBrushConverter : IValueConverter
 {
+    private static readonly Dictionary<int, Brush> Cache = [];
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
         int rarity = (int)value;
-        return SetBackgroundRarity(rarity);
+        if (Cache.TryGetValue(rarity, out var brush))
+        {
+            return brush;
+        }
+
+        var newBrush = SetBackgroundRarity(rarity);
+        newBrush.Freeze();
+        Cache[rarity] = newBrush;
+        return newBrush;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -5,20 +5,21 @@ using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
+using Microsoft.VisualStudio.Language.Intellisense;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace Genshin_Calculator.Presentation.Features.Inventory;
 
 public partial class InventoryViewModel : ObservableObject
 {
-    private readonly List<Material> originalMaterials;
-
     private readonly IInventoryService inventoryService;
+
+    private List<Material> originalMaterials = [];
 
     [ObservableProperty]
     private InventoryFilterOption? selectedFilter;
@@ -26,29 +27,37 @@ public partial class InventoryViewModel : ObservableObject
     public InventoryViewModel(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
-        var inventory = this.inventoryService.GetInventory();
-
-        var clonedMaterials = inventory.Materials.Select(m => m.Clone()).ToList();
-        this.originalMaterials = inventory.Materials;
-        this.Materials = new ObservableCollection<Material>(clonedMaterials);
 
         this.MaterialsView = CollectionViewSource.GetDefaultView(this.Materials);
         this.MaterialsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Material.Type)));
         this.MaterialsView.Filter = this.FilterMaterials;
+
+        this.FilterOptions =
+        [
+            new() { Value = null },
+            .. Enum.GetValues<MaterialTypes>().Select(x => new InventoryFilterOption { Value = x }),
+        ];
 
         this.SelectedFilter = this.FilterOptions[0];
     }
 
     public event EventHandler<bool>? CloseRequested;
 
-    public List<InventoryFilterOption> FilterOptions { get; } =
-    [
-        new InventoryFilterOption { Value = null }, .. Enum.GetValues<MaterialTypes>().Select(x => new InventoryFilterOption { Value = x })
-    ];
+    public List<InventoryFilterOption> FilterOptions { get; }
 
-    public ObservableCollection<Material> Materials { get; }
+    public BulkObservableCollection<Material> Materials { get; } = [];
 
     public ICollectionView MaterialsView { get; }
+
+    public async Task LoadDataAsync()
+    {
+        var inventory = this.inventoryService.GetInventory();
+        this.originalMaterials = inventory.Materials;
+
+        var clonedMaterials = await Task.Run(() => inventory.Materials.Select(m => m.Clone()).ToList());
+
+        this.Materials.AddRange(clonedMaterials);
+    }
 
     partial void OnSelectedFilterChanged(InventoryFilterOption? value)
     {

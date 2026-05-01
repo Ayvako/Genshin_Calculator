@@ -3,10 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:helpers="clr-namespace:Genshin_Calculator.Presentation.Helpers"
         xmlns:inventory="clr-namespace:Genshin_Calculator.Presentation.Features.Inventory"
+        xmlns:converters="clr-namespace:Genshin_Calculator.Presentation.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=inventory:InventoryViewModel}"
+        xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+
+    d:DataContext="{d:DesignInstance Type=inventory:InventoryViewModel}"
         Title="Inventory Manager"
         Height="780"
         Width="1060"
@@ -47,24 +50,22 @@
             <GradientStop Color="#C05050" Offset="1" />
         </LinearGradientBrush>
 
+        <LinearGradientBrush x:Key="CardTopLightBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="White" Offset="0" />
+            <GradientStop Color="Transparent" Offset="1" />
+        </LinearGradientBrush>
+
         <SolidColorBrush x:Key="GoldAccentBrush" Color="#C8A84B" />
         <SolidColorBrush x:Key="GoldSubtleBrush" Color="#4A3D1A" />
         <SolidColorBrush x:Key="CardBorderBrush" Color="#2E3140" />
         <SolidColorBrush x:Key="InputBgBrush" Color="#1E2030" />
         <SolidColorBrush x:Key="MutedTextBrush" Color="#8A8FA8" />
 
-        <!-- ═══ Shadows ═══ -->
-        <DropShadowEffect x:Key="SoftShadow"   BlurRadius="20" ShadowDepth="0" Opacity="0.5"  Color="Black" />
-        <DropShadowEffect x:Key="GoldGlow"      BlurRadius="14" ShadowDepth="0" Opacity="0.45" Color="#C8A84B" />
-        <DropShadowEffect x:Key="BtnShadow"     BlurRadius="16" ShadowDepth="2" Opacity="0.55" Color="Black" />
-        <DropShadowEffect x:Key="CardShadow"    BlurRadius="12" ShadowDepth="0" Opacity="0.6"  Color="Black" />
-
         <!-- ═══ Typography ═══ -->
         <Style x:Key="WindowTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize"   Value="22" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="{StaticResource HeaderGoldBrush}" />
-            <Setter Property="Effect"     Value="{StaticResource GoldGlow}" />
         </Style>
 
         <Style x:Key="WindowSubtitleStyle" TargetType="TextBlock">
@@ -85,7 +86,6 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush"    Value="{StaticResource CardBorderBrush}" />
             <Setter Property="Background"     Value="#2A2D3A" />
-            <Setter Property="Effect"         Value="{StaticResource CardShadow}" />
             <Setter Property="Margin"         Value="5" />
         </Style>
 
@@ -172,7 +172,6 @@
             <Setter Property="FontSize"        Value="13" />
             <Setter Property="FontWeight"      Value="SemiBold" />
             <Setter Property="Cursor"          Value="Hand" />
-            <Setter Property="Effect"          Value="{StaticResource BtnShadow}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -220,8 +219,7 @@
                 CornerRadius="16"
                 BorderBrush="#2A2E40"
                 BorderThickness="1"
-                Background="{StaticResource PanelBrush}"
-                Effect="{StaticResource SoftShadow}">
+                Background="{StaticResource PanelBrush}">
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -241,6 +239,7 @@
                 <Grid Grid.Row="0" Margin="22,20,22,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <!-- Title block -->
@@ -262,7 +261,18 @@
                             <TextBlock Text="INVENTORY" Style="{StaticResource WindowTitleStyle}" VerticalAlignment="Center" />
                         </StackPanel>
                     </StackPanel>
-
+                    <Button Grid.Column="1"
+                        Command="{Binding CancelCommand}"
+                        Width="40"
+                        Height="40"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Background="{StaticResource CancelBtnBrush}"
+                        Style="{StaticResource ActionButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✖"  FontSize="13" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </Grid>
 
                 <!-- ── GOLD DIVIDER ── -->
@@ -291,204 +301,205 @@
                 </Grid>
 
                 <!-- ── CONTENT: Material Cards ── -->
-                <ScrollViewer Grid.Row="3"
-                              VerticalScrollBarVisibility="Auto"
-                              HorizontalScrollBarVisibility="Disabled"
-                              Padding="16,0,16,0">
-                    <ItemsControl ItemsSource="{Binding MaterialsView}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
 
-                        <!-- Group headers -->
-                        <ItemsControl.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.ContainerStyle>
-                                    <Style TargetType="{x:Type GroupItem}">
-                                        <Setter Property="Margin" Value="0,0,0,16" />
-                                    </Style>
-                                </GroupStyle.ContainerStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="6,10,6,6">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
+                <ListView Grid.Row="3"
+                        ItemsSource="{Binding MaterialsView}"
+                        BorderThickness="0"
+                        Background="Transparent"
+                        Padding="16,0,16,0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        ScrollViewer.CanContentScroll="True"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                        VirtualizingPanel.ScrollUnit="Pixel"
+                        VirtualizingPanel.VirtualizationMode="Recycling">
 
-                                            <!-- Gold left accent bar -->
-                                            <Border Grid.Column="0"
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <vwp:VirtualizingWrapPanel
+                                VirtualizingPanel.CacheLength="1,1"
+                                VirtualizingPanel.CacheLengthUnit="Page" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <!-- Group headers -->
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Margin" Value="0,0,0,16" />
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="6,10,6,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Gold left accent bar -->
+                                        <Border Grid.Column="0"
                                                     Width="3"
                                                     CornerRadius="2"
                                                     Margin="0,0,10,0">
-                                                <Border.Background>
-                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                        <GradientStop Color="#E8D07A" Offset="0" />
-                                                        <GradientStop Color="#6A5018" Offset="1" />
-                                                    </LinearGradientBrush>
-                                                </Border.Background>
-                                            </Border>
+                                            <Border.Background>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="#E8D07A" Offset="0" />
+                                                    <GradientStop Color="#6A5018" Offset="1" />
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
 
-                                            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
-                                                <TextBlock Text="{Binding Name}"
+                                        <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}"
                                                            Style="{StaticResource SectionTitleStyle}" />
-                                                <Rectangle Height="1" Fill="#2E3140" Margin="0,5,0,0" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ItemsControl.GroupStyle>
+                                            <Rectangle Height="1" Fill="#2E3140" Margin="0,5,0,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
 
-                        <!-- Item template -->
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Style="{StaticResource InventoryCardStyle}"
+                    <!-- Item template -->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource InventoryCardStyle}"
                                         Width="80"
                                         Height="108"
                                         Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}"
                                         ToolTipService.InitialShowDelay="150"
                                         ToolTipService.ShowDuration="60000">
 
-                                    <!-- Tooltip -->
-                                    <Border.ToolTip>
-                                        <ToolTip Placement="Mouse"
+                                <!-- Tooltip -->
+                                <Border.ToolTip>
+                                    <ToolTip Placement="Mouse"
                                                  Background="Transparent"
                                                  BorderThickness="0">
-                                            <Border Width="230"
+                                        <Border Width="230"
                                                     Padding="14"
                                                     CornerRadius="12"
                                                     Background="#16182A"
                                                     BorderBrush="#3A3E55"
                                                     BorderThickness="1">
-                                                <Border.Effect>
-                                                    <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="Black" />
-                                                </Border.Effect>
-                                                <StackPanel>
-                                                    <!-- Name header -->
-                                                    <Border CornerRadius="8"
+                                            <Border.Effect>
+                                                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="Black" />
+                                            </Border.Effect>
+                                            <StackPanel>
+                                                <!-- Name header -->
+                                                <Border CornerRadius="8"
                                                             Padding="8"
                                                             Margin="0,0,0,10"
                                                             Background="{Binding Rarity, Converter={StaticResource RarityToBrushConverter}}">
-                                                        <TextBlock Text="{Binding Name}"
+                                                    <TextBlock Text="{Binding Name}"
                                                                    FontSize="14"
                                                                    FontWeight="Bold"
                                                                    Foreground="White"
                                                                    TextAlignment="Center"
                                                                    TextWrapping="Wrap" />
-                                                    </Border>
+                                                </Border>
 
-                                                    <!-- Quantity row -->
-                                                    <Grid Margin="0,3">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0" Text="Quantity"
+                                                <!-- Quantity row -->
+                                                <Grid Margin="0,3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="Quantity"
                                                                    Foreground="{StaticResource MutedTextBrush}"
                                                                    FontSize="12" VerticalAlignment="Center" />
-                                                        <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
+                                                    <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
                                                                    Margin="8,0" VerticalAlignment="Center" />
-                                                        <TextBlock Grid.Column="2" Text="{Binding Amount}"
+                                                    <TextBlock Grid.Column="2" Text="{Binding Amount}"
                                                                    Foreground="#E8D07A"
                                                                    FontWeight="SemiBold"
                                                                    FontSize="13" VerticalAlignment="Center" />
-                                                    </Grid>
+                                                </Grid>
 
-                                                    <!-- Rarity row -->
-                                                    <Grid Margin="0,3">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="*" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Grid.Column="0" Text="Rarity"
+                                                <!-- Rarity row -->
+                                                <Grid Margin="0,3">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="Rarity"
                                                                    Foreground="{StaticResource MutedTextBrush}"
                                                                    FontSize="12" VerticalAlignment="Center" />
-                                                        <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
+                                                    <Rectangle Grid.Column="1" Height="1" Fill="#2A2E40"
                                                                    Margin="8,0" VerticalAlignment="Center" />
-                                                        <TextBlock Grid.Column="2" Text="{Binding Rarity}"
+                                                    <TextBlock Grid.Column="2" Text="{Binding Rarity}"
                                                                    Foreground="#E8D07A"
                                                                    FontWeight="SemiBold"
                                                                    FontSize="13" VerticalAlignment="Center" />
-                                                    </Grid>
-                                                </StackPanel>
-                                            </Border>
-                                        </ToolTip>
-                                    </Border.ToolTip>
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+                                    </ToolTip>
+                                </Border.ToolTip>
 
-                                    <!-- Card body -->
-                                    <Grid>
-                                        <!-- Subtle inner top-light effect -->
-                                        <Border VerticalAlignment="Top"
+                                <!-- Card body -->
+                                <Grid>
+                                    <!-- Subtle inner top-light effect -->
+                                    <Border VerticalAlignment="Top"
                                                 CornerRadius="10,10,0,0"
                                                 Height="30"
-                                                Opacity="0.18">
-                                            <Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Color="White" Offset="0" />
-                                                    <GradientStop Color="Transparent" Offset="1" />
-                                                </LinearGradientBrush>
-                                            </Border.Background>
-                                        </Border>
+                                                Opacity="0.18"
+                                                Background="{StaticResource CardTopLightBrush}">
 
-                                        <!-- Item image -->
-                                        <Image Source="{Binding ImagePath}"
-                                               Width="58"
-                                               Height="58"
-                                               HorizontalAlignment="Center"
-                                               VerticalAlignment="Top"
-                                               Margin="0,10,0,0"
-                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Border>
 
-                                        <!-- Star dots by rarity -->
-                                        <ItemsControl HorizontalAlignment="Center"
-                                                      VerticalAlignment="Top"
-                                                      Margin="0,70,0,0"
-                                                      ItemsSource="{Binding Rarity}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Ellipse Width="5" Height="5"
-                                                             Fill="#E8D07A"
-                                                             Margin="1,0"
-                                                             Opacity="0.9" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                    <!-- Item image -->
+                                    <Image Source="{Binding ImagePath, Converter={StaticResource CachedImageConverter}}"
+                                           Width="58"
+                                           Height="58"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"
+                                           Margin="0,10,0,0"
+                                           RenderOptions.BitmapScalingMode="LowQuality">
+                                    </Image>
 
-                                        <!-- Amount input -->
-                                        <Border VerticalAlignment="Bottom"
+                                    <!-- Amount input -->
+                                    <Border VerticalAlignment="Bottom"
                                                 Margin="8,0,8,8"
                                                 CornerRadius="6"
                                                 Padding="4,3">
-                                            <Border.Background>
-                                                <SolidColorBrush Color="#000000" Opacity="0.55" />
-                                            </Border.Background>
-                                            <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
+                                        <Border.Background>
+                                            <SolidColorBrush Color="#000000" Opacity="0.55" />
+                                        </Border.Background>
+                                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}"
                                                      helpers:TextBoxExtensions.NumericOnly="True"
                                                      Style="{StaticResource AmountBoxStyle}" />
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
 
                 <!-- ── FOOTER ── -->
                 <Border Grid.Row="4"
-                        BorderBrush="#22253A"
-                        BorderThickness="0,1,0,0"
-                        Margin="0,12,0,0"
-                        Padding="22,14,22,18">
+                    BorderBrush="#22253A"
+                    BorderThickness="0,1,0,0"
+                    Margin="0,12,0,0"
+                    Padding="22,14,22,18">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -497,31 +508,15 @@
 
                         <!-- Buttons -->
                         <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    HorizontalAlignment="Right">
-
-                            <Button Command="{Binding CancelCommand}"
-                                    Width="120"
-                                    Height="40"
-                                    Margin="0,0,10,0"
-                                    Background="{StaticResource CancelBtnBrush}"
-                                    Padding="14,0"
-                                    Style="{StaticResource ActionButtonStyle}">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="✖"  FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="Отмена" FontSize="13" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button>
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
 
                             <Button Command="{Binding SaveCommand}"
-                                    Width="130"
-                                    Height="40"
-                                    Background="{StaticResource SaveBtnBrush}"
-                                    Padding="14,0"
-                                    Style="{StaticResource ActionButtonStyle}">
-                                <Button.Effect>
-                                    <DropShadowEffect BlurRadius="14" ShadowDepth="0" Opacity="0.5" Color="#3A8C5C" />
-                                </Button.Effect>
+                                Width="130"
+                                Height="40"
+                                Background="{StaticResource SaveBtnBrush}"
+                                Padding="14,0"
+                                Style="{StaticResource ActionButtonStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="✔"  FontSize="13" Margin="0,0,6,0" VerticalAlignment="Center" />
                                     <TextBlock Text="Сохранить" FontSize="13" VerticalAlignment="Center" />
@@ -530,7 +525,6 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-
             </Grid>
         </Border>
     </Grid>

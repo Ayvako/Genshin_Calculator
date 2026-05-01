@@ -9,5 +9,11 @@
   "OldHandguard": [ "OldHandguard", "KageuchiHandguard", "FamedHandguard" ],
   "SpectralHusk": [ "SpectralHusk", "SpectralHeart", "SpectralNucleus" ],
   "FungalSpores": [ "FungalSpores", "LuminescentPollen", "CrystallineCystDust" ],
-  "FadedRedSatin": [ "FadedRedSatin", "TrimmedRedSilk", "RichRedBrocade" ]
+  "FadedRedSatin": [ "FadedRedSatin", "TrimmedRedSilk", "RichRedBrocade" ],
+  "MeshingGear": [ "MeshingGear", "MechanicalSpurGear", "ArtificedDynamicGear" ],
+  "TransoceanicPearl": [ "TransoceanicPearl", "TransoceanicChunk", "XenochromaticCrystal" ],
+  "JuvenileFang": [ "JuvenileFang", "SeasonedFang", "TyrantsFang" ],
+  "SentrysWoodenWhistle": [ "SentrysWoodenWhistle", "WarriorsMetalWhistle", "SaurianCrownedWarriorsGoldenWhistle" ],
+  "BrokenDriveShaft": [ "BrokenDriveShaft", "ReinforcedDriveShaft", "PrecisionDriveShaft" ],
+  "TatteredWarrant": [ "TatteredWarrant", "ImmaculateWarrant", "FrostEtchedWarrant" ]
 }

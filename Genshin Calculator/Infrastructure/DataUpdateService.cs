@@ -14,6 +14,12 @@ public class DataUpdateService
 {
     private const string GitHubRawBase = "https://raw.githubusercontent.com/Ayvako/Genshin_Calculator/master/Genshin%20Calculator/GameData";
 
+    private const string GitHubApiBase = "https://api.github.com/repos/Ayvako/Genshin_Calculator/contents/Genshin%20Calculator/GameData";
+
+    private const string NoInternet = "No internet connection, using local data...";
+
+    private const int ProgressDelayMs = 200;
+
     private readonly HttpClient httpClient;
 
     private readonly string localBase;
@@ -21,6 +27,8 @@ public class DataUpdateService
     public DataUpdateService(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         this.httpClient = httpClientFactory.CreateClient();
+        this.httpClient.Timeout = TimeSpan.FromSeconds(10);
+        this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "C# App");
         this.localBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config["Paths:GameData"] ?? "Data/GameData");
     }
 
@@ -29,33 +37,28 @@ public class DataUpdateService
         try
         {
             progress?.Report(("Syncing characters data...", 10));
-            await Task.Delay(200);
-
-            await this.UpdateJsonFileAsync("Json/Characters.json");
+            await Task.Delay(ProgressDelayMs);
+            await this.UpdateJsonFileAsync("Json/Characters.json", progress, 20);
 
             progress?.Report(("Syncing enemies data...", 20));
-            await Task.Delay(200);
-            await this.UpdateJsonFileAsync("Json/Enemies.json");
+            await Task.Delay(ProgressDelayMs);
+            await this.UpdateJsonFileAsync("Json/Enemies.json", progress, 21);
 
             progress?.Report(("Syncing material images...", 21));
-            await Task.Delay(200);
+            await Task.Delay(ProgressDelayMs);
             await this.SyncFolderViaApiAsync("Images/Materials", progress, fromPercent: 21, toPercent: 70);
 
             progress?.Report(("Syncing character images...", 71));
-            await Task.Delay(200);
+            await Task.Delay(ProgressDelayMs);
             await this.SyncImagesFromJsonAsync("Json/Characters.json", progress, fromPercent: 71, toPercent: 95);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error Update: {ex.Message}");
+            Debug.WriteLine($"Error Update: {ex.Message}");
         }
     }
 
-    private async Task SyncImagesFromJsonAsync(
-    string jsonRelativePath,
-    IProgress<(string Message, double Percent)>? progress = null,
-    double fromPercent = 0,
-    double toPercent = 100)
+    private async Task SyncImagesFromJsonAsync(string jsonRelativePath, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
     {
         string localJsonPath = Path.Combine(this.localBase, jsonRelativePath);
         if (!File.Exists(localJsonPath))
@@ -70,11 +73,11 @@ public class DataUpdateService
             return;
         }
 
-        var toDownload = new List<(string Name, string Url, string LocalPath)>();
+        var toDownload = new List<(string Label, string Url, string LocalPath)>();
 
         foreach (var character in characters)
         {
-            string name = character["Name"]?.ToString();
+            string? name = character["Name"]?.ToString();
             if (string.IsNullOrEmpty(name))
             {
                 continue;
@@ -85,41 +88,28 @@ public class DataUpdateService
 
             if (!File.Exists(localImgPath))
             {
-                toDownload.Add((name, $"{GitHubRawBase}/{imgRelative}", localImgPath));
+                toDownload.Add(($"{name}.png", $"{GitHubRawBase}/{imgRelative}", localImgPath));
             }
         }
 
         if (toDownload.Count == 0)
         {
-            progress?.Report(($"All characters are up to date...", toPercent));
-            await Task.Delay(200);
+            progress?.Report(("All characters are up to date...", toPercent));
             return;
         }
 
-        for (int i = 0; i < toDownload.Count; i++)
-        {
-            var (name, url, localPath) = toDownload[i];
-            double percent = fromPercent + ((i + 1.0) / toDownload.Count * (toPercent - fromPercent));
-            progress?.Report(($"Downloading: {name}.png ({i + 1}/{toDownload.Count})", percent));
-            await this.DownloadFileAsync(url, localPath);
-        }
+        await this.DownloadBatchAsync(toDownload, progress, fromPercent, toPercent);
     }
 
-    private async Task SyncFolderViaApiAsync(string folderRelativePath, IProgress<(string Message, double Percent)>? progress = null, double fromPercent = 0, double toPercent = 100)
+    private async Task SyncFolderViaApiAsync(string folderRelativePath, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
     {
         try
         {
-            string apiUrl = $"https://api.github.com/repos/Ayvako/Genshin_Calculator/contents/Genshin%20Calculator/GameData/{folderRelativePath}";
-
-            if (!this.httpClient.DefaultRequestHeaders.Contains("User-Agent"))
-            {
-                this.httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
-            }
-
+            string apiUrl = $"{GitHubApiBase}/{folderRelativePath}";
             string response = await this.httpClient.GetStringAsync(apiUrl);
             var files = JArray.Parse(response);
 
-            var filesToDownload = new List<(string FileName, string DownloadUrl, string LocalPath)>();
+            var toDownload = new List<(string Label, string Url, string LocalPath)>();
 
             foreach (var file in files)
             {
@@ -128,8 +118,8 @@ public class DataUpdateService
                     continue;
                 }
 
-                string fileName = file["name"]?.ToString();
-                string downloadUrl = file["download_url"]?.ToString();
+                string? fileName = file["name"]?.ToString();
+                string? downloadUrl = file["download_url"]?.ToString();
 
                 if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(downloadUrl))
                 {
@@ -139,24 +129,22 @@ public class DataUpdateService
                 string localFilePath = Path.Combine(this.localBase, folderRelativePath, fileName);
                 if (!File.Exists(localFilePath))
                 {
-                    filesToDownload.Add((fileName, downloadUrl, localFilePath));
+                    toDownload.Add((fileName, downloadUrl, localFilePath));
                 }
             }
 
-            if (filesToDownload.Count == 0)
+            if (toDownload.Count == 0)
             {
                 progress?.Report(("All materials are up to date...", toPercent));
-                await Task.Delay(200);
                 return;
             }
 
-            for (int i = 0; i < filesToDownload.Count; i++)
-            {
-                var (fileName, downloadUrl, localPath) = filesToDownload[i];
-                double percent = fromPercent + ((i + 1.0) / filesToDownload.Count * (toPercent - fromPercent));
-                progress?.Report(($"Downloading: {fileName} ({i + 1}/{filesToDownload.Count})", percent));
-                await this.DownloadFileAsync(downloadUrl, localPath);
-            }
+            await this.DownloadBatchAsync(toDownload, progress, fromPercent, toPercent);
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.WriteLine($"No internet, skipping folder {folderRelativePath}: {ex.Message}");
+            progress?.Report((NoInternet, toPercent));
         }
         catch (Exception ex)
         {
@@ -164,15 +152,34 @@ public class DataUpdateService
         }
     }
 
-    private async Task UpdateJsonFileAsync(string relativePath)
+    private async Task UpdateJsonFileAsync(string relativePath, IProgress<(string Message, double Percent)>? progress, double percent)
     {
         string url = $"{GitHubRawBase}/{relativePath}";
         string localPath = Path.Combine(this.localBase, relativePath);
 
         Directory.CreateDirectory(Path.GetDirectoryName(localPath)!);
 
-        string content = await this.httpClient.GetStringAsync(url);
-        await File.WriteAllTextAsync(localPath, content);
+        try
+        {
+            string content = await this.httpClient.GetStringAsync(url);
+            await File.WriteAllTextAsync(localPath, content);
+        }
+        catch (HttpRequestException ex)
+        {
+            Debug.WriteLine($"No internet, skipping {relativePath}: {ex.Message}");
+            progress?.Report((NoInternet, percent));
+        }
+    }
+
+    private async Task DownloadBatchAsync(List<(string Label, string Url, string LocalPath)> items, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            var (label, url, localPath) = items[i];
+            double percent = fromPercent + ((i + 1.0) / items.Count * (toPercent - fromPercent));
+            progress?.Report(($"Downloading: {label} ({i + 1}/{items.Count})", percent));
+            await this.DownloadFileAsync(url, localPath);
+        }
     }
 
     private async Task DownloadFileAsync(string url, string localPath)
@@ -185,7 +192,7 @@ public class DataUpdateService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Failed to download file {url}: {ex.Message}");
+            Debug.WriteLine($"Failed to download {url}: {ex.Message}");
         }
     }
 }

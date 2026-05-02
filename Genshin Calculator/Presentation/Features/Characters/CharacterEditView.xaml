@@ -141,11 +141,11 @@
                             <charFeatures:LevelSelectorControl
                                 Title="Current"
                                 Level="{Binding Editable.CurrentLevel}"
-                                LevelOptionsPairs="{Binding LevelOptionsPairs}" />
+                                LevelRows="{Binding LevelRows}" />
                             <charFeatures:LevelSelectorControl
                                 Title="Desired"
                                 Level="{Binding Editable.DesiredLevel}"
-                                LevelOptionsPairs="{Binding LevelOptionsPairs}" />
+                                LevelRows="{Binding LevelRows}" />
                         </UniformGrid>
 
                     </StackPanel>

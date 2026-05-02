@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 
-public partial class CharacterEditViewModel : ObservableObject
+public partial class CharacterEditViewModel : ObservableObject, IDisposable
 {
-    private readonly ImmutableArray<string> levels = LevelHelper.Levels;
-
     private readonly ICharacterService characterService;
+
+    private readonly ITalentLevelRules rules;
 
     [ObservableProperty]
     private bool isPopupOpen;
@@ -23,9 +22,17 @@ public partial class CharacterEditViewModel : ObservableObject
     [ObservableProperty]
     private int maxTalentLevel;
 
-    public CharacterEditViewModel(Character character, ICharacterService characterService)
+    private bool isUpdating;
+
+    private bool disposed;
+
+    public CharacterEditViewModel(
+        Character character,
+        ICharacterService characterService,
+        ITalentLevelRules rules)
     {
         this.characterService = characterService;
+        this.rules = rules;
         this.Character = character;
         this.Editable = character.Clone();
 
@@ -35,50 +42,62 @@ public partial class CharacterEditViewModel : ObservableObject
 
     public event Action? RequestClose;
 
-    public IReadOnlyList<Skill> Talents { get; }
-
-    public IReadOnlyList<LevelPair> LevelOptionsPairs { get; } =
+    public static IReadOnlyList<LevelOptionRow> LevelRows { get; } =
     [
-        new LevelPair("20", "20★"),
-        new LevelPair("40", "40★"),
-        new LevelPair("50", "50★"),
-        new LevelPair("60", "60★"),
-        new LevelPair("70", "70★"),
-        new LevelPair("80", "80★"),
+        new(new Level(1,  false)),
+        new(new Level(20, false), new Level(20, true)),
+        new(new Level(40, false), new Level(40, true)),
+        new(new Level(50, false), new Level(50, true)),
+        new(new Level(60, false), new Level(60, true)),
+        new(new Level(70, false), new Level(70, true)),
+        new(new Level(80, false), new Level(80, true)),
+        new(new Level(90, false)),
+        new(new Level(95, false), new Level(100, false)),
     ];
+
+    public IReadOnlyList<Skill> Talents { get; }
 
     public Character Character { get; }
 
     public Character Editable { get; }
 
-    private static string EnsureLevelIsSufficient(string heroLevel, int talentLevel)
+    public void Dispose()
     {
-        return talentLevel > LevelHelper.GetMaxTalentLevel(heroLevel)
-            ? LevelHelper.GetRequiredLevelForTalent(talentLevel)
-            : heroLevel;
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!this.disposed)
+        {
+            if (disposing)
+            {
+                this.UnsubscribeEvents();
+            }
+
+            this.disposed = true;
+        }
     }
 
     [RelayCommand]
     private void TogglePopup() => this.IsPopupOpen = !this.IsPopupOpen;
 
     [RelayCommand]
-    private void SelectLevel(string level)
+    private void SelectLevel(Level level)
     {
         this.Editable.CurrentLevel = level;
         this.IsPopupOpen = false;
     }
 
     [RelayCommand]
-    private void IncreaseCurrentCharacterLevel() => this.ChangeLevel(1);
+    private void IncreaseCurrentCharacterLevel() => this.ChangeLevel(+1);
 
     [RelayCommand]
     private void DecreaseCurrentCharacterLevel() => this.ChangeLevel(-1);
 
     [RelayCommand]
-    private void Cancel()
-    {
-        this.RequestClose?.Invoke();
-    }
+    private void Cancel() => this.RequestClose?.Invoke();
 
     [RelayCommand]
     private void Save()
@@ -90,12 +109,16 @@ public partial class CharacterEditViewModel : ObservableObject
 
     private void ChangeLevel(int delta)
     {
-        int index = this.levels.IndexOf(this.Editable.CurrentLevel);
-        int newIndex = Math.Clamp(index + delta, 0, this.levels.Length - 1);
-        if (index != -1)
+        var allLevels = LevelHelper.Levels;
+
+        int index = allLevels.IndexOf(this.Editable.CurrentLevel);
+        if (index == -1)
         {
-            this.Editable.CurrentLevel = this.levels[newIndex];
+            return;
         }
+
+        int newIndex = Math.Clamp(index + delta, 0, allLevels.Count - 1);
+        this.Editable.CurrentLevel = allLevels[newIndex];
     }
 
     private void InitializeLogic()
@@ -107,57 +130,102 @@ public partial class CharacterEditViewModel : ObservableObject
 
         this.Editable.PropertyChanged += this.OnHeroPropertyChanged;
 
-        this.UpdateMaxTalentLevel();
+        this.ClampTalents();
     }
 
     private void OnTalentPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (sender is not Skill talent)
+        if (this.isUpdating || sender is not Skill talent)
         {
             return;
         }
 
-        if (e.PropertyName == nameof(Skill.CurrentLevel))
+        if (e.PropertyName is not (nameof(Skill.CurrentLevel) or nameof(Skill.DesiredLevel)))
         {
-            this.Editable.CurrentLevel = EnsureLevelIsSufficient(this.Editable.CurrentLevel, talent.CurrentLevel);
+            return;
         }
-        else if (e.PropertyName == nameof(Skill.DesiredLevel))
+
+        this.WithUpdate(() =>
         {
-            this.Editable.DesiredLevel = EnsureLevelIsSufficient(this.Editable.DesiredLevel, talent.DesiredLevel);
-        }
+            bool isCurrent = e.PropertyName == nameof(Skill.CurrentLevel);
+            int targetLevel = isCurrent ? talent.CurrentLevel : talent.DesiredLevel;
+
+            if (isCurrent && talent.CurrentLevel > talent.DesiredLevel)
+            {
+                talent.DesiredLevel = talent.CurrentLevel;
+            }
+            else if (!isCurrent && talent.DesiredLevel < talent.CurrentLevel)
+            {
+                talent.CurrentLevel = talent.DesiredLevel;
+            }
+
+            var required = this.rules.GetRequiredLevel(targetLevel);
+
+            if (this.Editable.DesiredLevel.CompareTo(required) < 0)
+            {
+                this.Editable.DesiredLevel = required;
+            }
+
+            if (isCurrent && this.Editable.CurrentLevel.CompareTo(required) < 0)
+            {
+                this.Editable.CurrentLevel = required;
+            }
+
+            this.MaxTalentLevel = this.rules.GetMaxTalentLevel(this.Editable.CurrentLevel);
+        });
     }
 
     private void OnHeroPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(this.Character.CurrentLevel))
+        if (this.isUpdating)
         {
-            this.UpdateMaxTalentLevel();
-            this.SyncTalents(isDesired: false);
+            return;
         }
-        else if (e.PropertyName == nameof(this.Character.DesiredLevel))
+
+        if (e.PropertyName is nameof(this.Character.CurrentLevel) or nameof(this.Character.DesiredLevel))
         {
-            this.SyncTalents(isDesired: true);
+            this.WithUpdate(this.ClampTalents);
         }
     }
 
-    private void UpdateMaxTalentLevel()
-        => this.MaxTalentLevel = LevelHelper.GetMaxTalentLevel(this.Editable.CurrentLevel);
-
-    private void SyncTalents(bool isDesired)
+    private void WithUpdate(Action action)
     {
-        var level = isDesired ? this.Editable.DesiredLevel : this.Editable.CurrentLevel;
-        int limit = LevelHelper.GetMaxTalentLevel(level);
+        if (this.isUpdating)
+        {
+            return;
+        }
+
+        this.isUpdating = true;
+        try
+        {
+            action();
+        }
+        finally
+        {
+            this.isUpdating = false;
+        }
+    }
+
+    private void ClampTalents()
+    {
+        int currentMax = this.rules.GetMaxTalentLevel(this.Editable.CurrentLevel);
+
+        this.MaxTalentLevel = currentMax;
 
         foreach (var talent in this.Talents)
         {
-            if (isDesired)
-            {
-                talent.DesiredLevel = Math.Min(talent.DesiredLevel, limit);
-            }
-            else
-            {
-                talent.CurrentLevel = Math.Min(talent.CurrentLevel, limit);
-            }
+            talent.DesiredLevel = this.rules.ClampTalentLevel(this.Editable.DesiredLevel, talent.DesiredLevel);
+            talent.CurrentLevel = this.rules.ClampTalentLevel(this.Editable.CurrentLevel, talent.CurrentLevel);
         }
+    }
+
+    private void UnsubscribeEvents()
+    {
+        foreach (var talent in this.Talents)
+        {
+            talent.PropertyChanged -= this.OnTalentPropertyChanged;
+        }
+
+        this.Editable.PropertyChanged -= this.OnHeroPropertyChanged;
     }
 }

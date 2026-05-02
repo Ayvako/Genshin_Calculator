@@ -1,85 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using Genshin_Calculator.Core.Models;
+using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace Genshin_Calculator.Core.Helpers;
 
 public static class LevelHelper
 {
-    public static readonly ImmutableArray<string> Levels =
-    [
-        "1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "20★",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "40★",
-        "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "50★",
-        "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "60★",
-        "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "70★",
-        "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "80★",
-        "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "95", "100",
-    ];
+    public static readonly ImmutableList<Level> Levels = Build();
 
-    private static readonly Dictionary<string, int> AscensionTalentLimits = new()
+    public static IEnumerable<Level> GetRange(Level from, Level to)
     {
-        { "20", 1 },
-        { "20★", 1 },
-        { "40★", 2 },
-        { "50★", 4 },
-        { "60★", 6 },
-        { "70★", 8 },
-        { "80★", 10 },
-        { "90", 10 },
-    };
+        int start = Levels.IndexOf(from);
+        int end = Levels.IndexOf(to);
 
-    public static int LevelToIndex(string level)
-    {
-        return Levels.IndexOf(level);
-    }
-
-    public static int CompareLevels(string a, string b)
-    {
-        return LevelToIndex(a).CompareTo(LevelToIndex(b));
-    }
-
-    public static int GetMaxTalentLevel(string characterLevel)
-    {
-        int currentNumericLevel = int.Parse(characterLevel.Replace("★", string.Empty));
-        bool hasStar = characterLevel.Contains('★');
-
-        var possibleLimits = AscensionTalentLimits
-            .Select(x => new
-            {
-                Level = int.Parse(x.Key.Replace("★", string.Empty)),
-                HasStar = x.Key.Contains('★'),
-                Limit = x.Value,
-            })
-            .Where(x => x.Level <= currentNumericLevel)
-            .OrderByDescending(x => x.Level)
-            .ThenByDescending(x => x.HasStar);
-        foreach (var item in possibleLimits)
+        if (start == -1 || end == -1 || start >= end)
         {
-            if (item.Level < currentNumericLevel)
+            yield break;
+        }
+
+        for (int i = start + 1; i <= end; i++)
+        {
+            yield return Levels[i];
+        }
+    }
+
+    private static ImmutableList<Level> Build()
+    {
+        var list = new List<Level>();
+
+        void AddRange(int from, int to, bool ascendedAtEnd = false)
+        {
+            for (int i = from; i < to; i++)
             {
-                return item.Limit;
+                list.Add(new Level(i, false));
             }
 
-            if (item.Level == currentNumericLevel && (hasStar || !item.HasStar))
+            list.Add(new Level(to, false));
+
+            if (ascendedAtEnd)
             {
-                return item.Limit;
+                list.Add(new Level(to, true));
             }
         }
 
-        return 1;
-    }
+        AddRange(1, 20, true);
+        AddRange(21, 40, true);
+        AddRange(41, 50, true);
+        AddRange(51, 60, true);
+        AddRange(61, 70, true);
+        AddRange(71, 80, true);
 
-    public static string GetRequiredLevelForTalent(int talentLevel)
-    {
-        var requirement = AscensionTalentLimits
-            .Select(x => new { x.Key, Limit = x.Value, Level = int.Parse(x.Key.Replace("★", string.Empty)) })
-            .OrderBy(x => x.Level)
-            .ThenBy(x => x.Key.Contains('★'))
-            .FirstOrDefault(x => x.Limit >= talentLevel);
+        for (int i = 81; i <= 90; i++)
+        {
+            list.Add(new Level(i, false));
+        }
 
-        return requirement?.Key ?? "80★";
+        list.Add(new Level(95, false));
+        list.Add(new Level(100, false));
+
+        return [.. list];
     }
 }

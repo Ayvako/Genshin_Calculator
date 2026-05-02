@@ -65,23 +65,22 @@ internal class DataIOService : IDataIOService
             progress?.Report(("Merging save data...", 98));
             await Task.Delay(200);
 
-            var (userInventory, userCharacters) = this.userData.Load();
+            var inventory = this.userData.Load();
 
-            if (userInventory == null && userCharacters == null)
+            if (inventory == null)
             {
                 this.isSuccessfullyLoaded = false;
-                Debug.WriteLine("❌ CRITICAL: Save file exists but is corrupted. Saving disabled to prevent data loss.");
             }
             else
             {
-                if (userInventory != null)
+                if (inventory != null)
                 {
-                    MergeInventories(materials, userInventory);
+                    MergeInventories(materials, inventory);
                 }
 
-                if (userCharacters != null)
+                if (inventory!.Characters != null)
                 {
-                    UpdateCharacters(characters, userCharacters);
+                    UpdateCharacters(characters, inventory.Characters);
                 }
 
                 this.ApplyData(characters, materials);

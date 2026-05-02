@@ -2,6 +2,7 @@
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,11 +19,13 @@ public partial class LevelSelectorControl : UserControl
         new PropertyMetadata(string.Empty));
 
     public static readonly DependencyProperty LevelProperty =
-    DependencyProperty.Register(
-        nameof(Level),
-        typeof(string),
-        typeof(LevelSelectorControl),
-        new FrameworkPropertyMetadata("1", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+        DependencyProperty.Register(
+            nameof(Level),
+            typeof(Level),
+            typeof(LevelSelectorControl),
+            new FrameworkPropertyMetadata(
+                default(Level),
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     public static readonly DependencyProperty IsPopupOpenProperty =
     DependencyProperty.Register(
@@ -31,12 +34,14 @@ public partial class LevelSelectorControl : UserControl
         typeof(LevelSelectorControl),
         new PropertyMetadata(false));
 
-    public static readonly DependencyProperty LevelOptionsPairsProperty =
+    public static readonly DependencyProperty LevelRowsProperty =
     DependencyProperty.Register(
-        nameof(LevelOptionsPairs),
-        typeof(IReadOnlyList<LevelPair>),
+        nameof(LevelRows),
+        typeof(IReadOnlyList<LevelOptionRow>),
         typeof(LevelSelectorControl),
         new PropertyMetadata(null));
+
+    private static readonly ImmutableList<Level> Levels = LevelHelper.Levels;
 
     public LevelSelectorControl()
     {
@@ -49,9 +54,9 @@ public partial class LevelSelectorControl : UserControl
         set => this.SetValue(TitleProperty, value);
     }
 
-    public string Level
+    public Level Level
     {
-        get => (string)this.GetValue(LevelProperty);
+        get => (Level)this.GetValue(LevelProperty);
         set => this.SetValue(LevelProperty, value);
     }
 
@@ -61,38 +66,38 @@ public partial class LevelSelectorControl : UserControl
         set => this.SetValue(IsPopupOpenProperty, value);
     }
 
-    public IReadOnlyList<LevelPair> LevelOptionsPairs
+    public IReadOnlyList<LevelOptionRow> LevelRows
     {
-        get => (IReadOnlyList<LevelPair>)this.GetValue(LevelOptionsPairsProperty);
-        set => this.SetValue(LevelOptionsPairsProperty, value);
+        get => (IReadOnlyList<LevelOptionRow>)this.GetValue(LevelRowsProperty);
+        set => this.SetValue(LevelRowsProperty, value);
     }
 
     [RelayCommand]
-    public void SelectLevel(string level)
+    public void SelectLevel(Level level)
     {
-        this.Level = level ?? string.Empty;
+        this.Level = level;
         this.IsPopupOpen = false;
     }
 
     [RelayCommand]
     public void IncreaseLevel()
     {
-        var index = LevelHelper.Levels.IndexOf(this.Level);
+        var index = Levels.IndexOf(this.Level);
 
-        if (index < (LevelHelper.Levels.Length - 1))
+        if (index < Levels.Count - 1)
         {
-            this.Level = LevelHelper.Levels[index + 1];
+            this.Level = Levels[index + 1];
         }
     }
 
     [RelayCommand]
     public void DecreaseLevel()
     {
-        var index = LevelHelper.Levels.IndexOf(this.Level);
+        var index = Levels.IndexOf(this.Level);
 
         if (index > 0)
         {
-            this.Level = LevelHelper.Levels[index - 1];
+            this.Level = Levels[index - 1];
         }
     }
 

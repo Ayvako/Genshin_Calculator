@@ -90,45 +90,34 @@
                         SnapsToDevicePixels="True">
 
                     <StackPanel>
-                        <Button Content="1"
-                                Style="{StaticResource LevelValueButtonStyle}"
-                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                CommandParameter="1" />
-
-                        <ItemsControl ItemsSource="{Binding LevelOptionsPairs, ElementName=root}">
+                        <ItemsControl ItemsSource="{Binding LevelRows, ElementName=root}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="{Binding Level}"
-                                                Style="{StaticResource LevelValueButtonStyle}"
-                                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                                CommandParameter="{Binding Level}" />
+                                        <Button Content="{Binding Left}"
+                                            Style="{StaticResource LevelValueButtonStyle}"
+                                            Command="{Binding SelectLevelCommand, ElementName=root}"
+                                            CommandParameter="{Binding Left}" />
 
-                                        <Button Content="{Binding Ascended}"
-                                                Style="{StaticResource LevelValueButtonStyle}"
-                                                Margin="6,0,0,0"
-                                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                                CommandParameter="{Binding Ascended}" />
+                                        <Button Content="{Binding Right}"
+                                            Margin="6,0,0,0"
+                                            Command="{Binding SelectLevelCommand, ElementName=root}"
+                                            CommandParameter="{Binding Right}">
+                                            <Button.Style>
+                                                <Style TargetType="Button" BasedOn="{StaticResource LevelValueButtonStyle}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Right}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+
                                     </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-
-                        <Button Content="90"
-                                Style="{StaticResource LevelValueButtonStyle}"
-                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                CommandParameter="90" />
-                        <WrapPanel>
-                            <Button Content="95"
-                                Style="{StaticResource LevelValueButtonStyle}"
-                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                CommandParameter="95" />
-                            <Button Content="100"
-                                Style="{StaticResource LevelValueButtonStyle}"
-                                Command="{Binding SelectLevelCommand, ElementName=root}"
-                                CommandParameter="100" />
-                        </WrapPanel>
-
                     </StackPanel>
                 </Border>
             </Popup>

@@ -16,7 +16,7 @@ public partial class SplashWindow : Window
         this.Dispatcher.Invoke(() =>
         {
             this.StatusText.Text = message;
-            DoubleAnimation animation = new DoubleAnimation
+            DoubleAnimation animation = new()
             {
                 To = progress,
                 Duration = TimeSpan.FromMilliseconds(250),

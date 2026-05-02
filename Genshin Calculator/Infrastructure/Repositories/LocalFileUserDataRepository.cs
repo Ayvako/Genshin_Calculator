@@ -1,12 +1,9 @@
 ﻿using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
-using Genshin_Calculator.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Management.Automation.Language;
 using System.Text;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
@@ -20,98 +17,71 @@ public class LocalFileUserDataRepository : IUserDataRepository
         this.exportFilePath = config["Paths:ExportFile"] ?? "Data/Export.json";
     }
 
-    public bool FileExists => File.Exists(this.exportFilePath);
+    public bool FileExists => File.Exists(this.exportFilePath) || File.Exists(this.exportFilePath + ".bak");
 
     public void Save(Inventory inventory)
     {
-        var exportJson = new JObject
-        {
-            ["Inventory"] = JToken.FromObject(inventory),
-            ["Characters"] = JToken.FromObject(inventory.Characters),
-        };
-
         var directory = Path.GetDirectoryName(this.exportFilePath);
         if (!string.IsNullOrEmpty(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
-        string tempFilePath = this.exportFilePath + ".tmp";
-        string backupFilePath = this.exportFilePath + ".bak";
-        string jsonString = exportJson.ToString(Formatting.Indented);
+        string temp = this.exportFilePath + ".tmp";
+        string backup = this.exportFilePath + ".bak";
 
-        try
+        var json = Serialize(inventory);
+
+        using (var fs = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None))
+        using (var sw = new StreamWriter(fs, Encoding.UTF8))
         {
-            using (FileStream fs = new(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
-            using (StreamWriter sw = new(fs, Encoding.UTF8))
-            {
-                sw.Write(jsonString);
-                sw.Flush();
-                fs.Flush(true);
-            }
-
-            if (File.Exists(this.exportFilePath))
-            {
-                File.Replace(tempFilePath, this.exportFilePath, backupFilePath, ignoreMetadataErrors: true);
-            }
-            else
-            {
-                File.Move(tempFilePath, this.exportFilePath);
-            }
-
-            Console.WriteLine($"💾 Export saved safely to {this.exportFilePath}");
+            sw.Write(json);
+            sw.Flush();
+            fs.Flush(true);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Error saving export: {ex.Message}");
 
-            if (File.Exists(tempFilePath))
-            {
-                File.Delete(tempFilePath);
-            }
+        if (File.Exists(this.exportFilePath))
+        {
+            File.Replace(temp, this.exportFilePath, backup);
+        }
+        else
+        {
+            File.Move(temp, this.exportFilePath);
         }
     }
 
-    public (Inventory? Inventory, List<Character>? Characters) Load()
+    public Inventory? Load()
     {
-        var result = TryLoadFile(this.exportFilePath);
-        if (result.Inventory != null || result.Characters != null)
+        var result = TryLoad(this.exportFilePath);
+        if (result != null)
         {
             return result;
         }
 
-        string backupFilePath = this.exportFilePath + ".bak";
-        if (File.Exists(backupFilePath))
-        {
-            Console.WriteLine($"⚠️ Main file corrupted or missing. Attempting to load backup from {backupFilePath}");
-            return TryLoadFile(backupFilePath);
-        }
-
-        return (null, null);
+        var backup = this.exportFilePath + ".bak";
+        return File.Exists(backup) ? TryLoad(backup) : null;
     }
 
-    private static (Inventory? Inventory, List<Character>? Characters) TryLoadFile(string filePath)
+    private static Inventory? TryLoad(string path)
     {
-        if (!File.Exists(filePath))
+        if (!File.Exists(path))
         {
-            return (null, null);
+            return null;
         }
 
         try
         {
-            var jsonContent = File.ReadAllText(filePath);
-
-            var exportJson = JObject.Parse(jsonContent);
-
-            var importedInventory = exportJson["Inventory"]?.ToObject<Inventory>();
-            var importedChars = exportJson["Characters"]?.ToObject<List<Character>>();
-
-            return (importedInventory, importedChars);
+            return Deserialize(File.ReadAllText(path));
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"⚠️ Warning: Failed to load {filePath}. {ex.Message}");
-            return (null, null);
+            return null;
         }
     }
+
+    private static string Serialize(Inventory inventory)
+    => JsonConvert.SerializeObject(inventory, Formatting.Indented);
+
+    private static Inventory? Deserialize(string json)
+        => JsonConvert.DeserializeObject<Inventory>(json);
 }

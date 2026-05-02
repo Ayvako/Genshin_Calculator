@@ -34,15 +34,15 @@ public partial class Skill : ObservableObject
     {
         if (value > desiredLevel)
         {
-            DesiredLevel = CurrentLevel;
+            this.DesiredLevel = value;
         }
     }
 
     partial void OnDesiredLevelChanged(int value)
     {
-        if (CurrentLevel > value)
+        if (this.CurrentLevel > value)
         {
-            CurrentLevel = value;
+            this.CurrentLevel = value;
         }
     }
 }

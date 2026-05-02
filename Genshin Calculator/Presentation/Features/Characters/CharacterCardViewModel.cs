@@ -41,9 +41,9 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 
     public bool IsActivated => this.Character.Activated;
 
-    public string CurrentLevel => this.Character.CurrentLevel;
+    public string CurrentLevel => this.Character.CurrentLevel.ToString();
 
-    public string DesiredLevel => this.Character.DesiredLevel;
+    public string DesiredLevel => this.Character.DesiredLevel.ToString();
 
     public Skill AutoAttack => this.Character.AutoAttack;
 

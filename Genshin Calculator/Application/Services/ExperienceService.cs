@@ -1,4 +1,5 @@
-﻿using Genshin_Calculator.Core.Interfaces;
+﻿using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
@@ -9,23 +10,17 @@ namespace Genshin_Calculator.Application.Services;
 
 public class ExperienceService : IExperienceService
 {
-    private const string HeroWit = "HerosWit";
-
     private const int HeroWitXp = 20000;
 
-    private const string AdventurerExperience = "AdventurersExperience";
-
     private const int AdventurerExperienceXp = 5000;
-
-    private const string WandererAdvice = "WanderersAdvice";
 
     private const int WandererAdviceXp = 1000;
 
     public long CalculateTotalExp(Inventory inventory)
     {
-        return ((long)(inventory.GetMaterial(HeroWit)?.Amount ?? 0) * HeroWitXp)
-             + ((long)(inventory.GetMaterial(AdventurerExperience)?.Amount ?? 0) * AdventurerExperienceXp)
-             + ((long)(inventory.GetMaterial(WandererAdvice)?.Amount ?? 0) * WandererAdviceXp);
+        return ((long)(inventory.GetMaterial(ItemIds.HerosWit)?.Amount ?? 0) * HeroWitXp)
+             + ((long)(inventory.GetMaterial(ItemIds.AdventurersExperience)?.Amount ?? 0) * AdventurerExperienceXp)
+             + ((long)(inventory.GetMaterial(ItemIds.WanderersAdvice)?.Amount ?? 0) * WandererAdviceXp);
     }
 
     public void ProcessExpRequirement(Material req, Inventory inventory, ref long totalExpPool, MaterialRequirement uiMat)
@@ -50,16 +45,16 @@ public class ExperienceService : IExperienceService
     public Material ConvertXpToHeroWit(long totalXpAmount)
     {
         int heroWitCount = (int)Math.Ceiling((double)totalXpAmount / HeroWitXp);
-        return new Material(HeroWit, MaterialTypes.Exp, MaterialRarity.Violet, heroWitCount);
+        return new Material(ItemIds.HerosWit, MaterialTypes.Exp, MaterialRarity.Violet, heroWitCount);
     }
 
     private static void DeductExpFromInventory(long xpToConsume, Inventory inventory, MaterialRequirement uiMat)
     {
         long remainingXp = xpToConsume;
 
-        remainingXp = ConsumeMaterialByXp(inventory, uiMat, HeroWit, HeroWitXp, MaterialTypes.Exp, MaterialRarity.Violet, remainingXp, incrementTakenFromInventory: true);
-        remainingXp = ConsumeMaterialByXp(inventory, uiMat, AdventurerExperience, AdventurerExperienceXp, MaterialTypes.Exp, MaterialRarity.Blue, remainingXp, incrementTakenFromInventory: false);
-        remainingXp = ConsumeMaterialByXp(inventory, uiMat, WandererAdvice, WandererAdviceXp, MaterialTypes.Exp, MaterialRarity.Green, remainingXp, incrementTakenFromInventory: false);
+        remainingXp = ConsumeMaterialByXp(inventory, uiMat, ItemIds.HerosWit, HeroWitXp, MaterialTypes.Exp, MaterialRarity.Violet, remainingXp, incrementTakenFromInventory: true);
+        remainingXp = ConsumeMaterialByXp(inventory, uiMat, ItemIds.AdventurersExperience, AdventurerExperienceXp, MaterialTypes.Exp, MaterialRarity.Blue, remainingXp, incrementTakenFromInventory: false);
+        remainingXp = ConsumeMaterialByXp(inventory, uiMat, ItemIds.WanderersAdvice, WandererAdviceXp, MaterialTypes.Exp, MaterialRarity.Green, remainingXp, incrementTakenFromInventory: false);
 
         if (remainingXp > 0)
         {
@@ -93,26 +88,26 @@ public class ExperienceService : IExperienceService
 
     private static void ConsumeSingleFallback(Inventory inventory, MaterialRequirement uiMat)
     {
-        var wand = inventory.GetMaterial(WandererAdvice);
+        var wand = inventory.GetMaterial(ItemIds.WanderersAdvice);
         if (wand != null && wand.Amount > 0)
         {
-            inventory.SetMaterial(new Material(WandererAdvice, MaterialTypes.Exp, MaterialRarity.Green, wand.Amount - 1));
-            AddExpSubstituteCost(uiMat, WandererAdvice, MaterialTypes.Exp, MaterialRarity.Green, 1);
+            inventory.SetMaterial(new Material(ItemIds.WanderersAdvice, MaterialTypes.Exp, MaterialRarity.Green, wand.Amount - 1));
+            AddExpSubstituteCost(uiMat, ItemIds.WanderersAdvice, MaterialTypes.Exp, MaterialRarity.Green, 1);
             return;
         }
 
-        var adv = inventory.GetMaterial(AdventurerExperience);
+        var adv = inventory.GetMaterial(ItemIds.AdventurersExperience);
         if (adv != null && adv.Amount > 0)
         {
-            inventory.SetMaterial(new Material(AdventurerExperience, MaterialTypes.Exp, MaterialRarity.Blue, adv.Amount - 1));
-            AddExpSubstituteCost(uiMat, AdventurerExperience, MaterialTypes.Exp, MaterialRarity.Blue, 1);
+            inventory.SetMaterial(new Material(ItemIds.AdventurersExperience, MaterialTypes.Exp, MaterialRarity.Blue, adv.Amount - 1));
+            AddExpSubstituteCost(uiMat, ItemIds.AdventurersExperience, MaterialTypes.Exp, MaterialRarity.Blue, 1);
             return;
         }
 
-        var hero = inventory.GetMaterial(HeroWit);
+        var hero = inventory.GetMaterial(ItemIds.HerosWit);
         if (hero != null && hero.Amount > 0)
         {
-            inventory.SetMaterial(new Material(HeroWit, MaterialTypes.Exp, MaterialRarity.Violet, hero.Amount - 1));
+            inventory.SetMaterial(new Material(ItemIds.HerosWit, MaterialTypes.Exp, MaterialRarity.Violet, hero.Amount - 1));
             uiMat.TakenFromInventory += 1;
         }
     }

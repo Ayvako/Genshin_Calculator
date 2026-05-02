@@ -1,4 +1,5 @@
-﻿using Genshin_Calculator.Core.Models.Enums;
+﻿using Genshin_Calculator.Core.Helpers;
+using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
@@ -52,12 +53,12 @@ public static class MaterialGenerator
 
         materials.AddRange(
         [
-            new Material("StellaFortuna", MaterialTypes.StellaFortuna, MaterialRarity.Orange, 0),
-            new Material("CrownOfInsight", MaterialTypes.Crown, MaterialRarity.Orange, 0),
-            new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, 0),
-            new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, 0),
-            new Material("AdventurersExperience", MaterialTypes.Exp, MaterialRarity.Blue, 0),
-            new Material("HerosWit", MaterialTypes.Exp, MaterialRarity.Violet, 0),
+            new Material(ItemIds.StellaFortuna, MaterialTypes.StellaFortuna, MaterialRarity.Orange, 0),
+            new Material(ItemIds.CrownOfInsight, MaterialTypes.Crown, MaterialRarity.Orange, 0),
+            new Material(ItemIds.Mora, MaterialTypes.Mora, MaterialRarity.Blue, 0),
+            new Material(ItemIds.WanderersAdvice, MaterialTypes.Exp, MaterialRarity.Green, 0),
+            new Material(ItemIds.AdventurersExperience, MaterialTypes.Exp, MaterialRarity.Blue, 0),
+            new Material(ItemIds.HerosWit, MaterialTypes.Exp, MaterialRarity.Violet, 0),
         ]);
 
         return materials;

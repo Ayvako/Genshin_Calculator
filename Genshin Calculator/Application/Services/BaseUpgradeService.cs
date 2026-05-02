@@ -1,4 +1,5 @@
 ﻿using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
@@ -24,9 +25,9 @@ public abstract class BaseUpgradeService
             MaterialTypes.LocalSpecialty => character.Assets?.LocalSpecialty ?? "Unknown",
             MaterialTypes.MiniBoss => character.Assets?.MiniBoss ?? "Unknown",
             MaterialTypes.WeeklyBoss => character.Assets?.WeeklyBoss ?? "Unknown Boss",
-            MaterialTypes.StellaFortuna => "StellaFortuna",
-            MaterialTypes.Crown => "CrownOfInsight",
-            MaterialTypes.Mora => "Mora",
+            MaterialTypes.StellaFortuna => ItemIds.StellaFortuna,
+            MaterialTypes.Crown => ItemIds.CrownOfInsight,
+            MaterialTypes.Mora => ItemIds.Mora,
             _ => "Unknown",
         };
 

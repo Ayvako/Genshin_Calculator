@@ -18,12 +18,15 @@ public class ViewService : IViewService
 
     private readonly IInventoryService inventoryService;
 
+    private readonly ITalentLevelRules rules;
+
     private int openDialogsCount = 0;
 
-    public ViewService(ICharacterService characterService, IInventoryService inventoryService)
+    public ViewService(ICharacterService characterService, IInventoryService inventoryService, ITalentLevelRules rules)
     {
         this.characterService = characterService;
         this.inventoryService = inventoryService;
+        this.rules = rules;
     }
 
     public bool ShowConfirm(string title, string message)
@@ -50,7 +53,7 @@ public class ViewService : IViewService
 
     public void ShowCharacterEdit(Character character)
     {
-        var vm = new CharacterEditViewModel(character, this.characterService);
+        var vm = new CharacterEditViewModel(character, this.characterService, this.rules);
         var view = CreateDialog<CharacterEditView>(vm);
 
         vm.RequestClose += () => view.Close();

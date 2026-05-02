@@ -2,6 +2,7 @@
 using Genshin_Calculator.Application.Services;
 using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Interfaces;
+using Genshin_Calculator.Core.Services;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
 using Genshin_Calculator.Presentation.Features.Main;
@@ -11,7 +12,6 @@ using Genshin_Calculator.Presentation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
@@ -82,7 +82,6 @@ public partial class App : System.Windows.Application
         services.AddSingleton<IDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
         services.AddSingleton<IEmbeddedDataRepository, EmbeddedResourceRepository>();
-
         services.AddSingleton<DataUpdateService>();
         services.AddSingleton<IDataIOService, DataIOService>();
         services.AddTransient<IInventoryService, InventoryService>();
@@ -91,7 +90,7 @@ public partial class App : System.Windows.Application
         services.AddTransient<ICharacterUpgradeService, CharacterUpgradeService>();
         services.AddTransient<IAlchemyService, AlchemyService>();
         services.AddTransient<IExperienceService, ExperienceService>();
-
+        services.AddSingleton<ITalentLevelRules, DefaultTalentLevelRules>();
         services.AddSingleton<InventoryStore>();
         services.AddSingleton<IViewService, ViewService>();
 

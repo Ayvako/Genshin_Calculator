@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Genshin_Calculator.Application.Services.MaterialProviders;
+﻿using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Models;
+using System.Collections.Generic;
 
 namespace Genshin_Calculator.Application.Services;
 
 public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeService
 {
-    private static readonly List<string> Levels = [.. LevelHelper.Levels];
-
     private readonly LevelData levelData;
 
     public CharacterUpgradeService(IMaterialProviderFactory factory, IEmbeddedDataRepository embeddedData)
@@ -23,35 +20,50 @@ public class CharacterUpgradeService : BaseUpgradeService, ICharacterUpgradeServ
 
     public List<Material> GetCharacterCost(Character character)
     {
-        var totalMaterials = new Dictionary<string, Material>();
+        var total = new Dictionary<string, Material>(16);
 
-        int startIndex = Levels.FindIndex(s => s.Contains(character.CurrentLevel));
-        int endIndex = Levels.FindIndex(s => s.Contains(character.DesiredLevel));
+        var levels = LevelHelper.GetRange(
+            character.CurrentLevel,
+            character.DesiredLevel);
 
-        if (startIndex == -1 || endIndex == -1)
+        foreach (var level in levels)
         {
-            return [];
+            this.ProcessLevel(level, character, total);
         }
 
-        var levelsInRange = Levels.Skip(startIndex + 1).Take(endIndex - startIndex);
+        return [.. total.Values];
+    }
 
-        foreach (var level in levelsInRange)
+    private void ProcessLevel(Level level, Character character, Dictionary<string, Material> total)
+    {
+        this.AddBaseCost(level, total);
+        this.AddAscensionCost(level, character, total);
+    }
+
+    private void AddBaseCost(Level level, Dictionary<string, Material> total)
+    {
+        if (this.levelData.BaseCosts.TryGetValue(level.ToString(), out int exp))
         {
-            if (this.levelData.BaseCosts.TryGetValue(level, out int expAmount))
-            {
-                MaterialMerger.AddToTotal(totalMaterials, new Material("WanderersAdvice", MaterialTypes.Exp, MaterialRarity.Green, expAmount));
-                MaterialMerger.AddToTotal(totalMaterials, new Material("Mora", MaterialTypes.Mora, MaterialRarity.Blue, expAmount / 5));
-            }
+            MaterialMerger.AddToTotal(
+                total,
+                new Material(ItemIds.WanderersAdvice, MaterialTypes.Exp, MaterialRarity.Green, exp));
 
-            if (this.levelData.AscensionCosts.TryGetValue(level, out var templates))
-            {
-                foreach (var t in templates)
-                {
-                    MaterialMerger.AddToTotal(totalMaterials, this.ResolveMaterial(character, t));
-                }
-            }
+            MaterialMerger.AddToTotal(
+                total,
+                new Material(ItemIds.Mora, MaterialTypes.Mora, MaterialRarity.Blue, exp / 5));
+        }
+    }
+
+    private void AddAscensionCost(Level level, Character character, Dictionary<string, Material> total)
+    {
+        if (!this.levelData.AscensionCosts.TryGetValue(level.ToString(), out var templates))
+        {
+            return;
         }
 
-        return [.. totalMaterials.Values];
+        foreach (var t in templates)
+        {
+            MaterialMerger.AddToTotal(total, this.ResolveMaterial(character, t));
+        }
     }
 }

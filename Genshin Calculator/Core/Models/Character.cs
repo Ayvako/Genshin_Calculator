@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
 using Newtonsoft.Json;
 
@@ -8,10 +7,10 @@ namespace Genshin_Calculator.Models;
 public partial class Character : ObservableObject
 {
     [ObservableProperty]
-    private string currentLevel = "1";
+    private Level currentLevel = new(1, false);
 
     [ObservableProperty]
-    private string desiredLevel = "1";
+    private Level desiredLevel = new(1, false);
 
     [ObservableProperty]
     private Skill autoAttack;
@@ -58,8 +57,8 @@ public partial class Character : ObservableObject
 
     public void Reset()
     {
-        this.CurrentLevel = "1";
-        this.DesiredLevel = "1";
+        this.CurrentLevel = new Level(1, false);
+        this.DesiredLevel = new Level(1, false);
         this.Activated = false;
 
         if (this.AutoAttack != null)
@@ -93,17 +92,17 @@ public partial class Character : ObservableObject
         this.Burst.CopyLevelsFrom(other.Burst!);
     }
 
-    partial void OnCurrentLevelChanged(string value)
+    partial void OnCurrentLevelChanged(Level value)
     {
-        if (LevelHelper.CompareLevels(value, this.DesiredLevel) > 0)
+        if (value.CompareTo(this.DesiredLevel) > 0)
         {
             this.DesiredLevel = value;
         }
     }
 
-    partial void OnDesiredLevelChanged(string value)
+    partial void OnDesiredLevelChanged(Level value)
     {
-        if (LevelHelper.CompareLevels(this.CurrentLevel, value) > 0)
+        if (CurrentLevel.CompareTo(value) > 0)
         {
             this.CurrentLevel = value;
         }

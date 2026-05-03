@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Genshin_Calculator.Core.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Infrastructure;
 
-public class DataUpdateService
+internal class DataUpdateService : IDataUpdateService
 {
-
     private const string NoInternet = "No internet connection, using local data...";
 
     private readonly HttpClient httpClient;

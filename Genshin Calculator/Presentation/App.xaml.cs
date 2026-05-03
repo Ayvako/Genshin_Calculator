@@ -82,7 +82,7 @@ public partial class App : System.Windows.Application
         services.AddSingleton<IDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
         services.AddSingleton<IEmbeddedDataRepository, EmbeddedResourceRepository>();
-        services.AddSingleton<DataUpdateService>();
+        services.AddSingleton<IDataUpdateService, DataUpdateService>();
         services.AddSingleton<IDataIOService, DataIOService>();
         services.AddTransient<IInventoryService, InventoryService>();
         services.AddTransient<ICharacterService, CharacterService>();
@@ -106,9 +106,9 @@ public partial class App : System.Windows.Application
 
         services.AddSingleton<IMaterialProviderFactory, MaterialProviderFactory>();
 
-        services.AddTransient<MainViewModel>();
+        services.AddSingleton<MainViewModel>();
+        services.AddSingleton<MainWindow>();
         services.AddTransient<ToolsPanelViewModel>();
-        services.AddTransient<MainWindow>();
         services.AddTransient<MainView>();
     }
 }

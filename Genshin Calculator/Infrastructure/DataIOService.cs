@@ -13,7 +13,7 @@ namespace Genshin_Calculator.Infrastructure;
 
 internal class DataIOService : IDataIOService
 {
-    private readonly DataUpdateService updater;
+    private readonly IDataUpdateService updater;
 
     private readonly InventoryStore store;
 
@@ -23,7 +23,7 @@ internal class DataIOService : IDataIOService
 
     private bool isSuccessfullyLoaded = false;
 
-    public DataIOService(InventoryStore store, IDataRepository staticData, IUserDataRepository userData, DataUpdateService updater)
+    public DataIOService(InventoryStore store, IDataRepository staticData, IUserDataRepository userData, IDataUpdateService updater)
     {
         this.store = store;
         this.data = staticData;

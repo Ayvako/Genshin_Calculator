@@ -124,11 +124,14 @@ public partial class MainViewModel : ObservableRecipient,
         this.Characters.Clear();
 
         var inventory = this.inventoryService.GetInventory();
+
         var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
 
         foreach (var character in inventory.NotDeletedCharacters.OrderBy(c => c.Priority))
         {
-            this.Characters.Add(this.CreateCharacterViewModel(character, this.GetMaterials(character, missingByCharacter)));
+            var materials = this.GetMaterials(character, missingByCharacter);
+            var sortedMaterials = InventoryService.SortMaterialsForDisplay(materials);
+            this.Characters.Add(this.CreateCharacterViewModel(character, sortedMaterials));
         }
     }
 

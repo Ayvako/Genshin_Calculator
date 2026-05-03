@@ -109,6 +109,5 @@ public partial class App : System.Windows.Application
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
         services.AddTransient<ToolsPanelViewModel>();
-        services.AddTransient<MainView>();
     }
 }

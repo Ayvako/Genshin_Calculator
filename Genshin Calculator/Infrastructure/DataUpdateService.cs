@@ -1,10 +1,9 @@
-﻿using Genshin_Calculator.Models;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
+﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,187 +11,120 @@ namespace Genshin_Calculator.Infrastructure;
 
 public class DataUpdateService
 {
-    private const string GitHubRawBase = "https://raw.githubusercontent.com/Ayvako/Genshin_Calculator/master/Genshin%20Calculator/GameData";
-
-    private const string GitHubApiBase = "https://api.github.com/repos/Ayvako/Genshin_Calculator/contents/Genshin%20Calculator/GameData";
 
     private const string NoInternet = "No internet connection, using local data...";
-
-    private const int ProgressDelayMs = 200;
 
     private readonly HttpClient httpClient;
 
     private readonly string localBase;
+
+    private readonly string apiUrl;
+
+    private readonly string zipUrl;
+
+    private readonly string targetPrefix;
 
     public DataUpdateService(IHttpClientFactory httpClientFactory, IConfiguration config)
     {
         this.httpClient = httpClientFactory.CreateClient();
         this.httpClient.Timeout = TimeSpan.FromSeconds(10);
         this.httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "C# App");
+
         this.localBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config["Paths:GameData"] ?? "Data/GameData");
+
+        string owner = config["GitHubSettings:Owner"] ?? "Ayvako";
+        string repo = config["GitHubSettings:Repo"] ?? "Genshin_Calculator";
+        string branch = config["GitHubSettings:Branch"] ?? "master";
+        string internalPath = config["GitHubSettings:InternalPath"] ?? "Genshin Calculator/GameData";
+
+        this.apiUrl = $"https://api.github.com/repos/{owner}/{repo}/branches/{branch}";
+        this.zipUrl = $"https://github.com/{owner}/{repo}/archive/refs/heads/{branch}.zip";
+
+        this.targetPrefix = $"{repo}-{branch}/{internalPath}/";
     }
 
-    public async Task UpdateAllDataAsync(IProgress<(string Message, double Percent)>? progress = null)
+    public async Task UpdateAllDataAsync(IProgress<(string Message, double Percent)>? progress = null, double fromPercent = 0, double toPercent = 100)
     {
         try
         {
-            progress?.Report(("Syncing characters data...", 10));
-            await Task.Delay(ProgressDelayMs);
-            await this.UpdateJsonFileAsync("Json/Characters.json", progress, 20);
+            string? onlineSha = await this.GetLatestCommitShaAsync();
 
-            progress?.Report(("Syncing enemies data...", 20));
-            await Task.Delay(ProgressDelayMs);
-            await this.UpdateJsonFileAsync("Json/Enemies.json", progress, 21);
+            string versionFile = Path.Combine(this.localBase, "version.txt");
+            string localSha = File.Exists(versionFile) ? await File.ReadAllTextAsync(versionFile) : string.Empty;
 
-            progress?.Report(("Syncing material images...", 21));
-            await Task.Delay(ProgressDelayMs);
-            await this.SyncFolderViaApiAsync("Images/Materials", progress, fromPercent: 21, toPercent: 70);
-
-            progress?.Report(("Syncing character images...", 71));
-            await Task.Delay(ProgressDelayMs);
-            await this.SyncImagesFromJsonAsync("Json/Characters.json", progress, fromPercent: 71, toPercent: 95);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error Update: {ex.Message}");
-        }
-    }
-
-    private async Task SyncImagesFromJsonAsync(string jsonRelativePath, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
-    {
-        string localJsonPath = Path.Combine(this.localBase, jsonRelativePath);
-        if (!File.Exists(localJsonPath))
-        {
-            return;
-        }
-
-        var json = JObject.Parse(await File.ReadAllTextAsync(localJsonPath));
-        var characters = json["Characters"]?.ToObject<List<JObject>>();
-        if (characters == null)
-        {
-            return;
-        }
-
-        var toDownload = new List<(string Label, string Url, string LocalPath)>();
-
-        foreach (var character in characters)
-        {
-            string? name = character["Name"]?.ToString();
-            if (string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(onlineSha) && onlineSha == localSha)
             {
-                continue;
-            }
-
-            string imgRelative = $"Images/Characters/{name}.png";
-            string localImgPath = Path.Combine(this.localBase, imgRelative);
-
-            if (!File.Exists(localImgPath))
-            {
-                toDownload.Add(($"{name}.png", $"{GitHubRawBase}/{imgRelative}", localImgPath));
-            }
-        }
-
-        if (toDownload.Count == 0)
-        {
-            progress?.Report(("All characters are up to date...", toPercent));
-            return;
-        }
-
-        await this.DownloadBatchAsync(toDownload, progress, fromPercent, toPercent);
-    }
-
-    private async Task SyncFolderViaApiAsync(string folderRelativePath, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
-    {
-        try
-        {
-            string apiUrl = $"{GitHubApiBase}/{folderRelativePath}";
-            string response = await this.httpClient.GetStringAsync(apiUrl);
-            var files = JArray.Parse(response);
-
-            var toDownload = new List<(string Label, string Url, string LocalPath)>();
-
-            foreach (var file in files)
-            {
-                if (file["type"]?.ToString() != "file")
-                {
-                    continue;
-                }
-
-                string? fileName = file["name"]?.ToString();
-                string? downloadUrl = file["download_url"]?.ToString();
-
-                if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(downloadUrl))
-                {
-                    continue;
-                }
-
-                string localFilePath = Path.Combine(this.localBase, folderRelativePath, fileName);
-                if (!File.Exists(localFilePath))
-                {
-                    toDownload.Add((fileName, downloadUrl, localFilePath));
-                }
-            }
-
-            if (toDownload.Count == 0)
-            {
-                progress?.Report(("All materials are up to date...", toPercent));
+                progress?.Report(("Data is already up to date.", toPercent));
                 return;
             }
 
-            await this.DownloadBatchAsync(toDownload, progress, fromPercent, toPercent);
+            await this.DownloadAndExtractZipAsync(progress, fromPercent, toPercent);
+
+            if (!string.IsNullOrEmpty(onlineSha))
+            {
+                await File.WriteAllTextAsync(versionFile, onlineSha);
+            }
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"No internet, skipping folder {folderRelativePath}: {ex.Message}");
+            Debug.WriteLine($"Update failed: {ex.Message}");
             progress?.Report((NoInternet, toPercent));
         }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Failed to sync folder {folderRelativePath}: {ex.Message}");
-        }
     }
 
-    private async Task UpdateJsonFileAsync(string relativePath, IProgress<(string Message, double Percent)>? progress, double percent)
-    {
-        string url = $"{GitHubRawBase}/{relativePath}";
-        string localPath = Path.Combine(this.localBase, relativePath);
-
-        Directory.CreateDirectory(Path.GetDirectoryName(localPath)!);
-
-        try
-        {
-            string content = await this.httpClient.GetStringAsync(url);
-            await File.WriteAllTextAsync(localPath, content);
-        }
-        catch (HttpRequestException ex)
-        {
-            Debug.WriteLine($"No internet, skipping {relativePath}: {ex.Message}");
-            progress?.Report((NoInternet, percent));
-        }
-    }
-
-    private async Task DownloadBatchAsync(List<(string Label, string Url, string LocalPath)> items, IProgress<(string Message, double Percent)>? progress, double fromPercent, double toPercent)
-    {
-        for (int i = 0; i < items.Count; i++)
-        {
-            var (label, url, localPath) = items[i];
-            double percent = fromPercent + ((i + 1.0) / items.Count * (toPercent - fromPercent));
-            progress?.Report(($"Downloading: {label} ({i + 1}/{items.Count})", percent));
-            await this.DownloadFileAsync(url, localPath);
-        }
-    }
-
-    private async Task DownloadFileAsync(string url, string localPath)
+    private async Task DownloadAndExtractZipAsync(IProgress<(string Message, double Percent)>? progress, double from, double to)
     {
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(localPath)!);
-            byte[] data = await this.httpClient.GetByteArrayAsync(url);
-            await File.WriteAllBytesAsync(localPath, data);
+            progress?.Report(("Downloading updates...", from + ((to - from) * 0.1)));
+
+            using Stream stream = await this.httpClient.GetStreamAsync(this.zipUrl);
+            using ZipArchive archive = new(stream, ZipArchiveMode.Read);
+
+            var entries = archive.Entries
+                .Where(e => e.FullName.StartsWith(this.targetPrefix) && !string.IsNullOrEmpty(e.Name))
+                .ToList();
+
+            if (entries.Count == 0)
+            {
+                Debug.WriteLine($"No files found for prefix: {this.targetPrefix}");
+                return;
+            }
+
+            int completed = 0;
+            double range = to - from;
+            foreach (var entry in entries)
+            {
+                string relativePath = entry.FullName.Substring(this.targetPrefix.Length);
+                string destinationPath = Path.Combine(this.localBase, relativePath);
+
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                entry.ExtractToFile(destinationPath, overwrite: true);
+
+                completed++;
+                double percent = from + (range * completed / entries.Count);
+                progress?.Report(($"Extracting: {entry.Name}", percent));
+            }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Failed to download {url}: {ex.Message}");
+            Debug.WriteLine($"Download/Extract error: {ex.Message}");
+            throw;
+        }
+    }
+
+    private async Task<string?> GetLatestCommitShaAsync()
+    {
+        try
+        {
+            var response = await this.httpClient.GetStringAsync(this.apiUrl);
+            var json = Newtonsoft.Json.Linq.JObject.Parse(response);
+            return json["commit"]?["sha"]?.ToString();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Failed to fetch version: {ex.Message}");
+            return null;
         }
     }
 }

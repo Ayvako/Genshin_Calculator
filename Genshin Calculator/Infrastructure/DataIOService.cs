@@ -36,7 +36,7 @@ internal class DataIOService : IDataIOService
         progress?.Report(("Checking for updates...", 5));
         await Task.Delay(200);
 
-        await this.updater.UpdateAllDataAsync(progress);
+        await this.updater.UpdateAllDataAsync(progress, fromPercent: 10, toPercent: 95);
 
         progress?.Report(("Loading game data...", 96));
         await Task.Delay(200);

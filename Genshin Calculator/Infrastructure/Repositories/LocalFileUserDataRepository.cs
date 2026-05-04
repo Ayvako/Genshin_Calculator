@@ -3,8 +3,8 @@ using Genshin_Calculator.Core.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.IO;
-using System.Management.Automation.Language;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
@@ -19,7 +19,7 @@ public class LocalFileUserDataRepository : IUserDataRepository
 
     public bool FileExists => File.Exists(this.exportFilePath) || File.Exists(this.exportFilePath + ".bak");
 
-    public void Save(Inventory inventory)
+    public async Task SaveAsync(Inventory inventory)
     {
         var directory = Path.GetDirectoryName(this.exportFilePath);
         if (!string.IsNullOrEmpty(directory))
@@ -32,12 +32,12 @@ public class LocalFileUserDataRepository : IUserDataRepository
 
         var json = Serialize(inventory);
 
-        using (var fs = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None))
+        using (var fs = new FileStream(temp, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
         using (var sw = new StreamWriter(fs, Encoding.UTF8))
         {
-            sw.Write(json);
-            sw.Flush();
-            fs.Flush(true);
+            await sw.WriteAsync(json);
+            await sw.FlushAsync();
+            await fs.FlushAsync();
         }
 
         if (File.Exists(this.exportFilePath))

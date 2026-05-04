@@ -7,5 +7,5 @@ public interface IDataIOService
 {
     Task ImportAsync(IProgress<(string Message, double Percent)>? progress = null);
 
-    void Save();
+    Task SaveAsync();
 }

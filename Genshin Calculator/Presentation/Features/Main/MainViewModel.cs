@@ -187,9 +187,9 @@ public partial class MainViewModel : ObservableRecipient,
 
                     charVm.RequiredMaterials = InventoryService.SortMaterialsForDisplay(materials);
                 }
-
-                this.dataIOService.Save();
             });
+
+            await this.dataIOService.SaveAsync();
         }
         finally
         {

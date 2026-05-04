@@ -96,15 +96,15 @@ internal class DataIOService : IDataIOService
         }
     }
 
-    public void Save()
+    public async Task SaveAsync()
     {
         if (!this.isSuccessfullyLoaded)
         {
-            Debug.WriteLine("⚠️ Save blocked: Data was not loaded successfully. Avoiding data loss.");
+            Debug.WriteLine("⚠️ Save blocked: Data was not loaded successfully.");
             return;
         }
 
-        this.userData.Save(this.store.Inventory);
+        await this.userData.SaveAsync(this.store.Inventory);
     }
 
     private static void UpdateCharacters(List<Character> baseChars, List<Character> importedChars)

@@ -12,6 +12,7 @@ using Genshin_Calculator.Presentation.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation;
@@ -63,14 +64,15 @@ public partial class App : System.Windows.Application
         }
     }
 
+    protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
+    {
+        base.OnSessionEnding(e);
+        this.HandleApplicationExit();
+    }
+
     protected override void OnExit(ExitEventArgs e)
     {
-        if (this.isInitialized)
-        {
-            var dataService = Services.GetService<IDataIOService>();
-            dataService?.Save();
-        }
-
+        this.HandleApplicationExit();
         base.OnExit(e);
     }
 
@@ -109,5 +111,17 @@ public partial class App : System.Windows.Application
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainWindow>();
         services.AddTransient<ToolsPanelViewModel>();
+    }
+
+    private void HandleApplicationExit()
+    {
+        if (this.isInitialized)
+        {
+            var dataService = Services.GetService<IDataIOService>();
+            if (dataService != null)
+            {
+                Task.Run(() => dataService.SaveAsync()).GetAwaiter().GetResult();
+            }
+        }
     }
 }

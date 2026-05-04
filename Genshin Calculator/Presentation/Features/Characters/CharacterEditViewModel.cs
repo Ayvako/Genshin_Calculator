@@ -146,34 +146,36 @@ public partial class CharacterEditViewModel : ObservableObject, IDisposable
             return;
         }
 
-        this.WithUpdate(() =>
+        this.WithUpdate(() => this.ApplyTalentConstraints(talent, e.PropertyName));
+    }
+
+    private void ApplyTalentConstraints(Skill talent, string? propertyName)
+    {
+        bool isCurrent = propertyName == nameof(Skill.CurrentLevel);
+        int targetLevel = isCurrent ? talent.CurrentLevel : talent.DesiredLevel;
+
+        if (isCurrent && talent.CurrentLevel > talent.DesiredLevel)
         {
-            bool isCurrent = e.PropertyName == nameof(Skill.CurrentLevel);
-            int targetLevel = isCurrent ? talent.CurrentLevel : talent.DesiredLevel;
+            talent.DesiredLevel = talent.CurrentLevel;
+        }
+        else if (!isCurrent && talent.DesiredLevel < talent.CurrentLevel)
+        {
+            talent.CurrentLevel = talent.DesiredLevel;
+        }
 
-            if (isCurrent && talent.CurrentLevel > talent.DesiredLevel)
-            {
-                talent.DesiredLevel = talent.CurrentLevel;
-            }
-            else if (!isCurrent && talent.DesiredLevel < talent.CurrentLevel)
-            {
-                talent.CurrentLevel = talent.DesiredLevel;
-            }
+        var required = this.rules.GetRequiredLevel(targetLevel);
 
-            var required = this.rules.GetRequiredLevel(targetLevel);
+        if (this.Editable.DesiredLevel.CompareTo(required) < 0)
+        {
+            this.Editable.DesiredLevel = required;
+        }
 
-            if (this.Editable.DesiredLevel.CompareTo(required) < 0)
-            {
-                this.Editable.DesiredLevel = required;
-            }
+        if (isCurrent && this.Editable.CurrentLevel.CompareTo(required) < 0)
+        {
+            this.Editable.CurrentLevel = required;
+        }
 
-            if (isCurrent && this.Editable.CurrentLevel.CompareTo(required) < 0)
-            {
-                this.Editable.CurrentLevel = required;
-            }
-
-            this.MaxTalentLevel = this.rules.GetMaxTalentLevel(this.Editable.CurrentLevel);
-        });
+        this.MaxTalentLevel = this.rules.GetMaxTalentLevel(this.Editable.CurrentLevel);
     }
 
     private void OnHeroPropertyChanged(object? sender, PropertyChangedEventArgs e)

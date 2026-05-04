@@ -1,5 +1,5 @@
-﻿using Genshin_Calculator.Application.Internal;
-using Genshin_Calculator.Application.Services.MaterialProviders;
+﻿using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Application.State;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;

@@ -1,8 +1,7 @@
-﻿using Genshin_Calculator.Application.Internal;
-using Genshin_Calculator.Application.Services;
+﻿using Genshin_Calculator.Application.Services;
 using Genshin_Calculator.Application.Services.MaterialProviders;
+using Genshin_Calculator.Application.State;
 using Genshin_Calculator.Core.Interfaces;
-using Genshin_Calculator.Core.Services;
 using Genshin_Calculator.Infrastructure;
 using Genshin_Calculator.Infrastructure.Repositories;
 using Genshin_Calculator.Presentation.Features.Main;

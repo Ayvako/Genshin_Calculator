@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Genshin_Calculator.Core.Services;
+namespace Genshin_Calculator.Application.Services;
 
 public class DefaultTalentLevelRules : ITalentLevelRules
 {
@@ -22,7 +22,7 @@ public class DefaultTalentLevelRules : ITalentLevelRules
 
     public int GetMaxTalentLevel(Level level)
     {
-        var result = this.rules
+        var result = rules
             .Where(r => IsApplicable(r.Level, level))
             .OrderByDescending(r => r.Level.Value)
             .ThenByDescending(r => r.Level.IsAscended)
@@ -38,7 +38,7 @@ public class DefaultTalentLevelRules : ITalentLevelRules
             return new Level(1, false);
         }
 
-        return this.rules
+        return rules
             .OrderBy(r => r.Level.Value)
             .ThenBy(r => r.Level.IsAscended)
             .First(r => r.Limit >= talentLevel)
@@ -46,7 +46,7 @@ public class DefaultTalentLevelRules : ITalentLevelRules
     }
 
     public int ClampTalentLevel(Level level, int talentLevel)
-    => Math.Min(talentLevel, this.GetMaxTalentLevel(level));
+    => Math.Min(talentLevel, GetMaxTalentLevel(level));
 
     private static bool IsApplicable(Level rule, Level current)
     {

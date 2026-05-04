@@ -1,6 +1,6 @@
 ﻿using Genshin_Calculator.Core.Models;
 
-namespace Genshin_Calculator.Application.Internal;
+namespace Genshin_Calculator.Application.State;
 
 internal sealed class InventoryStore
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Genshin_Calculator.Core.Interfaces;
 
-public interface IDataRepository
+public interface IGameDataRepository
 {
     List<Character> GetBaseCharacters();
 

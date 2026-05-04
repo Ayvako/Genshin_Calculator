@@ -17,13 +17,13 @@ internal class DataIOService : IDataIOService
 
     private readonly InventoryStore store;
 
-    private readonly IDataRepository data;
+    private readonly IGameDataRepository data;
 
     private readonly IUserDataRepository userData;
 
     private bool isSuccessfullyLoaded = false;
 
-    public DataIOService(InventoryStore store, IDataRepository staticData, IUserDataRepository userData, IDataUpdateService updater)
+    public DataIOService(InventoryStore store, IGameDataRepository staticData, IUserDataRepository userData, IDataUpdateService updater)
     {
         this.store = store;
         this.data = staticData;

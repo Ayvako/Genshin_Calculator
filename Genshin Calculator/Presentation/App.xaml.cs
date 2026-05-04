@@ -80,7 +80,7 @@ public partial class App : System.Windows.Application
         services.AddHttpClient();
         services.AddSingleton(Configuration);
 
-        services.AddSingleton<IDataRepository, JsonGameDataRepository>();
+        services.AddSingleton<IGameDataRepository, JsonGameDataRepository>();
         services.AddSingleton<IUserDataRepository, LocalFileUserDataRepository>();
         services.AddSingleton<IEmbeddedDataRepository, EmbeddedResourceRepository>();
         services.AddSingleton<IDataUpdateService, DataUpdateService>();

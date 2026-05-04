@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Genshin_Calculator.Infrastructure.Repositories;
 
-public class JsonGameDataRepository : IDataRepository
+public class JsonGameDataRepository : IGameDataRepository
 {
     private readonly string basePath;
 

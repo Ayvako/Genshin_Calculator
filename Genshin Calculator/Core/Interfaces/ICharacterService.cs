@@ -1,17 +1,18 @@
 ﻿using Genshin_Calculator.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Core.Interfaces;
 
 public interface ICharacterService
 {
-    void UpdateCharacter(Character character);
+    Task UpdateCharacterAsync(Character character);
 
-    void ToggleCharacterActivity(Character character);
+    Task ToggleCharacterActivityAsync(Character character);
 
-    void DeleteCharacter(Character character);
+    Task DeleteCharacterAsync(Character character);
 
-    void AddCharacter(Character character);
+    Task AddCharacterAsync(Character character);
 
     IReadOnlyList<Character> GetCharacters();
 }

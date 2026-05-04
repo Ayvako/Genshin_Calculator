@@ -8,9 +8,13 @@ using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Services;
 using GongSolutions.Wpf.DragDrop;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Genshin_Calculator.Presentation.Features.Main;
@@ -22,6 +26,8 @@ public partial class MainViewModel : ObservableRecipient,
     IRecipient<DimmingMessage>,
     IDropTarget
 {
+    private readonly SemaphoreSlim syncLock = new(1, 1);
+
     private readonly IInventoryService inventoryService;
 
     private readonly IViewService dialogService;
@@ -44,9 +50,10 @@ public partial class MainViewModel : ObservableRecipient,
         this.dataIOService = dataIOService;
         this.characterService = characterService;
 
+        System.Windows.Data.BindingOperations.EnableCollectionSynchronization(this.Characters, new object());
         this.IsActive = true;
-        this.RefreshCharacters();
-        this.RefreshMaterialsAndSave();
+
+        _ = this.InitializeAsync();
     }
 
     public ObservableCollection<CharacterCardViewModel> Characters { get; } = [];
@@ -60,7 +67,7 @@ public partial class MainViewModel : ObservableRecipient,
         }
     }
 
-    public void Drop(IDropInfo dropInfo)
+    public async void Drop(IDropInfo dropInfo)
     {
         if (dropInfo.Data is not CharacterCardViewModel sourceItem ||
             dropInfo.TargetItem is not CharacterCardViewModel targetItem)
@@ -77,37 +84,45 @@ public partial class MainViewModel : ObservableRecipient,
         }
 
         this.Characters.Move(oldIndex, newIndex);
+
         this.UpdatePriorities();
 
-        this.RefreshMaterialsAndSave();
+        await this.RefreshMaterialsAndSaveAsync();
     }
 
-    public void Receive(CharacterChangedMessage message)
+    public async void Receive(CharacterChangedMessage message)
     {
-        var character = message.Value;
-
-        if (character.Deleted)
+        try
         {
-            if (this.RemoveCharacter(character))
+            var character = message.Value;
+
+            if (character.Deleted)
             {
-                this.RefreshMaterialsAndSave();
+                if (this.RemoveCharacter(character))
+                {
+                    await this.RefreshMaterialsAndSaveAsync();
+                }
+
+                return;
             }
 
-            return;
-        }
+            if (!this.Characters.Any(c => c.Character == character))
+            {
+                await this.RefreshCharactersAsync();
+                return;
+            }
 
-        if (!this.Characters.Any(c => c.Character == character))
+            await this.RefreshMaterialsAndSaveAsync();
+        }
+        catch (Exception ex)
         {
-            this.RefreshCharacters();
-            return;
+            Debug.WriteLine($"Error processing CharacterChangedMessage: {ex.Message}");
         }
-
-        this.RefreshMaterialsAndSave();
     }
 
-    public void Receive(InventoryChangedMessage message) => this.RefreshMaterialsAndSave();
+    public async void Receive(InventoryChangedMessage message) => await this.RefreshMaterialsAndSaveAsync();
 
-    public void Receive(RefreshMaterialsRequestMessage message) => this.RefreshMaterialsAndSave();
+    public async void Receive(RefreshMaterialsRequestMessage message) => await this.RefreshMaterialsAndSaveAsync();
 
     public void Receive(DimmingMessage message) => this.IsDimmed = message.IsEnabled;
 
@@ -119,36 +134,66 @@ public partial class MainViewModel : ObservableRecipient,
         }
     }
 
-    private void RefreshCharacters()
+    private async Task RefreshCharactersAsync()
     {
-        this.Characters.Clear();
-
-        var inventory = this.inventoryService.GetInventory();
-
-        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
-
-        foreach (var character in inventory.NotDeletedCharacters.OrderBy(c => c.Priority))
+        await this.syncLock.WaitAsync();
+        try
         {
-            var materials = this.GetMaterials(character, missingByCharacter);
-            var sortedMaterials = InventoryService.SortMaterialsForDisplay(materials);
-            this.Characters.Add(this.CreateCharacterViewModel(character, sortedMaterials));
+            var (notDeletedCharacters, missingByCharacter) = await Task.Run(() =>
+            {
+                var inventory = this.inventoryService.GetInventory();
+                var missing = this.inventoryService.CalculateMissingMaterials(inventory);
+                var chars = inventory.NotDeletedCharacters.OrderBy(c => c.Priority).ToList();
+                return (chars, missing);
+            });
+
+            var viewModels = await Task.Run(() =>
+            {
+                return notDeletedCharacters.Select(character =>
+                {
+                    var materials = this.GetMaterials(character, missingByCharacter);
+                    var sorted = InventoryService.SortMaterialsForDisplay(materials);
+                    return this.CreateCharacterViewModel(character, sorted);
+                }).ToList();
+            });
+
+            this.Characters.Clear();
+            foreach (var vm in viewModels)
+            {
+                this.Characters.Add(vm);
+            }
+        }
+        finally
+        {
+            this.syncLock.Release();
         }
     }
 
-    private void RefreshMaterialsAndSave()
+    private async Task RefreshMaterialsAndSaveAsync()
     {
-        this.RefreshAllMaterials();
-        this.dataIOService.Save();
-    }
-
-    private void RefreshAllMaterials()
-    {
-        var inventory = this.inventoryService.GetInventory();
-        var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
-
-        foreach (var charVm in this.Characters)
+        await this.syncLock.WaitAsync();
+        try
         {
-            charVm.RequiredMaterials = InventoryService.SortMaterialsForDisplay(this.GetMaterials(charVm.Character, missingByCharacter));
+            var characterVms = this.Characters.ToList();
+
+            await Task.Run(() =>
+            {
+                var inventory = this.inventoryService.GetInventory();
+                var missingByCharacter = this.inventoryService.CalculateMissingMaterials(inventory);
+
+                foreach (var charVm in characterVms)
+                {
+                    var materials = this.GetMaterials(charVm.Character, missingByCharacter);
+
+                    charVm.RequiredMaterials = InventoryService.SortMaterialsForDisplay(materials);
+                }
+
+                this.dataIOService.Save();
+            });
+        }
+        finally
+        {
+            this.syncLock.Release();
         }
     }
 
@@ -184,5 +229,11 @@ public partial class MainViewModel : ObservableRecipient,
 
         this.Characters.Remove(vm);
         return true;
+    }
+
+    private async Task InitializeAsync()
+    {
+        await this.RefreshCharactersAsync();
+        await this.RefreshMaterialsAndSaveAsync();
     }
 }

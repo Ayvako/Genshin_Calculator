@@ -95,7 +95,7 @@ internal class DataUpdateService : IDataUpdateService
             double range = to - from;
             foreach (var entry in entries)
             {
-                string relativePath = entry.FullName.Substring(this.targetPrefix.Length);
+                string relativePath = entry.FullName[this.targetPrefix.Length..];
                 string destinationPath = Path.Combine(this.localBase, relativePath);
 
                 Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);

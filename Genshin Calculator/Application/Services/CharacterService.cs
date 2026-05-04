@@ -4,6 +4,8 @@ using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Application.Services;
 
@@ -11,42 +13,55 @@ public class CharacterService : ICharacterService
 {
     private readonly IInventoryService inventoryService;
 
+    private readonly SemaphoreSlim semaphore = new(1, 1);
+
     public CharacterService(IInventoryService inventoryService)
     {
         this.inventoryService = inventoryService;
     }
 
-    public void UpdateCharacter(Character character)
+    public async Task UpdateCharacterAsync(Character character)
     {
         WeakReferenceMessenger.Default.Send(new CharacterChangedMessage(character));
+        await Task.CompletedTask;
     }
 
-    public void ToggleCharacterActivity(Character character)
+    public async Task ToggleCharacterActivityAsync(Character character)
     {
         character.Activated = !character.Activated;
-        this.UpdateCharacter(character);
+        await this.UpdateCharacterAsync(character);
     }
 
-    public void DeleteCharacter(Character character)
+    public async Task DeleteCharacterAsync(Character character)
     {
         character.Deleted = true;
         character.Reset();
-        this.UpdateCharacter(character);
+        await this.UpdateCharacterAsync(character);
     }
 
-    public void AddCharacter(Character character)
+    public async Task AddCharacterAsync(Character character)
     {
-        character.Deleted = false;
-        character.Activated = true;
+        await this.semaphore.WaitAsync();
+        try
+        {
+            character.Deleted = false;
+            character.Activated = true;
 
-        var allCharacters = this.GetCharacters();
-        int maxPriority = allCharacters.Any()
-            ? allCharacters.Max(c => c.Priority)
-            : 0;
+            await Task.Run(async () =>
+            {
+                var allCharacters = this.GetCharacters().ToList();
+                int maxPriority = allCharacters.Count > 0
+                    ? allCharacters.Max(c => c.Priority)
+                    : 0;
 
-        character.Priority = maxPriority + 1;
-
-        this.UpdateCharacter(character);
+                character.Priority = maxPriority + 1;
+                await this.UpdateCharacterAsync(character);
+            });
+        }
+        finally
+        {
+            this.semaphore.Release();
+        }
     }
 
     public IReadOnlyList<Character> GetCharacters()

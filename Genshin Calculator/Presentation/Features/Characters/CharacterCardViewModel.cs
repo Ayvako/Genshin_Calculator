@@ -8,6 +8,7 @@ using Genshin_Calculator.Models;
 using Genshin_Calculator.Presentation.Services;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 
@@ -73,7 +74,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     }
 
     [RelayCommand]
-    private void Ascend()
+    private async Task AscendAsync()
     {
         bool? isConfirmed = this.dialogService.ShowUpgradeCharacterDialog(this.Character);
 
@@ -81,21 +82,21 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
         {
             this.inventoryService.Upgrade(this.Character);
 
-            this.characterService.UpdateCharacter(this.Character);
+            await this.characterService.UpdateCharacterAsync(this.Character);
 
             Debug.WriteLine("Upgrade completed and saved.");
         }
     }
 
     [RelayCommand]
-    private void ToggleActive()
+    private async Task ToggleActiveAsync()
     {
-        this.characterService.ToggleCharacterActivity(this.Character);
+        await this.characterService.ToggleCharacterActivityAsync(this.Character);
     }
 
     [RelayCommand]
-    private void Remove()
+    private async Task RemoveAsync()
     {
-        this.characterService.DeleteCharacter(this.Character);
+        await this.characterService.DeleteCharacterAsync(this.Character);
     }
 }

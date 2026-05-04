@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Interfaces;
@@ -10,9 +12,13 @@ using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 
-public partial class CharacterSelectorViewModel : ObservableObject
+public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
 {
     private readonly ICharacterService characterService;
+
+    private bool disposed;
+
+    private CancellationTokenSource? filterCts;
 
     [ObservableProperty]
     private string? searchQuery;
@@ -29,13 +35,11 @@ public partial class CharacterSelectorViewModel : ObservableObject
     [ObservableProperty]
     private bool isSortByRarity = false;
 
-    public CharacterSelectorViewModel(ICharacterService characterServise)
+    public CharacterSelectorViewModel(ICharacterService characterService)
     {
-        this.characterService = characterServise;
-        var deletedChars = this.characterService.GetCharacters().Where(c => c.Deleted);
-        this.AvailableCharacters = new ObservableCollection<Character>(deletedChars);
+        this.characterService = characterService;
+        this.AvailableCharacters = [];
         this.FilteredCharacters = [];
-        this.ApplyFilter();
     }
 
     public event EventHandler<bool>? CloseRequested;
@@ -57,77 +61,133 @@ public partial class CharacterSelectorViewModel : ObservableObject
 
     public bool IsOrangeRaritySelected => this.SelectedCharactersRarities.Contains(MaterialRarity.Orange);
 
-    partial void OnIsSortByRarityChanged(bool value) => ApplyFilter();
+    [RelayCommand]
+    public async Task InitializeAsync()
+    {
+        var deletedChars = this.characterService.GetCharacters().Where(c => c.Deleted).ToList();
 
-    partial void OnSearchQueryChanged(string? value) => ApplyFilter();
+        this.AvailableCharacters.Clear();
+        foreach (var c in deletedChars)
+        {
+            this.AvailableCharacters.Add(c);
+        }
 
-    partial void OnSelectedElementsChanged(ObservableCollection<Element> value) => ApplyFilter();
+        await this.ApplyFilterAsync();
+    }
 
-    partial void OnSelectedWeaponsChanged(ObservableCollection<WeaponType> value) => ApplyFilter();
+    public void Dispose()
+    {
+        this.Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!this.disposed)
+        {
+            if (disposing)
+            {
+                this.filterCts?.Cancel();
+                this.filterCts?.Dispose();
+            }
+
+            this.disposed = true;
+        }
+    }
+
+    partial void OnIsSortByRarityChanged(bool value) => _ = ApplyFilterAsync();
+
+    partial void OnSearchQueryChanged(string? value) => _ = ApplyFilterAsync();
+
+    partial void OnSelectedElementsChanged(ObservableCollection<Element> value) => _ = ApplyFilterAsync();
+
+    partial void OnSelectedWeaponsChanged(ObservableCollection<WeaponType> value) => _ = ApplyFilterAsync();
 
     partial void OnSelectedCharactersRaritiesChanged(ObservableCollection<MaterialRarity> value)
     {
         this.NotifyRaritySelectionChanged();
-        this.ApplyFilter();
+        _ = ApplyFilterAsync();
     }
 
-    private void ApplyFilter()
+    private async Task ApplyFilterAsync()
     {
-        IEnumerable<Character> query = this.AvailableCharacters;
+        this.filterCts?.CancelAsync();
+        this.filterCts = new CancellationTokenSource();
+        var token = this.filterCts.Token;
 
-        // Поиск
-        if (!string.IsNullOrWhiteSpace(this.SearchQuery))
+        var search = this.SearchQuery;
+        var elements = this.SelectedElements.ToList();
+        var weapons = this.SelectedWeapons.ToList();
+        var rarities = this.SelectedCharactersRarities.ToList();
+        var sortByRarity = this.IsSortByRarity;
+        var available = this.AvailableCharacters.ToList();
+
+        try
         {
-            query = query.Where(c =>
-                c.Name.Contains(this.SearchQuery, StringComparison.OrdinalIgnoreCase));
+            var filteredResult = await Task.Run(
+                () =>
+            {
+                IEnumerable<Character> query = available;
+
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    query = query.Where(c =>
+                        c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (elements.Count > 0)
+                {
+                    query = query.Where(c => elements.Contains(c.Assets!.Element));
+                }
+
+                if (weapons.Count > 0)
+                {
+                    query = query.Where(c => weapons.Contains(c.Assets!.Weapon));
+                }
+
+                if (rarities.Count > 0)
+                {
+                    query = query.Where(c => rarities.Contains(c.Assets!.Rarity));
+                }
+
+                query = sortByRarity
+                    ? query.OrderByDescending(c => c.Assets!.Rarity).ThenBy(c => c.Name)
+                    : query.OrderBy(c => c.Name);
+
+                return query.ToList();
+            },
+                token);
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            this.FilteredCharacters.Clear();
+            foreach (var item in filteredResult)
+            {
+                this.FilteredCharacters.Add(item);
+            }
         }
-
-        // Элемент
-        if (this.SelectedElements.Count > 0)
+        catch (OperationCanceledException)
         {
-            query = query.Where(c =>
-                this.SelectedElements.Contains(c.Assets!.Element));
-        }
-
-        // Оружие
-        if (this.SelectedWeapons.Count > 0)
-        {
-            query = query.Where(c =>
-                this.SelectedWeapons.Contains(c.Assets!.Weapon));
-        }
-
-        // Редкость
-        if (this.SelectedCharactersRarities.Count > 0)
-        {
-            query = query.Where(c =>
-                this.SelectedCharactersRarities.Contains(c.Assets!.Rarity));
-        }
-
-        // Сортировка
-        query = this.IsSortByRarity
-            ? query.OrderByDescending(c => c.Assets!.Rarity).ThenBy(c => c.Name)
-            : query.OrderBy(c => c.Name);
-
-        this.FilteredCharacters.Clear();
-        foreach (var item in query)
-        {
-            this.FilteredCharacters.Add(item);
+            // Ignored - это ожидаемое исключение при отмене задачи
         }
     }
 
     [RelayCommand]
-    private void ToggleWeapon(WeaponType e)
+    private async Task ToggleWeaponAsync(WeaponType e)
     {
         if (!this.SelectedWeapons.Remove(e))
         {
             this.SelectedWeapons.Add(e);
         }
 
-        this.ApplyFilter();
+        await this.ApplyFilterAsync();
     }
 
     [RelayCommand]
-    private void ToggleRarity(MaterialRarity e)
+    private async Task ToggleRarityAsync(MaterialRarity e)
     {
         if (!this.SelectedCharactersRarities.Remove(e))
         {
@@ -135,24 +195,24 @@ public partial class CharacterSelectorViewModel : ObservableObject
         }
 
         this.NotifyRaritySelectionChanged();
-        this.ApplyFilter();
+        await this.ApplyFilterAsync();
     }
 
     [RelayCommand]
-    private void ToggleElement(Element e)
+    private async Task ToggleElementAsync(Element e)
     {
         if (!this.SelectedElements.Remove(e))
         {
             this.SelectedElements.Add(e);
         }
 
-        this.ApplyFilter();
+        await this.ApplyFilterAsync();
     }
 
     [RelayCommand]
-    private void SelectCharacter(Character character)
+    private async Task SelectCharacterAsync(Character character)
     {
-        this.characterService.AddCharacter(character);
+        await this.characterService.AddCharacterAsync(character);
         this.CloseRequested?.Invoke(this, true);
     }
 

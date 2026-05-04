@@ -7,6 +7,7 @@ using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
 
@@ -100,10 +101,10 @@ public partial class CharacterEditViewModel : ObservableObject, IDisposable
     private void Cancel() => this.RequestClose?.Invoke();
 
     [RelayCommand]
-    private void Save()
+    private async Task SaveAsync()
     {
         this.Character.ApplyChangesFrom(this.Editable);
-        this.characterService.UpdateCharacter(this.Character);
+        await this.characterService.UpdateCharacterAsync(this.Character);
         this.RequestClose?.Invoke();
     }
 

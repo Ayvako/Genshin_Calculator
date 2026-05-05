@@ -27,7 +27,7 @@ public partial class CharacterEditViewModel : ObservableObject, IDisposable
     private bool disposed;
 
     public CharacterEditViewModel(
-        Character character,
+        CharacterViewModel character,
         ICharacterService characterService,
         ITalentLevelRules rules)
     {
@@ -57,9 +57,9 @@ public partial class CharacterEditViewModel : ObservableObject, IDisposable
 
     public IReadOnlyList<Skill> Talents { get; }
 
-    public Character Character { get; }
+    public CharacterViewModel Character { get; }
 
-    public Character Editable { get; }
+    public CharacterViewModel Editable { get; }
 
     public void Dispose()
     {
@@ -102,8 +102,9 @@ public partial class CharacterEditViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private async Task SaveAsync()
     {
+        this.Editable.SyncToModel();
         this.Character.ApplyChangesFrom(this.Editable);
-        await this.characterService.UpdateCharacterAsync(this.Character);
+        await this.characterService.UpdateCharacterAsync(this.Character.Model);
         this.RequestClose?.Invoke();
     }
 

@@ -105,7 +105,7 @@ public partial class MainViewModel : ObservableRecipient,
                 return;
             }
 
-            if (!this.Characters.Any(c => c.Character == character))
+            if (!this.Characters.Any(c => c.Character.Model == character))
             {
                 await this.RefreshCharactersAsync();
                 return;
@@ -129,7 +129,7 @@ public partial class MainViewModel : ObservableRecipient,
     {
         for (int i = 0; i < this.Characters.Count; i++)
         {
-            this.Characters[i].Character.Priority = i;
+            this.Characters[i].Character.Model.Priority = i;
         }
     }
 
@@ -150,9 +150,10 @@ public partial class MainViewModel : ObservableRecipient,
             {
                 return notDeletedCharacters.Select(character =>
                 {
-                    var materials = this.GetMaterials(character, missingByCharacter);
+                    var characterVm = new CharacterViewModel(character);
+                    var materials = this.GetMaterials(characterVm, missingByCharacter);
                     var sorted = InventoryService.SortMaterialsForDisplay(materials);
-                    return this.CreateCharacterViewModel(character, sorted);
+                    return this.CreateCharacterViewModel(characterVm, sorted);
                 }).ToList();
             });
 
@@ -196,12 +197,12 @@ public partial class MainViewModel : ObservableRecipient,
         }
     }
 
-    private List<MaterialRequirement> GetMaterials(Character character, Dictionary<Character, List<MaterialRequirement>> missingByCharacter)
+    private List<MaterialRequirement> GetMaterials(CharacterViewModel character, Dictionary<Character, List<MaterialRequirement>> missingByCharacter)
     {
         if (!character.Activated)
         {
             return [.. this.inventoryService
-                .TotalCost(character)
+                .TotalCost(character.Model)
                 .Select(m => new MaterialRequirement(m, m.Amount)
                 {
                     MissingAmount = m.Amount,
@@ -210,17 +211,17 @@ public partial class MainViewModel : ObservableRecipient,
                 })];
         }
 
-        return missingByCharacter.TryGetValue(character, out var value) ? value : [];
+        return missingByCharacter.TryGetValue(character.Model, out var value) ? value : [];
     }
 
-    private CharacterCardViewModel CreateCharacterViewModel(Character character, List<MaterialRequirement> materials)
+    private CharacterCardViewModel CreateCharacterViewModel(CharacterViewModel character, List<MaterialRequirement> materials)
     {
         return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
     }
 
     private bool RemoveCharacter(Character character)
     {
-        var vm = this.Characters.FirstOrDefault(c => c.Character == character);
+        var vm = this.Characters.FirstOrDefault(c => c.Character.Model == character);
         if (vm is null)
         {
             return false;

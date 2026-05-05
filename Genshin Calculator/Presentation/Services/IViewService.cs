@@ -1,17 +1,18 @@
 ﻿using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Presentation.Features.Characters;
 using System.Collections.Generic;
 
 namespace Genshin_Calculator.Presentation.Services;
 
 public interface IViewService
 {
-    void ShowCharacterEdit(Character character);
+    void ShowCharacterEdit(CharacterViewModel character);
 
     void ShowCharacterSelector();
 
     void ShowInventory();
 
-    bool ShowUpgradeCharacterDialog(Character character);
+    bool ShowUpgradeCharacterDialog(CharacterViewModel character);
 
     void ShowAddMaterialsDialog(List<Material> list);
 

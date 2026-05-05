@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Services;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     private IReadOnlyCollection<Material> materialsToCraft = [];
 
     public UpgradeCharacterDialogViewModel(
-    Character character,
+    CharacterViewModel character,
     IViewService dialogService,
     IInventoryService inventoryService)
     {
@@ -38,7 +39,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
 
     public event Action? RequestClose;
 
-    public Character Character { get; }
+    public CharacterViewModel Character { get; }
 
     [RelayCommand]
     private void Save()
@@ -71,7 +72,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     [RelayCommand]
     private void OpenAddItem(Material material)
     {
-        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character, material);
+        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character.Model, material);
         this.viewService.ShowAddMaterialsDialog(relatedMaterials);
 
         this.RefreshMaterials();
@@ -82,7 +83,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
         var inventory = this.inventoryService.GetInventory();
         var missingMap = this.inventoryService.CalculateMissingMaterials(inventory);
 
-        if (missingMap.TryGetValue(this.Character, out var requirements))
+        if (missingMap.TryGetValue(this.Character.Model, out var requirements))
         {
             this.Materials = [.. requirements];
 

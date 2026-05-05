@@ -44,9 +44,9 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
 
     public event EventHandler<bool>? CloseRequested;
 
-    public ObservableCollection<Character> AvailableCharacters { get; }
+    public ObservableCollection<CharacterViewModel> AvailableCharacters { get; }
 
-    public ObservableCollection<Character> FilteredCharacters { get; }
+    public ObservableCollection<CharacterViewModel> FilteredCharacters { get; }
 
     public ObservableCollection<Element> ElementTypes { get; } = new(Enum.GetValues<Element>());
 
@@ -69,7 +69,7 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         this.AvailableCharacters.Clear();
         foreach (var c in deletedChars)
         {
-            this.AvailableCharacters.Add(c);
+            this.AvailableCharacters.Add(new CharacterViewModel(c));
         }
 
         await this.ApplyFilterAsync();
@@ -127,7 +127,7 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
             var filteredResult = await Task.Run(
                 () =>
             {
-                IEnumerable<Character> query = available;
+                IEnumerable<CharacterViewModel> query = available;
 
                 if (!string.IsNullOrWhiteSpace(search))
                 {
@@ -210,9 +210,9 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private async Task SelectCharacterAsync(Character character)
+    private async Task SelectCharacterAsync(CharacterViewModel character)
     {
-        await this.characterService.AddCharacterAsync(character);
+        await this.characterService.AddCharacterAsync(character.Model);
         this.CloseRequested?.Invoke(this, true);
     }
 

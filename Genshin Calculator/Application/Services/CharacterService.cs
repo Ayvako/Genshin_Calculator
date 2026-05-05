@@ -34,7 +34,6 @@ public class CharacterService : ICharacterService
 
     public async Task DeleteCharacterAsync(Character character)
     {
-        character.Deleted = true;
         character.Reset();
         await this.UpdateCharacterAsync(character);
     }

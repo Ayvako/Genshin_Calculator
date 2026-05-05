@@ -22,7 +22,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [ObservableProperty]
     private List<MaterialRequirement> requiredMaterials;
 
-    public CharacterCardViewModel(Character character, List<MaterialRequirement> requiredMaterials, IViewService dialogService, IInventoryService inventoryService, ICharacterService characterService)
+    public CharacterCardViewModel(CharacterViewModel character, List<MaterialRequirement> requiredMaterials, IViewService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
@@ -33,7 +33,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
         this.characterService = characterService;
     }
 
-    public Character Character { get; }
+    public CharacterViewModel Character { get; }
 
     public Assets Assets => this.Character.Assets!;
 
@@ -53,7 +53,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 
     public void Receive(CharacterChangedMessage message)
     {
-        if (message.Value == this.Character)
+        if (message.Value == this.Character.Model)
         {
             this.OnPropertyChanged(string.Empty);
         }
@@ -68,7 +68,7 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private void OpenAddItem(Material material)
     {
-        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character, material);
+        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character.Model, material);
         this.dialogService.ShowAddMaterialsDialog(relatedMaterials);
     }
 
@@ -79,9 +79,9 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
 
         if (isConfirmed == true)
         {
-            this.inventoryService.Upgrade(this.Character);
+            this.inventoryService.Upgrade(this.Character.Model);
 
-            await this.characterService.UpdateCharacterAsync(this.Character);
+            await this.characterService.UpdateCharacterAsync(this.Character.Model);
 
             Debug.WriteLine("Upgrade completed and saved.");
         }
@@ -90,12 +90,14 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     [RelayCommand]
     private async Task ToggleActiveAsync()
     {
-        await this.characterService.ToggleCharacterActivityAsync(this.Character);
+        await this.characterService.ToggleCharacterActivityAsync(this.Character.Model);
+        this.Character.Activated = this.Character.Model.Activated;
+        this.OnPropertyChanged(nameof(this.IsActivated));
     }
 
     [RelayCommand]
     private async Task RemoveAsync()
     {
-        await this.characterService.DeleteCharacterAsync(this.Character);
+        await this.characterService.DeleteCharacterAsync(this.Character.Model);
     }
 }

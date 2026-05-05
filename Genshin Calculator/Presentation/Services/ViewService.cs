@@ -51,7 +51,7 @@ public class ViewService : IViewService
         this.ShowDialogWithDimming(view);
     }
 
-    public void ShowCharacterEdit(Character character)
+    public void ShowCharacterEdit(CharacterViewModel character)
     {
         var vm = new CharacterEditViewModel(character, this.characterService, this.rules);
         var view = CreateDialog<CharacterEditView>(vm);
@@ -89,7 +89,7 @@ public class ViewService : IViewService
         this.ShowDialogWithDimming(view);
     }
 
-    public bool ShowUpgradeCharacterDialog(Character character)
+    public bool ShowUpgradeCharacterDialog(CharacterViewModel character)
     {
         var vm = new UpgradeCharacterDialogViewModel(character, this, this.inventoryService);
         var view = CreateDialog<UpgradeCharacterDialogView>(vm);

@@ -1,33 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Newtonsoft.Json;
+﻿namespace Genshin_Calculator.Core.Models;
 
-namespace Genshin_Calculator.Core.Models;
-
-public partial class Character : ObservableObject
+public class Character
 {
-    [ObservableProperty]
     private Level currentLevel = new(1, false);
 
-    [ObservableProperty]
     private Level desiredLevel = new(1, false);
-
-    [ObservableProperty]
-    private Skill autoAttack;
-
-    [ObservableProperty]
-    private Skill elemental;
-
-    [ObservableProperty]
-    private Skill burst;
-
-    [ObservableProperty]
-    private bool deleted = true;
-
-    [ObservableProperty]
-    private bool activated;
-
-    [ObservableProperty]
-    private int priority;
 
     public Character(string name, Assets assets)
     {
@@ -40,17 +17,54 @@ public partial class Character : ObservableObject
 
     public string Name { get; set; }
 
-    [JsonIgnore]
     public Assets? Assets { get; set; }
+
+    public Level CurrentLevel
+    {
+        get => this.currentLevel;
+
+        set
+        {
+            this.currentLevel = value;
+            if (value.CompareTo(this.DesiredLevel) > 0)
+            {
+                this.DesiredLevel = value;
+            }
+        }
+    }
+
+    public Level DesiredLevel
+    {
+        get => this.desiredLevel;
+
+        set
+        {
+            this.desiredLevel = value;
+            if (this.CurrentLevel.CompareTo(value) > 0)
+            {
+                this.CurrentLevel = value;
+            }
+        }
+    }
+
+    public Skill AutoAttack { get; set; }
+
+    public Skill Elemental { get; set; }
+
+    public Skill Burst { get; set; }
+
+    public bool Deleted { get; set; } = true;
+
+    public bool Activated { get; set; }
+
+    public int Priority { get; set; }
 
     public Character Clone()
     {
         var clone = (Character)this.MemberwiseClone();
-
         clone.AutoAttack = this.AutoAttack.Clone();
         clone.Elemental = this.Elemental.Clone();
         clone.Burst = this.Burst.Clone();
-
         return clone;
     }
 
@@ -58,25 +72,14 @@ public partial class Character : ObservableObject
     {
         this.CurrentLevel = new Level(1, false);
         this.DesiredLevel = new Level(1, false);
+        this.Deleted = true;
         this.Activated = false;
-
-        if (this.AutoAttack != null)
-        {
-            this.AutoAttack.CurrentLevel = 1;
-            this.AutoAttack.DesiredLevel = 1;
-        }
-
-        if (this.Elemental != null)
-        {
-            this.Elemental.CurrentLevel = 1;
-            this.Elemental.DesiredLevel = 1;
-        }
-
-        if (this.Burst != null)
-        {
-            this.Burst.CurrentLevel = 1;
-            this.Burst.DesiredLevel = 1;
-        }
+        this.AutoAttack.CurrentLevel = 1;
+        this.Elemental.CurrentLevel = 1;
+        this.Burst.CurrentLevel = 1;
+        this.AutoAttack.DesiredLevel = 1;
+        this.Elemental.DesiredLevel = 1;
+        this.Burst.DesiredLevel = 1;
     }
 
     public void ApplyChangesFrom(Character other)
@@ -86,24 +89,8 @@ public partial class Character : ObservableObject
         this.CurrentLevel = other.CurrentLevel;
         this.DesiredLevel = other.DesiredLevel;
         this.Priority = other.Priority;
-        this.AutoAttack.CopyLevelsFrom(other.AutoAttack!);
-        this.Elemental.CopyLevelsFrom(other.Elemental!);
-        this.Burst.CopyLevelsFrom(other.Burst!);
-    }
-
-    partial void OnCurrentLevelChanged(Level value)
-    {
-        if (value.CompareTo(this.DesiredLevel) > 0)
-        {
-            this.DesiredLevel = value;
-        }
-    }
-
-    partial void OnDesiredLevelChanged(Level value)
-    {
-        if (CurrentLevel.CompareTo(value) > 0)
-        {
-            this.CurrentLevel = value;
-        }
+        this.AutoAttack.CopyLevelsFrom(other.AutoAttack);
+        this.Elemental.CopyLevelsFrom(other.Elemental);
+        this.Burst.CopyLevelsFrom(other.Burst);
     }
 }

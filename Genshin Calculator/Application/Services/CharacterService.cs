@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Models;
+using Genshin_Calculator.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

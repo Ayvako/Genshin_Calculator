@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Genshin_Calculator.Core.Models;
 using Newtonsoft.Json;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public partial class Character : ObservableObject
 {

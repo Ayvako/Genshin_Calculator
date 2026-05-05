@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Models;
+using Genshin_Calculator.Core.Models;
 using System.ComponentModel;
 
 namespace Genshin_Calculator.Presentation.ViewModels;

@@ -2,7 +2,6 @@
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
-using Genshin_Calculator.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

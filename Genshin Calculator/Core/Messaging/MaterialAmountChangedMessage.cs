@@ -1,4 +1,4 @@
-﻿using Genshin_Calculator.Models;
+﻿using Genshin_Calculator.Core.Models;
 
 namespace Genshin_Calculator.Core.Messaging;
 

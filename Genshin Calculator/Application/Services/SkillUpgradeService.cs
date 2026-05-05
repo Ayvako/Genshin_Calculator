@@ -2,7 +2,6 @@
 using Genshin_Calculator.Application.Services.MaterialProviders;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
-using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Application.Services;
 

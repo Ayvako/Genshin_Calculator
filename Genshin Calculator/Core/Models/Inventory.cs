@@ -1,5 +1,4 @@
-﻿using Genshin_Calculator.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 

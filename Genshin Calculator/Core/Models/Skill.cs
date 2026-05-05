@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public partial class Skill : ObservableObject
 {

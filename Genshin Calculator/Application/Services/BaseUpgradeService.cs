@@ -2,7 +2,6 @@
 using Genshin_Calculator.Core.Helpers;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Core.Models.Enums;
-using Genshin_Calculator.Models;
 
 namespace Genshin_Calculator.Application.Services;
 

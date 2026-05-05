@@ -6,7 +6,7 @@ using Genshin_Calculator.Infrastructure.Helpers;
 using Newtonsoft.Json;
 using System;
 
-namespace Genshin_Calculator.Models;
+namespace Genshin_Calculator.Core.Models;
 
 public partial class Material : ObservableObject
 {

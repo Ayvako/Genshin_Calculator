@@ -29,7 +29,7 @@ public partial class InventoryViewModel : ObservableObject
         this.inventoryService = inventoryService;
 
         this.MaterialsView = CollectionViewSource.GetDefaultView(this.Materials);
-        this.MaterialsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(Material.Type)));
+        this.MaterialsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(MaterialViewModel.Type)));
         this.MaterialsView.Filter = this.FilterMaterials;
 
         this.FilterOptions =
@@ -45,7 +45,7 @@ public partial class InventoryViewModel : ObservableObject
 
     public List<InventoryFilterOption> FilterOptions { get; }
 
-    public BulkObservableCollection<Material> Materials { get; } = [];
+    public BulkObservableCollection<MaterialViewModel> Materials { get; } = [];
 
     public ICollectionView MaterialsView { get; }
 
@@ -54,9 +54,10 @@ public partial class InventoryViewModel : ObservableObject
         var inventory = this.inventoryService.GetInventory();
         this.originalMaterials = inventory.Materials;
 
-        var clonedMaterials = await Task.Run(() => inventory.Materials.Select(m => m.Clone()).ToList());
+        var viewModels = await Task.Run(() =>
+            inventory.Materials.Select(m => new MaterialViewModel(m.Clone())).ToList());
 
-        this.Materials.AddRange(clonedMaterials);
+        this.Materials.AddRange(viewModels);
     }
 
     partial void OnSelectedFilterChanged(InventoryFilterOption? value)
@@ -73,7 +74,7 @@ public partial class InventoryViewModel : ObservableObject
             return true;
         }
 
-        if (obj is Material material)
+        if (obj is MaterialViewModel material)
         {
             return material.Type == filterValue;
         }

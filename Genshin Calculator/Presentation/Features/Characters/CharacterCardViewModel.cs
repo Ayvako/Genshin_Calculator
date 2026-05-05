@@ -4,9 +4,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Presentation.Services;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Genshin_Calculator.Presentation.Features.Characters;
@@ -20,9 +22,9 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     private readonly ICharacterService characterService;
 
     [ObservableProperty]
-    private List<MaterialRequirement> requiredMaterials;
+    private List<MaterialRequirementViewModel> requiredMaterials;
 
-    public CharacterCardViewModel(CharacterViewModel character, List<MaterialRequirement> requiredMaterials, IViewService dialogService, IInventoryService inventoryService, ICharacterService characterService)
+    public CharacterCardViewModel(CharacterViewModel character, List<MaterialRequirementViewModel> requiredMaterials, IViewService dialogService, IInventoryService inventoryService, ICharacterService characterService)
     {
         this.Character = character;
         this.RequiredMaterials = requiredMaterials;
@@ -66,9 +68,13 @@ public partial class CharacterCardViewModel : ObservableRecipient, IRecipient<Ch
     }
 
     [RelayCommand]
-    private void OpenAddItem(Material material)
+    private void OpenAddItem(MaterialViewModel material)
     {
-        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character.Model, material);
+        var relatedMaterials = this.inventoryService
+            .GetRelatedMaterials(this.Character.Model, material.Model)
+            .Select(m => new MaterialViewModel(m))
+            .ToList();
+
         this.dialogService.ShowAddMaterialsDialog(relatedMaterials);
     }
 

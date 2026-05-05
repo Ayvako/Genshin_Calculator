@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
+using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Presentation.Services;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,10 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     private bool? dialogResult;
 
     [ObservableProperty]
-    private IReadOnlyCollection<MaterialRequirement> materials = [];
+    private IReadOnlyCollection<MaterialRequirementViewModel> materials = [];
 
     [ObservableProperty]
-    private IReadOnlyCollection<Material> materialsToCraft = [];
+    private IReadOnlyCollection<MaterialViewModel> materialsToCraft = [];
 
     public UpgradeCharacterDialogViewModel(
     CharacterViewModel character,
@@ -70,9 +71,13 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void OpenAddItem(Material material)
+    private void OpenAddItem(MaterialViewModel material)
     {
-        var relatedMaterials = this.inventoryService.GetRelatedMaterials(this.Character.Model, material);
+        var relatedMaterials = this.inventoryService
+            .GetRelatedMaterials(this.Character.Model, material.Model)
+            .Select(m => new MaterialViewModel(m))
+            .ToList();
+
         this.viewService.ShowAddMaterialsDialog(relatedMaterials);
 
         this.RefreshMaterials();
@@ -85,7 +90,7 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
 
         if (missingMap.TryGetValue(this.Character.Model, out var requirements))
         {
-            this.Materials = [.. requirements];
+            this.Materials = [.. requirements.Select(r => new MaterialRequirementViewModel(r))];
 
             this.UpdateMaterialsToCraft();
         }
@@ -94,13 +99,13 @@ public partial class UpgradeCharacterDialogViewModel : ObservableObject
     private void UpdateMaterialsToCraft()
     {
         this.MaterialsToCraft = [.. this.Materials
-            .SelectMany(m => m.AlchemyCosts)
-            .GroupBy(a => a.Name)
-            .Select(g =>
-            {
-                var first = g.First();
-
-                return new Material(g.Key, first.Type, first.Rarity, g.Sum(x => x.Amount));
-            })];
+        .SelectMany(m => m.AlchemyCosts)
+        .GroupBy(a => a.Name)
+        .Select(g =>
+        {
+            var first = g.First();
+            var material = new Material(g.Key, first.Type, first.Rarity, g.Sum(x => x.Amount));
+            return new MaterialViewModel(material);
+        })];
     }
 }

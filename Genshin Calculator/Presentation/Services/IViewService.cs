@@ -1,5 +1,5 @@
-﻿using Genshin_Calculator.Core.Models;
-using Genshin_Calculator.Presentation.Features.Characters;
+﻿using Genshin_Calculator.Presentation.Features.Characters;
+using Genshin_Calculator.Presentation.Features.Inventory;
 using System.Collections.Generic;
 
 namespace Genshin_Calculator.Presentation.Services;
@@ -14,7 +14,7 @@ public interface IViewService
 
     bool ShowUpgradeCharacterDialog(CharacterViewModel character);
 
-    void ShowAddMaterialsDialog(List<Material> list);
+    void ShowAddMaterialsDialog(List<MaterialViewModel> list);
 
     bool ShowConfirm(string title, string message);
 }

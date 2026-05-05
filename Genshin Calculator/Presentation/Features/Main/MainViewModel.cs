@@ -5,6 +5,7 @@ using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
 using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
+using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Presentation.Services;
 using GongSolutions.Wpf.DragDrop;
 using System;
@@ -152,7 +153,9 @@ public partial class MainViewModel : ObservableRecipient,
                 {
                     var characterVm = new CharacterViewModel(character);
                     var materials = this.GetMaterials(characterVm, missingByCharacter);
-                    var sorted = InventoryService.SortMaterialsForDisplay(materials);
+                    var sorted = InventoryService.SortMaterialsForDisplay(materials)
+                        .Select(r => new MaterialRequirementViewModel(r))
+                        .ToList();
                     return this.CreateCharacterViewModel(characterVm, sorted);
                 }).ToList();
             });
@@ -184,8 +187,7 @@ public partial class MainViewModel : ObservableRecipient,
                 foreach (var charVm in characterVms)
                 {
                     var materials = this.GetMaterials(charVm.Character, missingByCharacter);
-
-                    charVm.RequiredMaterials = InventoryService.SortMaterialsForDisplay(materials);
+                    charVm.RequiredMaterials = [.. InventoryService.SortMaterialsForDisplay(materials).Select(r => new MaterialRequirementViewModel(r))];
                 }
             });
 
@@ -214,7 +216,7 @@ public partial class MainViewModel : ObservableRecipient,
         return missingByCharacter.TryGetValue(character.Model, out var value) ? value : [];
     }
 
-    private CharacterCardViewModel CreateCharacterViewModel(CharacterViewModel character, List<MaterialRequirement> materials)
+    private CharacterCardViewModel CreateCharacterViewModel(CharacterViewModel character, List<MaterialRequirementViewModel> materials)
     {
         return new CharacterCardViewModel(character, materials, this.dialogService, this.inventoryService, this.characterService);
     }

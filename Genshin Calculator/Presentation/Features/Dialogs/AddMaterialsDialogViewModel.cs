@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Core.Models;
+using Genshin_Calculator.Presentation.Features.Inventory;
 using Genshin_Calculator.Presentation.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Genshin_Calculator.Presentation.Features.Dialogs;
 
 public partial class AddMaterialsDialogViewModel : ObservableObject
 {
-    public AddMaterialsDialogViewModel(List<Material> family)
+    public AddMaterialsDialogViewModel(List<MaterialViewModel> family)
     {
         this.MaterialWrappers = new ObservableCollection<MaterialAdditionViewModel>(
                     family.Select(m => new MaterialAdditionViewModel(m)));

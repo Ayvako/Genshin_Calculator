@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Genshin_Calculator.Core.Interfaces;
 using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Core.Models;
 using Genshin_Calculator.Presentation.Features.Characters;
 using Genshin_Calculator.Presentation.Features.Dialogs;
 using Genshin_Calculator.Presentation.Features.Inventory;
@@ -40,7 +39,7 @@ public class ViewService : IViewService
         return vm.Result;
     }
 
-    public void ShowAddMaterialsDialog(List<Material> list)
+    public void ShowAddMaterialsDialog(List<MaterialViewModel> list)
     {
         var vm = new AddMaterialsDialogViewModel(list);
         var view = CreateDialog<AddMaterialsDialogView>(vm);

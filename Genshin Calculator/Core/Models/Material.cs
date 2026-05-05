@@ -1,18 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Genshin_Calculator.Core.Messaging;
-using Genshin_Calculator.Core.Models.Enums;
-using Genshin_Calculator.Infrastructure.Helpers;
+﻿using Genshin_Calculator.Core.Models.Enums;
 using Newtonsoft.Json;
-using System;
 
 namespace Genshin_Calculator.Core.Models;
 
-public partial class Material : ObservableObject
+public class Material
 {
-    [ObservableProperty]
-    private int amount;
-
     public Material(string name, MaterialTypes type, MaterialRarity rarity, int amount)
     {
         this.Name = name;
@@ -29,28 +21,11 @@ public partial class Material : ObservableObject
     [JsonIgnore]
     public MaterialRarity Rarity { get; set; }
 
-    [JsonIgnore]
-    public Uri ImagePath => ResourcePaths.Material(this.Name);
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is not Material item)
-        {
-            return false;
-        }
-
-        return this.Name.Equals(item.Name);
-    }
-
-    public override int GetHashCode()
-    {
-        return this.Name.GetHashCode();
-    }
+    public int Amount { get; set; }
 
     public Material Clone() => (Material)this.MemberwiseClone();
 
-    partial void OnAmountChanged(int value)
-    {
-        WeakReferenceMessenger.Default.Send(new MaterialAmountChangedMessage(this));
-    }
+    public override bool Equals(object? obj) => obj is Material m && this.Name.Equals(m.Name);
+
+    public override int GetHashCode() => this.Name.GetHashCode();
 }

@@ -2,6 +2,7 @@
   "Characters": [
     {
       "Name": "Albedo",
+      "Version": "1.2.1",
       "Weapon": "Sword",
       "Element": "Geo",
       "LocalSpecialty": "Cecilia",
@@ -20,7 +21,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "CrystallineBloom",
       "WeeklyBoss": "MoltenMoment",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "2.1.0"
     },
     {
       "Name": "Amber",
@@ -31,7 +33,8 @@
       "Enemy": "FirmArrowhead",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "DvalinsSigh",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Arataki Itto",
@@ -42,7 +45,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "RiftbornRegalia",
       "WeeklyBoss": "AshenHeart",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "2.3.0"
     },
     {
       "Name": "Barbara",
@@ -53,7 +57,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "CleansingHeart",
       "WeeklyBoss": "RingOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Beidou",
@@ -64,7 +69,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "LightningPrism",
       "WeeklyBoss": "DvalinsSigh",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Bennett",
@@ -75,7 +81,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "DvalinsPlume",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Chongyun",
@@ -86,7 +93,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "DvalinsSigh",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Collei",
@@ -97,7 +105,8 @@
       "Enemy": "FirmArrowhead",
       "MiniBoss": "MajesticHookedBeak",
       "WeeklyBoss": "TearsOfTheCalamitousGod",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "3.0.1"
     },
     {
       "Name": "Diluc",
@@ -108,7 +117,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "DvalinsPlume",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Diona",
@@ -119,7 +129,8 @@
       "Enemy": "FirmArrowhead",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "ShardofaFoulLegacy",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Dori",
@@ -130,7 +141,8 @@
       "Enemy": "FadedRedSatin",
       "MiniBoss": "ThunderclapFruitcore",
       "WeeklyBoss": "BloodjadeBranch",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "3.0.2"
     },
     {
       "Name": "Eula",
@@ -141,7 +153,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "CrystallineBloom",
       "WeeklyBoss": "DragonLordsCrown",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Fischl",
@@ -152,7 +165,8 @@
       "Enemy": "FirmArrowhead",
       "MiniBoss": "LightningPrism",
       "WeeklyBoss": "SpiritLocketOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Ganyu",
@@ -163,7 +177,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "ShadowOfTheWarrior",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.2.2"
     },
     {
       "Name": "Gorou",
@@ -174,7 +189,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "PerpetualHeart",
       "WeeklyBoss": "MoltenMoment",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Hu Tao",
@@ -185,7 +201,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "JuvenileJade",
       "WeeklyBoss": "ShardofaFoulLegacy",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Jean",
@@ -196,7 +213,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "HurricaneSeed",
       "WeeklyBoss": "DvalinsPlume",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kaedehara Kazuha",
@@ -207,7 +225,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "MarionetteCore",
       "WeeklyBoss": "GildedScale",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kamisato Ayaka",
@@ -218,7 +237,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "PerpetualHeart",
       "WeeklyBoss": "BloodjadeBranch",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kamisato Ayato",
@@ -229,7 +249,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "DewOfrepudiation",
       "WeeklyBoss": "MudraOfTheMaleficGeneral",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kaeya",
@@ -240,7 +261,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "SpiritLocketOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Keqing",
@@ -251,7 +273,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "LightningPrism",
       "WeeklyBoss": "RingOfBoreas",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Klee",
@@ -262,7 +285,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "RingOfBoreas",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kujou Sara",
@@ -273,7 +297,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "StormBeads",
       "WeeklyBoss": "AshenHeart",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kuki Shinobu",
@@ -284,7 +309,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "RunicFang",
       "WeeklyBoss": "TearsOfTheCalamitousGod",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Lisa",
@@ -295,7 +321,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "LightningPrism",
       "WeeklyBoss": "DvalinsClaw",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Mona",
@@ -306,7 +333,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "CleansingHeart",
       "WeeklyBoss": "RingOfBoreas",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Ningguang",
@@ -317,7 +345,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "BasaltPillar",
       "WeeklyBoss": "SpiritLocketOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Noelle",
@@ -328,7 +357,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "BasaltPillar",
       "WeeklyBoss": "DvalinsClaw",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Qiqi",
@@ -339,7 +369,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "TailOfBoreas",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Raiden Shogun",
@@ -350,7 +381,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "StormBeads",
       "WeeklyBoss": "MoltenMoment",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Razor",
@@ -361,7 +393,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "LightningPrism",
       "WeeklyBoss": "DvalinsClaw",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Rosaria",
@@ -372,7 +405,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "HoarfrostCore",
       "WeeklyBoss": "ShadowOfTheWarrior",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Sangonomiya Kokomi",
@@ -383,7 +417,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "DewOfrepudiation",
       "WeeklyBoss": "HellfireButterfly",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Sayu",
@@ -394,7 +429,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "MarionetteCore",
       "WeeklyBoss": "GildedScale",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Shenhe",
@@ -405,7 +441,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "DragonheirsFalseFin",
       "WeeklyBoss": "HellfireButterfly",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Shikanoin Heizou",
@@ -416,7 +453,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "RunicFang",
       "WeeklyBoss": "TheMeaningOfAeons",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Sucrose",
@@ -427,7 +465,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "HurricaneSeed",
       "WeeklyBoss": "SpiritLocketOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Tartaglia",
@@ -438,7 +477,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "CleansingHeart",
       "WeeklyBoss": "ShardofaFoulLegacy",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Thoma",
@@ -449,7 +489,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "SmolderingPearl",
       "WeeklyBoss": "HellfireButterfly",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Tighnari",
@@ -460,7 +501,8 @@
       "Enemy": "FungalSpores",
       "MiniBoss": "MajesticHookedBeak",
       "WeeklyBoss": "TheMeaningOfAeons",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "3.0.1"
     },
     {
       "Name": "Venti",
@@ -471,7 +513,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "HurricaneSeed",
       "WeeklyBoss": "TailOfBoreas",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xiangling",
@@ -482,7 +525,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "DvalinsClaw",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xiao",
@@ -493,7 +537,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "JuvenileJade",
       "WeeklyBoss": "ShadowOfTheWarrior",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xingqiu",
@@ -504,7 +549,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "CleansingHeart",
       "WeeklyBoss": "TailOfBoreas",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xinyan",
@@ -515,7 +561,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "EverflameSeed",
       "WeeklyBoss": "TuskOfMonocerosCaeli",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yae Miko",
@@ -526,7 +573,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "DragonheirsFalseFin",
       "WeeklyBoss": "TheMeaningOfAeons",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yanfei",
@@ -537,7 +585,8 @@
       "Enemy": "TreasureHoarderInsignia",
       "MiniBoss": "JuvenileJade",
       "WeeklyBoss": "BloodjadeBranch",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yelan",
@@ -548,7 +597,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "RunicFang",
       "WeeklyBoss": "GildedScale",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yoimiya",
@@ -559,7 +609,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "SmolderingPearl",
       "WeeklyBoss": "DragonLordsCrown",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yun Jin",
@@ -570,7 +621,8 @@
       "Enemy": "DamagedMask",
       "MiniBoss": "RiftbornRegalia",
       "WeeklyBoss": "AshenHeart",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Zhongli",
@@ -581,7 +633,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "BasaltPillar",
       "WeeklyBoss": "TuskOfMonocerosCaeli",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Cyno",
@@ -592,7 +645,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "ThunderclapFruitcore",
       "WeeklyBoss": "MudraOfTheMaleficGeneral",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Nilou",
@@ -603,7 +657,8 @@
       "Enemy": "FungalSpores",
       "MiniBoss": "PerpetualCaliber",
       "WeeklyBoss": "TearsOfTheCalamitousGod",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Nahida",
@@ -614,7 +669,8 @@
       "Enemy": "FungalSpores",
       "MiniBoss": "QuelledCreeper",
       "WeeklyBoss": "PuppetStrings",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Wanderer",
@@ -625,7 +681,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "PerpetualCaliber",
       "WeeklyBoss": "DakasBell",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Alhaitham",
@@ -636,7 +693,8 @@
       "Enemy": "FadedRedSatin",
       "MiniBoss": "PseudoStamens",
       "WeeklyBoss": "MirrorOfMushin",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Baizhu",
@@ -647,7 +705,8 @@
       "Enemy": "FungalSpores",
       "MiniBoss": "EvergloomRing",
       "WeeklyBoss": "WorldspanFern",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Lyney",
@@ -658,7 +717,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "EmperorsResolution",
       "WeeklyBoss": "PrimordialGreenbloom",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Wriothesley",
@@ -669,7 +729,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "TourbillonDevice",
       "WeeklyBoss": "PrimordialGreenbloom",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Neuvillette",
@@ -680,7 +741,8 @@
       "Enemy": "TransoceanicPearl",
       "MiniBoss": "FontemerUnihorn",
       "WeeklyBoss": "Everamber",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Furina",
@@ -691,7 +753,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "WaterThatFailedToTranscend",
       "WeeklyBoss": "LightlessMass",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Navia",
@@ -702,7 +765,8 @@
       "Enemy": "TransoceanicPearl",
       "MiniBoss": "ArtificedSpareClockworkComponentCoppelius",
       "WeeklyBoss": "LightlessSilkString",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xianyun",
@@ -713,7 +777,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "CloudseamScale",
       "WeeklyBoss": "LightlessEyeOfTheMaelstrom",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Chiori",
@@ -724,7 +789,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "ArtificedSpareClockworkComponentCoppelia",
       "WeeklyBoss": "LightlessSilkString",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Arlecchino",
@@ -735,7 +801,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "FragmentOfAGoldenMelody",
       "WeeklyBoss": "FadingCandle",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Clorinde",
@@ -746,7 +813,8 @@
       "Enemy": "TransoceanicPearl",
       "MiniBoss": "FontemerUnihorn",
       "WeeklyBoss": "Everamber",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Sigewinne",
@@ -757,7 +825,8 @@
       "Enemy": "TransoceanicPearl",
       "MiniBoss": "WaterThatFailedToTranscend",
       "WeeklyBoss": "LightlessEyeOfTheMaelstrom",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Emilie",
@@ -768,7 +837,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "FragmentOfAGoldenMelody",
       "WeeklyBoss": "SilkenFeather",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kinich",
@@ -779,7 +849,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "OverripeFlamegranate",
       "WeeklyBoss": "DenialAndJudgment",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Mualani",
@@ -790,7 +861,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "MarkOfTheBindingBlessing",
       "WeeklyBoss": "LightlessMass",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Xilonen",
@@ -801,7 +873,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "GoldInscribedSecretSourceCore",
       "WeeklyBoss": "MirrorOfMushin",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Chasca",
@@ -812,7 +885,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "EnsnaringGaze",
       "WeeklyBoss": "SilkenFeather",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Mavuika",
@@ -823,7 +897,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "GoldInscribedSecretSourceCore",
       "WeeklyBoss": "ErodedHorn",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Citlali",
@@ -834,7 +909,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "TalismanOfTheEnigmaticLand",
       "WeeklyBoss": "DenialAndJudgment",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "YumemizukiMizuki",
@@ -845,7 +921,8 @@
       "Enemy": "OldHandguard",
       "MiniBoss": "TalismanOfTheEnigmaticLand",
       "WeeklyBoss": "FadingCandle",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Varesa",
@@ -856,7 +933,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "SparklessStatueCore",
       "WeeklyBoss": "ErodedScaleFeather",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Escoffier",
@@ -867,7 +945,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "SecretSourceAirflowAccumulator",
       "WeeklyBoss": "ErodedHorn",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Skirk",
@@ -878,7 +957,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "EnsnaringGaze",
       "WeeklyBoss": "AscendedSampleKnight",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Ineffa",
@@ -889,7 +969,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "SecretSourceAirflowAccumulator",
       "WeeklyBoss": "ErodedSunfire",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Flins",
@@ -900,7 +981,8 @@
       "Enemy": "BrokenDriveShaft",
       "MiniBoss": "PrecisionKuuvahkiStampingDie",
       "WeeklyBoss": "AscendedSampleQueen",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Lauma",
@@ -911,7 +993,8 @@
       "Enemy": "TatteredWarrant",
       "MiniBoss": "LightbearingScaleFeather",
       "WeeklyBoss": "ErodedScaleFeather",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Nefer",
@@ -922,7 +1005,8 @@
       "Enemy": "TatteredWarrant",
       "MiniBoss": "RadiantAntler",
       "WeeklyBoss": "AscendedSampleRook",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Durin",
@@ -933,7 +1017,8 @@
       "Enemy": "TatteredWarrant",
       "MiniBoss": "CyclicMilitaryKuuvahkiCore",
       "WeeklyBoss": "ErodedSunfire",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Columbina",
@@ -944,7 +1029,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "RadiantAntler",
       "WeeklyBoss": "MaskOfTheVirtuousDoctor",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Zibai",
@@ -955,7 +1041,8 @@
       "Enemy": "TatteredWarrant",
       "MiniBoss": "RemnantOfTheDreadwing",
       "WeeklyBoss": "AscendedSampleQueen",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Varka",
@@ -966,7 +1053,8 @@
       "Enemy": "BrokenDriveShaft",
       "MiniBoss": "PrismaticSeveredTail",
       "WeeklyBoss": "AscendedSampleRook",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Linnea",
@@ -977,7 +1065,8 @@
       "Enemy": "TatteredWarrant",
       "MiniBoss": "PlumeOfTheFallenWatcher",
       "WeeklyBoss": "ElixirOfTheHeretic",
-      "Rarity": 5
+      "Rarity": 5,
+      "Version": "1.0.0"
     },
     {
       "Name": "Candace",
@@ -988,7 +1077,8 @@
       "Enemy": "FadedRedSatin",
       "MiniBoss": "LightGuidingTetrahedron",
       "WeeklyBoss": "TearsOfTheCalamitousGod",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Layla",
@@ -999,7 +1089,8 @@
       "Enemy": "DiviningScroll",
       "MiniBoss": "PerpetualCaliber",
       "WeeklyBoss": "MirrorOfMushin",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Faruzan",
@@ -1010,7 +1101,8 @@
       "Enemy": "FadedRedSatin",
       "MiniBoss": "LightGuidingTetrahedron",
       "WeeklyBoss": "PuppetStrings",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Yaoyao",
@@ -1021,7 +1113,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "QuelledCreeper",
       "WeeklyBoss": "DakasBell",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Mika",
@@ -1032,7 +1125,8 @@
       "Enemy": "RecruitsInsignia",
       "MiniBoss": "PseudoStamens",
       "WeeklyBoss": "MirrorOfMushin",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kaveh",
@@ -1043,7 +1137,8 @@
       "Enemy": "FungalSpores",
       "MiniBoss": "QuelledCreeper",
       "WeeklyBoss": "PrimordialGreenbloom",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kirara",
@@ -1054,7 +1149,8 @@
       "Enemy": "SpectralHusk",
       "MiniBoss": "EvergloomRing",
       "WeeklyBoss": "Everamber",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Freminet",
@@ -1065,7 +1161,8 @@
       "Enemy": "TransoceanicPearl",
       "MiniBoss": "ArtificedSpareClockworkComponentCoppelius",
       "WeeklyBoss": "WorldspanFern",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Lynette",
@@ -1076,7 +1173,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "ArtificedSpareClockworkComponentCoppelia",
       "WeeklyBoss": "Everamber",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Charlotte",
@@ -1087,7 +1185,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "TourbillonDevice",
       "WeeklyBoss": "LightlessSilkString",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Chevreuse",
@@ -1098,7 +1197,8 @@
       "Enemy": "MeshingGear",
       "MiniBoss": "FontemerUnihorn",
       "WeeklyBoss": "LightlessEyeOfTheMaelstrom",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Gaming",
@@ -1109,7 +1209,8 @@
       "Enemy": "SlimeCondensate",
       "MiniBoss": "EmperorsResolution",
       "WeeklyBoss": "LightlessMass",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Sethos",
@@ -1120,7 +1221,8 @@
       "Enemy": "FadedRedSatin",
       "MiniBoss": "CloudseamScale",
       "WeeklyBoss": "DakasBell",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Kachina",
@@ -1131,7 +1233,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "OverripeFlamegranate",
       "WeeklyBoss": "FadingCandle",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Ororon",
@@ -1142,7 +1245,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "MarkOfTheBindingBlessing",
       "WeeklyBoss": "LightlessSilkString",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "LanYan",
@@ -1153,7 +1257,8 @@
       "Enemy": "WhopperflowerNectar",
       "MiniBoss": "GoldInscribedSecretSourceCore",
       "WeeklyBoss": "ErodedSunfire",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Iansan",
@@ -1164,7 +1269,8 @@
       "Enemy": "SentrysWoodenWhistle",
       "MiniBoss": "EnsnaringGaze",
       "WeeklyBoss": "DenialAndJudgment",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Ifa",
@@ -1175,7 +1281,8 @@
       "Enemy": "JuvenileFang",
       "MiniBoss": "SparklessStatueCore",
       "WeeklyBoss": "AscendedSampleRook",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Dahlia",
@@ -1186,7 +1293,8 @@
       "Enemy": "FirmArrowhead",
       "MiniBoss": "SecretSourceAirflowAccumulator",
       "WeeklyBoss": "ErodedScaleFeather",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Aino",
@@ -1197,7 +1305,8 @@
       "Enemy": "BrokenDriveShaft",
       "MiniBoss": "PrecisionKuuvahkiStampingDie",
       "WeeklyBoss": "SilkenFeather",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Jahoda",
@@ -1208,7 +1317,8 @@
       "Enemy": "BrokenDriveShaft",
       "MiniBoss": "LightbearingScaleFeather",
       "WeeklyBoss": "AscendedSampleKnight",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     },
     {
       "Name": "Illuga",
@@ -1219,7 +1329,8 @@
       "Enemy": "BrokenDriveShaft",
       "MiniBoss": "CyclicMilitaryKuuvahkiCore",
       "WeeklyBoss": "ErodedHorn",
-      "Rarity": 4
+      "Rarity": 4,
+      "Version": "1.0.0"
     }
   ]
 }

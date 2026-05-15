@@ -1,12 +1,22 @@
-﻿using System;
-using Genshin_Calculator.Core.Models.Enums;
+﻿using Genshin_Calculator.Core.Models.Enums;
 using Genshin_Calculator.Infrastructure.Helpers;
+using System;
 
 namespace Genshin_Calculator.Core.Models;
 
 public record Assets
 {
-    public Assets(string name, WeaponType weapon, Element element, string localSpecialty, string skillMaterials, string enemy, string miniBoss, string weeklyBoss, MaterialRarity rarity)
+    public Assets(
+        string name,
+        WeaponType weapon,
+        Element element,
+        string localSpecialty,
+        string skillMaterials,
+        string enemy,
+        string miniBoss,
+        string weeklyBoss,
+        MaterialRarity rarity,
+        string version)
     {
         this.Name = name;
         this.LocalSpecialty = localSpecialty;
@@ -17,7 +27,10 @@ public record Assets
         this.MiniBoss = miniBoss;
         this.WeeklyBoss = weeklyBoss;
         this.Rarity = rarity;
+        this.Version = Version.Parse(version);
     }
+
+    public Version Version { get; set; }
 
     public string Name { get; set; }
 

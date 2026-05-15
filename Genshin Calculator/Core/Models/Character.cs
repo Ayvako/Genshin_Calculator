@@ -1,4 +1,6 @@
-﻿namespace Genshin_Calculator.Core.Models;
+﻿using Newtonsoft.Json;
+
+namespace Genshin_Calculator.Core.Models;
 
 public class Character
 {
@@ -17,6 +19,7 @@ public class Character
 
     public string Name { get; set; }
 
+    [JsonIgnore]
     public Assets? Assets { get; set; }
 
     public Level CurrentLevel

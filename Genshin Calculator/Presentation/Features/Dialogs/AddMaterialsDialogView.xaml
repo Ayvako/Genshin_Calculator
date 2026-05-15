@@ -1,120 +1,146 @@
-﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Dialogs.AddMaterialsDialogView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:helpers="clr-namespace:Genshin_Calculator.Presentation.Helpers"
-        xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
-        SizeToContent="WidthAndHeight"
-        MinWidth="480"
-        MaxWidth="620"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        FontFamily="Segoe UI"
-        TextElement.Foreground="#EAE6D8">
+﻿<Window
+    x:Class="Genshin_Calculator.Presentation.Features.Dialogs.AddMaterialsDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
+    xmlns:helpers="clr-namespace:Genshin_Calculator.Presentation.Helpers"
+    MinWidth="480"
+    MaxWidth="620"
+    AllowsTransparency="True"
+    Background="Transparent"
+    FontFamily="Segoe UI"
+    SizeToContent="WidthAndHeight"
+    TextElement.Foreground="#EAE6D8"
+    WindowStyle="None">
 
     <Window.Resources>
 
-        <!-- ═══ Brushes ═══ -->
+        <!--  ═══ Brushes ═══  -->
         <LinearGradientBrush x:Key="DialogBgBrush" StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#16182A" Offset="0" />
-            <GradientStop Color="#0F1018" Offset="1" />
+            <GradientStop Offset="0" Color="#16182A" />
+            <GradientStop Offset="1" Color="#0F1018" />
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="HeaderGoldBrush" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Color="#C8A84B" Offset="0" />
-            <GradientStop Color="#E8D07A" Offset="0.5" />
-            <GradientStop Color="#C8A84B" Offset="1" />
+            <GradientStop Offset="0" Color="#C8A84B" />
+            <GradientStop Offset="0.5" Color="#E8D07A" />
+            <GradientStop Offset="1" Color="#C8A84B" />
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="CardBgBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#1E2235" Offset="0" />
-            <GradientStop Color="#181A28" Offset="1" />
+            <GradientStop Offset="0" Color="#1E2235" />
+            <GradientStop Offset="1" Color="#181A28" />
         </LinearGradientBrush>
 
-        <SolidColorBrush x:Key="GoldAccentBrush"  Color="#C8A84B" />
-        <SolidColorBrush x:Key="MutedTextBrush"   Color="#6B7280" />
-        <SolidColorBrush x:Key="StockBgBrush"     Color="#111320" />
-        <SolidColorBrush x:Key="AddBgBrush"        Color="#06301E" />
+        <SolidColorBrush x:Key="GoldAccentBrush" Color="#C8A84B" />
+        <SolidColorBrush x:Key="MutedTextBrush" Color="#6B7280" />
+        <SolidColorBrush x:Key="StockBgBrush" Color="#111320" />
+        <SolidColorBrush x:Key="AddBgBrush" Color="#06301E" />
 
-        <!-- ═══ Shadows ═══ -->
-        <DropShadowEffect x:Key="WindowShadow" BlurRadius="40" ShadowDepth="6" Opacity="0.7"  Color="Black" />
-        <DropShadowEffect x:Key="GoldGlow"     BlurRadius="12" ShadowDepth="0" Opacity="0.4"  Color="#C8A84B" />
-        <DropShadowEffect x:Key="CardShadow"   BlurRadius="10" ShadowDepth="0" Opacity="0.5"  Color="Black" />
+        <!--  ═══ Shadows ═══  -->
+        <DropShadowEffect
+            x:Key="WindowShadow"
+            BlurRadius="40"
+            Opacity="0.7"
+            ShadowDepth="6"
+            Color="Black" />
+        <DropShadowEffect
+            x:Key="GoldGlow"
+            BlurRadius="12"
+            Opacity="0.4"
+            ShadowDepth="0"
+            Color="#C8A84B" />
+        <DropShadowEffect
+            x:Key="CardShadow"
+            BlurRadius="10"
+            Opacity="0.5"
+            ShadowDepth="0"
+            Color="Black" />
 
-        <!-- ═══ Column label ═══ -->
+        <!--  ═══ Column label ═══  -->
         <Style x:Key="ColLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontSize"        Value="9" />
-            <Setter Property="FontWeight"      Value="Bold" />
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="Margin"          Value="0,0,0,2" />
-            <Setter Property="Opacity"         Value="0.75" />
+            <Setter Property="Margin" Value="0,0,0,2" />
+            <Setter Property="Opacity" Value="0.75" />
         </Style>
 
-        <!-- ═══ Value TextBlock (TOTAL) ═══ -->
+        <!--  ═══ Value TextBlock (TOTAL) ═══  -->
         <Style x:Key="TotalValueStyle" TargetType="TextBlock">
-            <Setter Property="Foreground"          Value="#E8D07A" />
-            <Setter Property="FontWeight"          Value="Black" />
-            <Setter Property="FontSize"            Value="15" />
+            <Setter Property="Foreground" Value="#E8D07A" />
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="FontSize" Value="15" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
 
-        <!-- ═══ Shared numeric TextBox base ═══ -->
+        <!--  ═══ Shared numeric TextBox base ═══  -->
         <Style x:Key="NumericBoxBase" TargetType="TextBox">
-            <Setter Property="MaxLength"                    Value="9" />
-            <Setter Property="Background"                   Value="Transparent" />
-            <Setter Property="BorderThickness"              Value="0" />
-            <Setter Property="FontWeight"                   Value="SemiBold" />
-            <Setter Property="FontSize"                     Value="13" />
-            <Setter Property="HorizontalContentAlignment"   Value="Center" />
-            <Setter Property="VerticalContentAlignment"     Value="Center" />
-            <Setter Property="Padding"                      Value="0" />
+            <Setter Property="MaxLength" Value="9" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="0" />
         </Style>
 
-        <!-- Stock box -->
-        <Style x:Key="StockBoxStyle" TargetType="TextBox" BasedOn="{StaticResource NumericBoxBase}">
-            <Setter Property="Foreground"   Value="#8A90A8" />
-            <Setter Property="CaretBrush"   Value="#C8A84B" />
+        <!--  Stock box  -->
+        <Style
+            x:Key="StockBoxStyle"
+            BasedOn="{StaticResource NumericBoxBase}"
+            TargetType="TextBox">
+            <Setter Property="Foreground" Value="#8A90A8" />
+            <Setter Property="CaretBrush" Value="#C8A84B" />
         </Style>
 
-        <!-- Add box -->
-        <Style x:Key="AddBoxStyle" TargetType="TextBox" BasedOn="{StaticResource NumericBoxBase}">
-            <Setter Property="Foreground"  Value="#34D399" />
-            <Setter Property="FontWeight"  Value="Bold" />
+        <!--  Add box  -->
+        <Style
+            x:Key="AddBoxStyle"
+            BasedOn="{StaticResource NumericBoxBase}"
+            TargetType="TextBox">
+            <Setter Property="Foreground" Value="#34D399" />
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="CaretBrush" Value="#34D399" />
         </Style>
 
-        <!-- ═══ Operator label ═══ -->
+        <!--  ═══ Operator label ═══  -->
         <Style x:Key="OperatorStyle" TargetType="TextBlock">
-            <Setter Property="Foreground"        Value="#2E3255" />
-            <Setter Property="FontSize"          Value="18" />
-            <Setter Property="FontWeight"        Value="Bold" />
+            <Setter Property="Foreground" Value="#2E3255" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin"            Value="4,2,4,0" />
+            <Setter Property="Margin" Value="4,2,4,0" />
         </Style>
 
     </Window.Resources>
 
-    <!-- ══════════════════════════════════
-         ROOT — outer glow + border
-    ══════════════════════════════════ -->
-    <Border CornerRadius="16"
-            Background="{StaticResource DialogBgBrush}"
-            BorderBrush="#2A2E45"
-            BorderThickness="1"
-            Padding="0"
-            Effect="{StaticResource WindowShadow}">
+    <!--
+        ══════════════════════════════════
+        ROOT — outer glow + border
+        ══════════════════════════════════
+    -->
+    <Border
+        Padding="0"
+        Background="{StaticResource DialogBgBrush}"
+        BorderBrush="#2A2E45"
+        BorderThickness="1"
+        CornerRadius="16"
+        Effect="{StaticResource WindowShadow}">
 
         <StackPanel>
 
-            <!-- ── HEADER ── -->
-            <Border CornerRadius="16,16,0,0"
-                    Padding="20,16,20,14"
-                    BorderBrush="#22263A"
-                    BorderThickness="0,0,0,1">
+            <!--  ── HEADER ──  -->
+            <Border
+                Padding="20,16,20,14"
+                BorderBrush="#22263A"
+                BorderThickness="0,0,0,1"
+                CornerRadius="16,16,0,0">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#1C1F30" Offset="0" />
-                        <GradientStop Color="#14172A" Offset="1" />
+                        <GradientStop Offset="0" Color="#1C1F30" />
+                        <GradientStop Offset="1" Color="#14172A" />
                     </LinearGradientBrush>
                 </Border.Background>
 
@@ -124,15 +150,17 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Diamond icon -->
-                    <Border Grid.Column="0"
-                            Width="22" Height="22"
-                            Margin="0,0,12,0"
-                            VerticalAlignment="Center">
+                    <!--  Diamond icon  -->
+                    <Border
+                        Grid.Column="0"
+                        Width="22"
+                        Height="22"
+                        Margin="0,0,12,0"
+                        VerticalAlignment="Center">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                <GradientStop Color="#C8A84B" Offset="0" />
-                                <GradientStop Color="#E8D07A" Offset="1" />
+                                <GradientStop Offset="0" Color="#C8A84B" />
+                                <GradientStop Offset="1" Color="#E8D07A" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Border.RenderTransform>
@@ -141,164 +169,197 @@
                     </Border>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="ADD MATERIALS"
-                                   FontSize="15"
-                                   FontWeight="Bold"
-                                   Foreground="{StaticResource HeaderGoldBrush}"
-                                   Effect="{StaticResource GoldGlow}" />
-                        <TextBlock Text="Please enter the quantity to add to your current stock"
-                                   FontSize="11"
-                                   Foreground="{StaticResource MutedTextBrush}"
-                                   Margin="0,3,0,0" />
+                        <TextBlock
+                            Effect="{StaticResource GoldGlow}"
+                            FontSize="15"
+                            FontWeight="Bold"
+                            Foreground="{StaticResource HeaderGoldBrush}"
+                            Text="ADD MATERIALS" />
+                        <TextBlock
+                            Margin="0,3,0,0"
+                            FontSize="11"
+                            Foreground="{StaticResource MutedTextBrush}"
+                            Text="Please enter the quantity to add to your current stock" />
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- ── COLUMN HEADERS ── -->
+            <!--  ── COLUMN HEADERS ──  -->
             <Grid Margin="20,12,20,4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="54" />
-                    <!-- icon -->
+                    <!--  icon  -->
                     <ColumnDefinition Width="*" />
-                    <!-- name -->
+                    <!--  name  -->
                     <ColumnDefinition Width="80" />
-                    <!-- stock -->
+                    <!--  stock  -->
                     <ColumnDefinition Width="25" />
-                    <!-- + -->
+                    <!--  +  -->
                     <ColumnDefinition Width="88" />
-                    <!-- add -->
+                    <!--  add  -->
                     <ColumnDefinition Width="23" />
-                    <!-- = -->
+                    <!--  =  -->
                     <ColumnDefinition Width="90" />
-                    <!-- total -->
+                    <!--  total  -->
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="2" Text="IN STOCK"
-                           Style="{StaticResource ColLabelStyle}"
-                           Foreground="{StaticResource MutedTextBrush}" />
-                <TextBlock Grid.Column="4" Text="ADD"
-                           Style="{StaticResource ColLabelStyle}"
-                           Foreground="#10B981" />
-                <TextBlock Grid.Column="6" Text="TOTAL"
-                           Style="{StaticResource ColLabelStyle}"
-                           Foreground="#B8960A" />
+                <TextBlock
+                    Grid.Column="2"
+                    Foreground="{StaticResource MutedTextBrush}"
+                    Style="{StaticResource ColLabelStyle}"
+                    Text="IN STOCK" />
+                <TextBlock
+                    Grid.Column="4"
+                    Foreground="#10B981"
+                    Style="{StaticResource ColLabelStyle}"
+                    Text="ADD" />
+                <TextBlock
+                    Grid.Column="6"
+                    Foreground="#B8960A"
+                    Style="{StaticResource ColLabelStyle}"
+                    Text="TOTAL" />
             </Grid>
 
-            <!-- Thin divider under column headers -->
-            <Rectangle Height="1" Fill="#1E2235" Margin="20,0,20,6" />
+            <!--  Thin divider under column headers  -->
+            <Rectangle
+                Height="1"
+                Margin="20,0,20,6"
+                Fill="#1E2235" />
 
-            <!-- ── ITEMS LIST ── -->
-            <ItemsControl ItemsSource="{Binding MaterialWrappers}"
-                          Margin="12,0,12,12">
+            <!--  ── ITEMS LIST ──  -->
+            <ItemsControl Margin="12,0,12,12" ItemsSource="{Binding MaterialWrappers}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="0,4"
-                                CornerRadius="10"
-                                Background="{StaticResource CardBgBrush}"
-                                BorderBrush="#252840"
-                                BorderThickness="1"
-                                Padding="10,8"
-                                Effect="{StaticResource CardShadow}">
+                        <Border
+                            Margin="0,4"
+                            Padding="10,8"
+                            Background="{StaticResource CardBgBrush}"
+                            BorderBrush="#252840"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Effect="{StaticResource CardShadow}">
 
                             <Grid VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="46" />
-                                    <!-- icon -->
+                                    <!--  icon  -->
                                     <ColumnDefinition Width="*" />
-                                    <!-- name -->
+                                    <!--  name  -->
                                     <ColumnDefinition Width="10" />
-                                    <!-- gap -->
+                                    <!--  gap  -->
                                     <ColumnDefinition Width="80" />
-                                    <!-- stock -->
+                                    <!--  stock  -->
                                     <ColumnDefinition Width="24" />
-                                    <!-- + -->
+                                    <!--  +  -->
                                     <ColumnDefinition Width="88" />
-                                    <!-- add -->
+                                    <!--  add  -->
                                     <ColumnDefinition Width="24" />
-                                    <!-- = -->
+                                    <!--  =  -->
                                     <ColumnDefinition Width="86" />
-                                    <!-- total -->
+                                    <!--  total  -->
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Rarity icon -->
-                                <Border Grid.Column="0"
-                                        Width="40" Height="40"
-                                        CornerRadius="8"
-                                        Background="{Binding Material.Rarity, Converter={StaticResource RarityToBrushConverter}}">
+                                <!--  Rarity icon  -->
+                                <Border
+                                    Grid.Column="0"
+                                    Width="40"
+                                    Height="40"
+                                    Background="{Binding Material.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                                    CornerRadius="8">
                                     <Grid>
-                                        <!-- Inner highlight -->
-                                        <Border CornerRadius="8,8,0,0" Height="16" VerticalAlignment="Top" Opacity="0.2">
+                                        <!--  Inner highlight  -->
+                                        <Border
+                                            Height="16"
+                                            VerticalAlignment="Top"
+                                            CornerRadius="8,8,0,0"
+                                            Opacity="0.2">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                                    <GradientStop Color="White" Offset="0" />
-                                                    <GradientStop Color="Transparent" Offset="1" />
+                                                    <GradientStop Offset="0" Color="White" />
+                                                    <GradientStop Offset="1" Color="Transparent" />
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                         </Border>
-                                        <Image Source="{Binding Material.ImagePath}" Margin="4"
-                                               RenderOptions.BitmapScalingMode="HighQuality" />
+                                        <Image
+                                            Margin="4"
+                                            RenderOptions.BitmapScalingMode="HighQuality"
+                                            Source="{Binding Material.ImagePath}" />
                                     </Grid>
                                 </Border>
 
-                                <!-- Name -->
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding Material.Name}"
-                                           VerticalAlignment="Center"
-                                           Margin="12,0,0,0"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="#C8D0E0"
-                                           TextTrimming="CharacterEllipsis" />
+                                <!--  Name  -->
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="13"
+                                    FontWeight="SemiBold"
+                                    Foreground="#C8D0E0"
+                                    Text="{Binding Material.Name}"
+                                    TextTrimming="CharacterEllipsis" />
 
-                                <!-- ── STOCK ── -->
-                                <Border Grid.Column="3"
-                                        Background="{StaticResource StockBgBrush}"
-                                        BorderBrush="#22263A"
-                                        BorderThickness="1"
-                                        CornerRadius="7"
-                                        Padding="6,4">
-                                    <TextBox Text="{Binding Material.Amount, UpdateSourceTrigger=PropertyChanged}"
-                                             helpers:TextBoxExtensions.NumericOnly="True"
-                                             Style="{StaticResource StockBoxStyle}" />
+                                <!--  ── STOCK ──  -->
+                                <Border
+                                    Grid.Column="3"
+                                    Padding="6,4"
+                                    Background="{StaticResource StockBgBrush}"
+                                    BorderBrush="#22263A"
+                                    BorderThickness="1"
+                                    CornerRadius="7">
+                                    <TextBox
+                                        helpers:TextBoxExtensions.NumericOnly="True"
+                                        Style="{StaticResource StockBoxStyle}"
+                                        Text="{Binding Material.Amount, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
 
-                                <!-- + operator -->
-                                <TextBlock Grid.Column="4" Text="+" Style="{StaticResource OperatorStyle}" />
+                                <!--  + operator  -->
+                                <TextBlock
+                                    Grid.Column="4"
+                                    Style="{StaticResource OperatorStyle}"
+                                    Text="+" />
 
-                                <!-- ── ADD ── -->
-                                <Border Grid.Column="5"
-                                        Background="{StaticResource AddBgBrush}"
-                                        BorderBrush="#0D5C3A"
-                                        BorderThickness="1"
-                                        CornerRadius="7"
-                                        Padding="6,4">
-                                    <TextBox Text="{Binding AdditionAmount, UpdateSourceTrigger=PropertyChanged}"
-                                             helpers:TextBoxExtensions.NumericOnly="True"
-                                             Style="{StaticResource AddBoxStyle}" />
+                                <!--  ── ADD ──  -->
+                                <Border
+                                    Grid.Column="5"
+                                    Padding="6,4"
+                                    Background="{StaticResource AddBgBrush}"
+                                    BorderBrush="#0D5C3A"
+                                    BorderThickness="1"
+                                    CornerRadius="7">
+                                    <TextBox
+                                        helpers:TextBoxExtensions.NumericOnly="True"
+                                        Style="{StaticResource AddBoxStyle}"
+                                        Text="{Binding AdditionAmount, UpdateSourceTrigger=PropertyChanged}" />
                                 </Border>
 
-                                <!-- = operator -->
-                                <TextBlock Grid.Column="6" Text="=" Style="{StaticResource OperatorStyle}" />
+                                <!--  = operator  -->
+                                <TextBlock
+                                    Grid.Column="6"
+                                    Style="{StaticResource OperatorStyle}"
+                                    Text="=" />
 
-                                <!-- ── TOTAL ── -->
-                                <Border Grid.Column="7"
-                                        CornerRadius="7"
-                                        BorderThickness="1"
-                                        Padding="6,5">
+                                <!--  ── TOTAL ──  -->
+                                <Border
+                                    Grid.Column="7"
+                                    Padding="6,5"
+                                    BorderThickness="1"
+                                    CornerRadius="7">
                                     <Border.BorderBrush>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#5A4010" Offset="0" />
-                                            <GradientStop Color="#3A2808" Offset="1" />
+                                            <GradientStop Offset="0" Color="#5A4010" />
+                                            <GradientStop Offset="1" Color="#3A2808" />
                                         </LinearGradientBrush>
                                     </Border.BorderBrush>
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#2A1E08" Offset="0" />
-                                            <GradientStop Color="#1A1205" Offset="1" />
+                                            <GradientStop Offset="0" Color="#2A1E08" />
+                                            <GradientStop Offset="1" Color="#1A1205" />
                                         </LinearGradientBrush>
                                     </Border.Background>
-                                    <TextBlock Text="{Binding TotalResult}" VerticalAlignment="Center"
-                                               Style="{StaticResource TotalValueStyle}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        Style="{StaticResource TotalValueStyle}"
+                                        Text="{Binding TotalResult}" />
                                 </Border>
 
                             </Grid>
@@ -307,19 +368,19 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <!-- ── FOOTER DIVIDER ── -->
+            <!--  ── FOOTER DIVIDER ──  -->
             <Rectangle Height="1" Margin="16,0,16,0">
                 <Rectangle.Fill>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="Transparent" Offset="0" />
-                        <GradientStop Color="#C8A84B"     Offset="0.3" />
-                        <GradientStop Color="#C8A84B"     Offset="0.7" />
-                        <GradientStop Color="Transparent" Offset="1" />
+                        <GradientStop Offset="0" Color="Transparent" />
+                        <GradientStop Offset="0.3" Color="#C8A84B" />
+                        <GradientStop Offset="0.7" Color="#C8A84B" />
+                        <GradientStop Offset="1" Color="Transparent" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
 
-            <!-- ── DIALOG BUTTONS ── -->
+            <!--  ── DIALOG BUTTONS ──  -->
             <Border Padding="16,12,16,16">
                 <controls:DialogButtonsControl />
             </Border>

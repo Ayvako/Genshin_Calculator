@@ -1,26 +1,28 @@
-﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Characters.CharacterEditView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:charFeatures="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
-        xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
-        Width="360"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        SizeToContent="Height"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="Genshin_Calculator.Presentation.Features.Characters.CharacterEditView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:charFeatures="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
+    xmlns:controls="clr-namespace:Genshin_Calculator.Presentation.Controls"
+    Width="360"
+    AllowsTransparency="True"
+    Background="Transparent"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None">
 
     <Window.Resources>
 
-        <!-- Drop shadow for the whole card -->
-        <DropShadowEffect x:Key="WindowShadow"
-                          Color="Black"
-                          Direction="270"
-                          ShadowDepth="4"
-                          BlurRadius="28"
-                          Opacity="0.65" />
+        <!--  Drop shadow for the whole card  -->
+        <DropShadowEffect
+            x:Key="WindowShadow"
+            BlurRadius="28"
+            Direction="270"
+            Opacity="0.65"
+            ShadowDepth="4"
+            Color="Black" />
 
-        <!-- Section container — matches CharacterCard PillStyle -->
+        <!--  Section container — matches CharacterCard PillStyle  -->
         <Style x:Key="SectionPillStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="12" />
             <Setter Property="Background" Value="#20232A" />
@@ -30,7 +32,7 @@
             <Setter Property="Margin" Value="0,0,0,10" />
         </Style>
 
-        <!-- Gold section heading — matches CharacterCard InfoLabelStyle -->
+        <!--  Gold section heading — matches CharacterCard InfoLabelStyle  -->
         <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#C8A865" />
             <Setter Property="FontSize" Value="11" />
@@ -40,7 +42,7 @@
             <Setter Property="Margin" Value="0,0,0,8" />
         </Style>
 
-        <!-- Column heading -->
+        <!--  Column heading  -->
         <Style x:Key="ColumnHeadingStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="#7A8FA8" />
             <Setter Property="FontSize" Value="10" />
@@ -50,7 +52,7 @@
             <Setter Property="Margin" Value="0,0,0,4" />
         </Style>
 
-        <!-- Thin horizontal rule between sections -->
+        <!--  Thin horizontal rule between sections  -->
         <Style x:Key="DividerStyle" TargetType="Border">
             <Setter Property="Height" Value="1" />
             <Setter Property="Margin" Value="0,8" />
@@ -58,85 +60,89 @@
 
     </Window.Resources>
 
-    <!-- Outer border: rounded top corners + shadow -->
-    <Border CornerRadius="16"
-            Effect="{StaticResource WindowShadow}"
-            Background="#181A1F"
-            BorderThickness="1">
+    <!--  Outer border: rounded top corners + shadow  -->
+    <Border
+        Background="#181A1F"
+        BorderThickness="1"
+        CornerRadius="16"
+        Effect="{StaticResource WindowShadow}">
 
         <Border.BorderBrush>
             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                <GradientStop Color="#3A3D46" Offset="0" />
-                <GradientStop Color="#1C1E24" Offset="1" />
+                <GradientStop Offset="0" Color="#3A3D46" />
+                <GradientStop Offset="1" Color="#1C1E24" />
             </LinearGradientBrush>
         </Border.BorderBrush>
 
         <Grid ClipToBounds="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <!-- Header -->
+                <!--  Header  -->
                 <RowDefinition Height="Auto" />
-                <!-- Content -->
+                <!--  Content  -->
                 <RowDefinition Height="Auto" />
-                <!-- Buttons -->
+                <!--  Buttons  -->
             </Grid.RowDefinitions>
 
-            <!-- ═══════════════════════════════════════
-                 HEADER
-                 ═══════════════════════════════════════ -->
+            <!--
+                ═══════════════════════════════════════
+                HEADER
+                ═══════════════════════════════════════
+            -->
             <Grid Grid.Row="0">
 
-                <!-- Rarity-coloured band (draggable) -->
-                <Border CornerRadius="16,16,0,0"
-                        MouseLeftButtonDown="OnMouseLeftButtonDown"
-                        Background="{Binding Editable.Assets.Rarity,
-                                     Converter={StaticResource RarityToBrushConverter}}"
-                        Padding="16,12">
-                    <TextBlock Text="{Binding Editable.Name, FallbackValue='Character Name'}"
-                               HorizontalAlignment="Center"
-                               FontSize="20"
-                               FontWeight="Bold"
-                               Foreground="White"
-                               TextTrimming="CharacterEllipsis" />
+                <!--  Rarity-coloured band (draggable)  -->
+                <Border
+                    Padding="16,12"
+                    Background="{Binding Editable.Assets.Rarity, Converter={StaticResource RarityToBrushConverter}}"
+                    CornerRadius="16,16,0,0"
+                    MouseLeftButtonDown="OnMouseLeftButtonDown">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="20"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="{Binding Editable.Name, FallbackValue='Character Name'}"
+                        TextTrimming="CharacterEllipsis" />
                 </Border>
 
-                <!-- Subtle gold gradient line beneath the header -->
-                <Border Height="1"
-                        VerticalAlignment="Bottom"
-                        IsHitTestVisible="False">
+                <!--  Subtle gold gradient line beneath the header  -->
+                <Border
+                    Height="1"
+                    VerticalAlignment="Bottom"
+                    IsHitTestVisible="False">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                            <GradientStop Color="#00C8A865" Offset="0" />
-                            <GradientStop Color="#90C8A865" Offset="0.5" />
-                            <GradientStop Color="#00C8A865" Offset="1" />
+                            <GradientStop Offset="0" Color="#00C8A865" />
+                            <GradientStop Offset="0.5" Color="#90C8A865" />
+                            <GradientStop Offset="1" Color="#00C8A865" />
                         </LinearGradientBrush>
                     </Border.Background>
                 </Border>
 
             </Grid>
 
-            <!-- ═══════════════════════════════════════
-                 CONTENT
-                 ═══════════════════════════════════════ -->
+            <!--
+                ═══════════════════════════════════════
+                CONTENT
+                ═══════════════════════════════════════
+            -->
             <StackPanel Grid.Row="1" Margin="14,14,14,4">
 
-                <!-- ── Level section ── -->
+                <!--  ── Level section ──  -->
                 <Border Style="{StaticResource SectionPillStyle}">
                     <StackPanel>
 
-                        <!-- Section label -->
-                        <TextBlock Text="Level"
-                                   Style="{StaticResource SectionLabelStyle}" />
+                        <!--  Section label  -->
+                        <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Level" />
 
-                        <!-- Column headings -->
+                        <!--  Column headings  -->
                         <UniformGrid Columns="2">
-                            <TextBlock Text="Current"
-                                       Style="{StaticResource ColumnHeadingStyle}" />
-                            <TextBlock Text="Desired"
-                                       Style="{StaticResource ColumnHeadingStyle}" />
+                            <TextBlock Style="{StaticResource ColumnHeadingStyle}" Text="Current" />
+                            <TextBlock Style="{StaticResource ColumnHeadingStyle}" Text="Desired" />
                         </UniformGrid>
 
-                        <!-- Controls -->
+                        <!--  Controls  -->
                         <UniformGrid Columns="2">
                             <charFeatures:LevelSelectorControl
                                 Title="Current"
@@ -151,55 +157,55 @@
                     </StackPanel>
                 </Border>
 
-                <!-- ── Talents section ── -->
+                <!--  ── Talents section ──  -->
                 <Border Style="{StaticResource SectionPillStyle}">
                     <StackPanel>
 
-                        <!-- Section label -->
-                        <TextBlock Text="Talents"
-                                   Style="{StaticResource SectionLabelStyle}" />
+                        <!--  Section label  -->
+                        <TextBlock Style="{StaticResource SectionLabelStyle}" Text="Talents" />
 
-                        <!-- Column headings (shown once above all rows) -->
-                        <UniformGrid Columns="2" Margin="0,0,0,6">
-                            <TextBlock Text="Current"
-                                       Style="{StaticResource ColumnHeadingStyle}"
-                                       Margin="0" />
-                            <TextBlock Text="Desired"
-                                       Style="{StaticResource ColumnHeadingStyle}"
-                                       Margin="0" />
+                        <!--  Column headings (shown once above all rows)  -->
+                        <UniformGrid Margin="0,0,0,6" Columns="2">
+                            <TextBlock
+                                Margin="0"
+                                Style="{StaticResource ColumnHeadingStyle}"
+                                Text="Current" />
+                            <TextBlock
+                                Margin="0"
+                                Style="{StaticResource ColumnHeadingStyle}"
+                                Text="Desired" />
                         </UniformGrid>
 
-                        <!-- Talent rows -->
+                        <!--  Talent rows  -->
                         <ItemsControl ItemsSource="{Binding Talents}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel>
 
-                                        <!-- Talent name -->
-                                        <TextBlock Text="{Binding Name}"
-                                                   Foreground="#7A8FA8"
-                                                   FontSize="10"
-                                                   FontWeight="SemiBold"
-                                                   HorizontalAlignment="Center"
-                                                   Typography.Capitals="AllSmallCaps"
-                                                   Margin="0,0,0,4" />
+                                        <!--  Talent name  -->
+                                        <TextBlock
+                                            Margin="0,0,0,4"
+                                            HorizontalAlignment="Center"
+                                            FontSize="10"
+                                            FontWeight="SemiBold"
+                                            Foreground="#7A8FA8"
+                                            Text="{Binding Name}"
+                                            Typography.Capitals="AllSmallCaps" />
 
-                                        <!-- Current / Desired controls -->
+                                        <!--  Current / Desired controls  -->
                                         <UniformGrid Columns="2">
-                                            <charFeatures:TalentLevelControl Title="Current"
-                                                                             Level="{Binding CurrentLevel}" />
-                                            <charFeatures:TalentLevelControl Title="Desired"
-                                                                             Level="{Binding DesiredLevel}" />
+                                            <charFeatures:TalentLevelControl Title="Current" Level="{Binding CurrentLevel}" />
+                                            <charFeatures:TalentLevelControl Title="Desired" Level="{Binding DesiredLevel}" />
                                         </UniformGrid>
 
-                                        <!-- Divider between talents (hidden after last item via trigger) -->
+                                        <!--  Divider between talents (hidden after last item via trigger)  -->
                                         <Border Style="{StaticResource DividerStyle}">
                                             <Border.Background>
                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                    <GradientStop Color="#002A2D34" Offset="0" />
-                                                    <GradientStop Color="#FF2A2D34" Offset="0.3" />
-                                                    <GradientStop Color="#FF2A2D34" Offset="0.7" />
-                                                    <GradientStop Color="#002A2D34" Offset="1" />
+                                                    <GradientStop Offset="0" Color="#002A2D34" />
+                                                    <GradientStop Offset="0.3" Color="#FF2A2D34" />
+                                                    <GradientStop Offset="0.7" Color="#FF2A2D34" />
+                                                    <GradientStop Offset="1" Color="#002A2D34" />
                                                 </LinearGradientBrush>
                                             </Border.Background>
                                         </Border>
@@ -214,23 +220,27 @@
 
             </StackPanel>
 
-            <!-- ═══════════════════════════════════════
-                 FOOTER / BUTTONS
-                 ═══════════════════════════════════════ -->
+            <!--
+                ═══════════════════════════════════════
+                FOOTER / BUTTONS
+                ═══════════════════════════════════════
+            -->
 
-            <Border Grid.Row="2" Height="1" VerticalAlignment="Top">
+            <Border
+                Grid.Row="2"
+                Height="1"
+                VerticalAlignment="Top">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#002A2D34" Offset="0" />
-                        <GradientStop Color="#FF2A2D34" Offset="0.2" />
-                        <GradientStop Color="#FF2A2D34" Offset="0.8" />
-                        <GradientStop Color="#002A2D34" Offset="1" />
+                        <GradientStop Offset="0" Color="#002A2D34" />
+                        <GradientStop Offset="0.2" Color="#FF2A2D34" />
+                        <GradientStop Offset="0.8" Color="#FF2A2D34" />
+                        <GradientStop Offset="1" Color="#002A2D34" />
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
 
-            <controls:DialogButtonsControl Grid.Row="2"
-                                           Margin="14,10,14,14" />
+            <controls:DialogButtonsControl Grid.Row="2" Margin="14,10,14,14" />
         </Grid>
     </Border>
 </Window>

@@ -1,30 +1,32 @@
-﻿<Window x:Class="Genshin_Calculator.Presentation.Features.Main.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:charFeatures="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
-        xmlns:tools="clr-namespace:Genshin_Calculator.Presentation.Features.Tools"
-        xmlns:dd="urn:gong-wpf-dragdrop"
-        Title="GICalculator"
-        Width="1100"
-        Height="750"
-        MinWidth="950"
-        MinHeight="650">
+﻿<Window
+    x:Class="Genshin_Calculator.Presentation.Features.Main.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:charFeatures="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
+    xmlns:dd="urn:gong-wpf-dragdrop"
+    xmlns:tools="clr-namespace:Genshin_Calculator.Presentation.Features.Tools"
+    Title="GICalculator"
+    Width="1100"
+    Height="750"
+    MinWidth="950"
+    MinHeight="650">
 
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-            <GradientStop Color="#31394E" Offset="0" />
-            <GradientStop Color="#1D212D" Offset="0.2" />
-            <GradientStop Color="#191E33" Offset="0.4" />
-            <GradientStop Color="#141829" Offset="0.6" />
-            <GradientStop Color="#101321" Offset="1" />
+            <GradientStop Offset="0" Color="#31394E" />
+            <GradientStop Offset="0.2" Color="#1D212D" />
+            <GradientStop Offset="0.4" Color="#191E33" />
+            <GradientStop Offset="0.6" Color="#141829" />
+            <GradientStop Offset="1" Color="#101321" />
         </LinearGradientBrush>
     </Window.Background>
     <Grid>
-        <Border x:Name="DimmingOverlay"
-        Background="Black"
-        Opacity="0.5"
-        Panel.ZIndex="99"
-        Visibility="{Binding IsDimmed, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <Border
+            x:Name="DimmingOverlay"
+            Panel.ZIndex="99"
+            Background="Black"
+            Opacity="0.5"
+            Visibility="{Binding IsDimmed, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -33,24 +35,21 @@
 
             <tools:ToolsPanelControl Grid.Row="0" />
 
-            <ListBox Grid.Row="1"
-        ItemsSource="{Binding Characters}"
-        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-        ScrollViewer.VerticalScrollBarVisibility="Auto"
-
-        dd:DragDrop.IsDragSource="True"
-        dd:DragDrop.IsDropTarget="True"
-        dd:DragDrop.DropHandler="{Binding}"
-
-        BorderThickness="0"
-        Background="Transparent"
-
-        Padding="20,10,20,10">
+            <ListBox
+                Grid.Row="1"
+                Padding="20,10,20,10"
+                dd:DragDrop.DropHandler="{Binding}"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True"
+                Background="Transparent"
+                BorderThickness="0"
+                ItemsSource="{Binding Characters}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal"
-                   HorizontalAlignment="Center" />
+                        <WrapPanel HorizontalAlignment="Center" Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
 

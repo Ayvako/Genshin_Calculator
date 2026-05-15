@@ -32,7 +32,7 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
     private ObservableCollection<MaterialRarity> selectedCharactersRarities = [];
 
     [ObservableProperty]
-    private bool isSortByRarity = false;
+    private SortMode currentSortMode = SortMode.Version;
 
     public CharacterSelectorViewModel(ICharacterService characterService)
     {
@@ -60,7 +60,6 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
 
     public bool IsOrangeRaritySelected => this.SelectedCharactersRarities.Contains(MaterialRarity.Orange);
 
-    [RelayCommand]
     public async Task InitializeAsync()
     {
         var deletedChars = this.characterService.GetCharacters().Where(c => c.Deleted).ToList();
@@ -94,7 +93,7 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         }
     }
 
-    partial void OnIsSortByRarityChanged(bool value) => _ = ApplyFilterAsync();
+    partial void OnCurrentSortModeChanged(SortMode value) => _ = ApplyFilterAsync();
 
     partial void OnSearchQueryChanged(string? value) => _ = ApplyFilterAsync();
 
@@ -118,7 +117,6 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         var elements = this.SelectedElements.ToList();
         var weapons = this.SelectedWeapons.ToList();
         var rarities = this.SelectedCharactersRarities.ToList();
-        var sortByRarity = this.IsSortByRarity;
         var available = this.AvailableCharacters.ToList();
 
         try
@@ -149,9 +147,15 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
                     query = query.Where(c => rarities.Contains(c.Assets!.Rarity));
                 }
 
-                query = sortByRarity
-                    ? query.OrderByDescending(c => c.Assets!.Rarity).ThenBy(c => c.Name)
-                    : query.OrderBy(c => c.Name);
+                query = this.CurrentSortMode switch
+                {
+                    SortMode.Rarity => query.OrderByDescending(c => c.Assets!.Rarity)
+                                            .ThenByDescending(c => c.Assets!.Version)
+                                            .ThenBy(c => c.Name),
+                    SortMode.Name => query.OrderBy(c => c.Name),
+                    _ => query.OrderByDescending(c => c.Assets!.Version)
+                                            .ThenBy(c => c.Name),
+                };
 
                 return query.ToList();
             },

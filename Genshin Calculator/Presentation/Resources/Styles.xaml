@@ -1,14 +1,15 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-                    xmlns:system="http://schemas.microsoft.com/winfx/2009/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:system="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <LinearGradientBrush x:Key="MyGradientBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#31394E" Offset="0.0" />
-        <GradientStop Color="#1D212D" Offset="0.2" />
-        <GradientStop Color="#191E33" Offset="0.4" />
-        <GradientStop Color="#141829" Offset="0.6" />
-        <GradientStop Color="#101321" Offset="0.8" />
+        <GradientStop Offset="0.0" Color="#31394E" />
+        <GradientStop Offset="0.2" Color="#1D212D" />
+        <GradientStop Offset="0.4" Color="#191E33" />
+        <GradientStop Offset="0.6" Color="#141829" />
+        <GradientStop Offset="0.8" Color="#101321" />
     </LinearGradientBrush>
 
     <ControlTemplate x:Key="VerticalScrollBarTemplate" TargetType="ScrollBar">
@@ -18,7 +19,10 @@
                     <Thumb>
                         <Thumb.Template>
                             <ControlTemplate TargetType="Thumb">
-                                <Border x:Name="border" Background="#0272c8" SnapsToDevicePixels="True" />
+                                <Border
+                                    x:Name="border"
+                                    Background="#0272c8"
+                                    SnapsToDevicePixels="True" />
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter TargetName="border" Property="Background" Value="#0a0c33" />
@@ -33,6 +37,38 @@
         </Border>
     </ControlTemplate>
 
+    <Style x:Key="SortRadioButtonStyle" TargetType="RadioButton">
+        <Setter Property="Foreground" Value="#9AA0AD" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="10,4" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border
+                        x:Name="Bg"
+                        Padding="{TemplateBinding Padding}"
+                        Background="Transparent"
+                        CornerRadius="6">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#18C8A865" />
+                            <Setter Property="Foreground" Value="#C8A865" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="#30C8A865" />
+                            <Setter Property="Foreground" Value="#C8A865" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="SortToggleButtonStyle" TargetType="ToggleButton">
         <Setter Property="Width" Value="70" />
         <Setter Property="Height" Value="28" />
@@ -44,82 +80,105 @@
                 <ControlTemplate TargetType="ToggleButton">
                     <Border>
                         <Grid x:Name="Root">
-                            <Border x:Name="SwitchBackground"
+                            <Border
+                                x:Name="SwitchBackground"
                                 Background="#3A3A4C"
                                 CornerRadius="14" />
 
-                            <Border x:Name="Thumb"
-                                Width="26" Height="26"
-                                Background="#E0E0E0"
-                                CornerRadius="13"
+                            <Border
+                                x:Name="Thumb"
+                                Width="26"
+                                Height="26"
+                                Margin="1"
                                 HorizontalAlignment="Left"
-                                Margin="1">
+                                Background="#E0E0E0"
+                                CornerRadius="13">
                                 <Border.RenderTransform>
                                     <TranslateTransform x:Name="ThumbTranslate" X="0" />
                                 </Border.RenderTransform>
                             </Border>
 
-                            <materialDesign:PackIcon x:Name="RarityIcon"
-                                Kind="StarOutline"
-                                Width="16" Height="16"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
+                            <materialDesign:PackIcon
+                                x:Name="RarityIcon"
+                                Width="16"
+                                Height="16"
                                 Margin="6,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
                                 Foreground="White"
+                                Kind="StarOutline"
                                 Opacity="0" />
 
-                            <materialDesign:PackIcon x:Name="NameIcon"
-                                Kind="SortAlphabeticalAscending"
-                                Width="16" Height="16"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Right"
+                            <materialDesign:PackIcon
+                                x:Name="NameIcon"
+                                Width="16"
+                                Height="16"
                                 Margin="0,0,6,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
                                 Foreground="White"
+                                Kind="SortAlphabeticalAscending"
                                 Opacity="1" />
                         </Grid>
 
-                        <!-- VisualStateManager -->
+                        <!--  VisualStateManager  -->
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CheckStates">
-                                <!-- Unchecked -->
+                                <!--  Unchecked  -->
                                 <VisualState x:Name="Unchecked">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbTranslate"
-                                                 Storyboard.TargetProperty="X"
-                                                 To="0" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ThumbTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            To="0"
+                                            Duration="0:0:0.2" />
 
-                                        <ColorAnimation Storyboard.TargetName="SwitchBackground"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="#3A3A4C" Duration="0:0:0.2" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="SwitchBackground"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="#3A3A4C"
+                                            Duration="0:0:0.2" />
 
-                                        <DoubleAnimation Storyboard.TargetName="RarityIcon"
-                                                 Storyboard.TargetProperty="Opacity"
-                                                 To="0" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="RarityIcon"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.2" />
 
-                                        <DoubleAnimation Storyboard.TargetName="NameIcon"
-                                                 Storyboard.TargetProperty="Opacity"
-                                                 To="1" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="NameIcon"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.2" />
                                     </Storyboard>
                                 </VisualState>
 
-                                <!-- Checked -->
+                                <!--  Checked  -->
                                 <VisualState x:Name="Checked">
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="ThumbTranslate"
-                                                 Storyboard.TargetProperty="X"
-                                                 To="42" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="ThumbTranslate"
+                                            Storyboard.TargetProperty="X"
+                                            To="42"
+                                            Duration="0:0:0.2" />
 
-                                        <ColorAnimation Storyboard.TargetName="SwitchBackground"
-                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                To="#6A6AFF" Duration="0:0:0.2" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="SwitchBackground"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="#6A6AFF"
+                                            Duration="0:0:0.2" />
 
-                                        <DoubleAnimation Storyboard.TargetName="RarityIcon"
-                                                 Storyboard.TargetProperty="Opacity"
-                                                 To="1" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="RarityIcon"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.2" />
 
-                                        <DoubleAnimation Storyboard.TargetName="NameIcon"
-                                                 Storyboard.TargetProperty="Opacity"
-                                                 To="0" Duration="0:0:0.2" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="NameIcon"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.2" />
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -139,17 +198,29 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <Border x:Name="border" CornerRadius="24" Background="{TemplateBinding Background}"
-                                BorderThickness="0" RenderTransformOrigin="0.5,0.5">
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="0"
+                            CornerRadius="24"
+                            RenderTransformOrigin="0.5,0.5">
                             <Border.RenderTransform>
                                 <ScaleTransform ScaleX="1" ScaleY="1" />
                             </Border.RenderTransform>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="15" ShadowDepth="3" Direction="270" Color="Black" Opacity="0.3" />
+                                <DropShadowEffect
+                                    BlurRadius="15"
+                                    Direction="270"
+                                    Opacity="0.3"
+                                    ShadowDepth="3"
+                                    Color="Black" />
                             </Border.Effect>
                         </Border>
 
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True" />
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
                     </Grid>
 
                     <ControlTemplate.Triggers>
@@ -186,23 +257,29 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <Border x:Name="border"
+                        <Border
+                            x:Name="border"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="10"
                             SnapsToDevicePixels="True">
                             <Border.Effect>
-                                <DropShadowEffect x:Name="shadow" Color="Black"
-                                             Direction="270" ShadowDepth="2"
-                                             BlurRadius="8" Opacity="0" />
+                                <DropShadowEffect
+                                    x:Name="shadow"
+                                    BlurRadius="8"
+                                    Direction="270"
+                                    Opacity="0"
+                                    ShadowDepth="2"
+                                    Color="Black" />
                             </Border.Effect>
                         </Border>
 
-                        <ContentPresenter HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Margin="{TemplateBinding Padding}"
-                                      RecognizesAccessKey="True" />
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
                     </Grid>
 
                     <ControlTemplate.Triggers>
@@ -210,18 +287,42 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="White" Duration="0:0:0.1" />
-                                        <ColorAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#6A6AFF" Duration="0:0:0.1" />
-                                        <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.Effect).Opacity" To="0.3" Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="White"
+                                            Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                            To="#6A6AFF"
+                                            Duration="0:0:0.1" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.Effect).Opacity"
+                                            To="0.3"
+                                            Duration="0:0:0.1" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#F3EBDD" Duration="0:0:0.1" />
-                                        <ColorAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" To="#E0D6C8" Duration="0:0:0.1" />
-                                        <DoubleAnimation Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.Effect).Opacity" To="0" Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="#F3EBDD"
+                                            Duration="0:0:0.1" />
+                                        <ColorAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)"
+                                            To="#E0D6C8"
+                                            Duration="0:0:0.1" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="border"
+                                            Storyboard.TargetProperty="(Border.Effect).Opacity"
+                                            To="0"
+                                            Duration="0:0:0.1" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -256,18 +357,20 @@
                 <DataTrigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                             To="1"
-                                             Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="Opacity"
+                                To="1"
+                                Duration="0:0:0.2" />
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.EnterActions>
                 <DataTrigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                             To="0"
-                                             Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="Opacity"
+                                To="0"
+                                Duration="0:0:0.2" />
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.ExitActions>
@@ -290,10 +393,13 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
-                        <Border x:Name="border" Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="18" SnapsToDevicePixels="True" />
+                        <Border
+                            x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="18"
+                            SnapsToDevicePixels="True" />
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -319,12 +425,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Border x:Name="mainBorder"
-                        Width="50" Height="29"
-                        CornerRadius="2"
+                    <Border
+                        x:Name="mainBorder"
+                        Width="50"
+                        Height="29"
                         Background="#E8E2D4"
                         BorderBrush="#D4C8B8"
                         BorderThickness="1"
+                        CornerRadius="2"
                         Cursor="Hand">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -333,22 +441,27 @@
                                 <RowDefinition Height="3*" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0"
-                                   Text="{Binding Level, ElementName=root, FallbackValue=100}"
-                                   FontSize="22"
-                                   FontWeight="SemiBold"
-                                   Foreground="#2C2C2C"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                            <TextBlock
+                                Grid.Row="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="22"
+                                FontWeight="SemiBold"
+                                Foreground="#2C2C2C"
+                                Text="{Binding Level, ElementName=root, FallbackValue=100}" />
 
-                            <Rectangle Grid.Row="1" Height="1" Fill="#C4B8A8" />
+                            <Rectangle
+                                Grid.Row="1"
+                                Height="1"
+                                Fill="#C4B8A8" />
 
-                            <TextBlock Grid.Row="2"
-                                   Text="▼"
-                                   FontSize="6"
-                                   Foreground="#666666"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                            <TextBlock
+                                Grid.Row="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="6"
+                                Foreground="#666666"
+                                Text="▼" />
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -391,18 +504,20 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
                     <Grid>
-                        <Border x:Name="Border"
+                        <Border
+                            x:Name="Border"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="6">
                             <Grid>
-                                <ToggleButton x:Name="ToggleButton"
-                                    Focusable="False"
-                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                    ClickMode="Press"
+                                <ToggleButton
+                                    x:Name="ToggleButton"
                                     Background="Transparent"
-                                    BorderThickness="0">
+                                    BorderThickness="0"
+                                    ClickMode="Press"
+                                    Focusable="False"
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
 
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
@@ -428,37 +543,42 @@
                                             <ColumnDefinition Width="28" />
                                         </Grid.ColumnDefinitions>
 
-                                        <ContentPresenter Margin="{TemplateBinding Padding}"
-                                            VerticalAlignment="Center"
+                                        <ContentPresenter
+                                            Margin="{TemplateBinding Padding}"
                                             HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
                                             Content="{TemplateBinding SelectionBoxItem}"
                                             TextElement.Foreground="{TemplateBinding Foreground}" />
 
-                                        <Path Grid.Column="1"
+                                        <Path
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
                                             Data="M 0 0 L 4 4 L 8 0"
                                             Stroke="#B8B8C0"
-                                            StrokeThickness="1.5"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center" />
+                                            StrokeThickness="1.5" />
                                     </Grid>
                                 </ToggleButton>
 
-                                <Popup x:Name="Popup"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   AllowsTransparency="True"
-                                   Focusable="False"
-                                   PopupAnimation="Fade">
-                                    <Border Background="#25252A"
+                                <Popup
+                                    x:Name="Popup"
+                                    AllowsTransparency="True"
+                                    Focusable="False"
+                                    IsOpen="{TemplateBinding IsDropDownOpen}"
+                                    Placement="Bottom"
+                                    PopupAnimation="Fade">
+                                    <Border
+                                        MinWidth="{TemplateBinding ActualWidth}"
+                                        Margin="0,4,0,0"
+                                        Background="#25252A"
                                         BorderBrush="#3A3A40"
                                         BorderThickness="1"
-                                        CornerRadius="6"
-                                        Margin="0,4,0,0"
-                                        MinWidth="{TemplateBinding ActualWidth}">
-                                        <ScrollViewer Margin="2"
+                                        CornerRadius="6">
+                                        <ScrollViewer
+                                            Margin="2"
+                                            HorizontalScrollBarVisibility="Hidden"
                                             SnapsToDevicePixels="True"
-                                            VerticalScrollBarVisibility="Hidden"
-                                            HorizontalScrollBarVisibility="Hidden">
+                                            VerticalScrollBarVisibility="Hidden">
                                             <ItemsPresenter />
                                         </ScrollViewer>
                                     </Border>
@@ -495,10 +615,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBoxItem">
-                    <Border x:Name="Bd"
+                    <Border
+                        x:Name="Bd"
+                        Padding="{TemplateBinding Padding}"
                         Background="{TemplateBinding Background}"
-                        CornerRadius="4"
-                        Padding="{TemplateBinding Padding}">
+                        CornerRadius="4">
                         <ContentPresenter />
                     </Border>
 

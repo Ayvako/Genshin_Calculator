@@ -332,10 +332,10 @@
                             Orientation="Horizontal">
 
                             <components:FilterToggleList
+                                ExcludedItems="{Binding ElementTypesExclude}"
                                 IconConverter="{StaticResource ElementToIconConverter}"
                                 Items="{Binding ElementTypes}"
-                                SelectedItems="{Binding SelectedElements}"
-                                ToggleCommand="{Binding ToggleElementCommand}" />
+                                SelectedItems="{Binding ElementTypesInclude}" />
 
                             <!--  Vertical separator  -->
                             <Border
@@ -344,10 +344,10 @@
                                 Background="{StaticResource VerticalSeparatorBrush}" />
 
                             <components:FilterToggleList
+                                ExcludedItems="{Binding WeaponTypesExclude}"
                                 IconConverter="{StaticResource WeaponToIconConverter}"
                                 Items="{Binding WeaponTypes}"
-                                SelectedItems="{Binding SelectedWeapons}"
-                                ToggleCommand="{Binding ToggleWeaponCommand}" />
+                                SelectedItems="{Binding WeaponTypesInclude}" />
 
                             <Border
                                 Width="1"

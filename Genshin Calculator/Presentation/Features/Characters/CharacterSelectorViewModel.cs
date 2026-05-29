@@ -23,10 +23,16 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
     private string? searchQuery;
 
     [ObservableProperty]
-    private ObservableCollection<Element> selectedElements = [];
+    private ObservableCollection<Element> elementTypesInclude = [];
 
     [ObservableProperty]
-    private ObservableCollection<WeaponType> selectedWeapons = [];
+    private ObservableCollection<Element> elementTypesExclude = [];
+
+    [ObservableProperty]
+    private ObservableCollection<WeaponType> weaponTypesInclude = [];
+
+    [ObservableProperty]
+    private ObservableCollection<WeaponType> weaponTypesExclude = [];
 
     [ObservableProperty]
     private ObservableCollection<MaterialRarity> selectedCharactersRarities = [];
@@ -39,6 +45,18 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         this.characterService = characterService;
         this.AvailableCharacters = [];
         this.FilteredCharacters = [];
+
+        this.ElementTypesInclude.CollectionChanged += (_, _) => _ = this.ApplyFilterAsync();
+        this.ElementTypesExclude.CollectionChanged += (_, _) => _ = this.ApplyFilterAsync();
+
+        this.WeaponTypesInclude.CollectionChanged += (_, _) => _ = this.ApplyFilterAsync();
+        this.WeaponTypesExclude.CollectionChanged += (_, _) => _ = this.ApplyFilterAsync();
+
+        this.SelectedCharactersRarities.CollectionChanged += (_, _) =>
+        {
+            this.NotifyRaritySelectionChanged();
+            _ = this.ApplyFilterAsync();
+        };
     }
 
     public event EventHandler<bool>? CloseRequested;
@@ -97,16 +115,6 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
 
     partial void OnSearchQueryChanged(string? value) => _ = ApplyFilterAsync();
 
-    partial void OnSelectedElementsChanged(ObservableCollection<Element> value) => _ = ApplyFilterAsync();
-
-    partial void OnSelectedWeaponsChanged(ObservableCollection<WeaponType> value) => _ = ApplyFilterAsync();
-
-    partial void OnSelectedCharactersRaritiesChanged(ObservableCollection<MaterialRarity> value)
-    {
-        this.NotifyRaritySelectionChanged();
-        _ = ApplyFilterAsync();
-    }
-
     private async Task ApplyFilterAsync()
     {
         this.filterCts?.CancelAsync();
@@ -114,8 +122,11 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         var token = this.filterCts.Token;
 
         var search = this.SearchQuery;
-        var elements = this.SelectedElements.ToList();
-        var weapons = this.SelectedWeapons.ToList();
+        var includeElements = this.ElementTypesInclude.ToList();
+        var excludeElements = this.ElementTypesExclude.ToList();
+
+        var includeWeapons = this.WeaponTypesInclude.ToList();
+        var excludeWeapons = this.WeaponTypesExclude.ToList();
         var rarities = this.SelectedCharactersRarities.ToList();
         var available = this.AvailableCharacters.ToList();
 
@@ -132,14 +143,28 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
                         c.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
                 }
 
-                if (elements.Count > 0)
+                if (includeElements.Count > 0)
                 {
-                    query = query.Where(c => elements.Contains(c.Assets!.Element));
+                    query = query.Where(c =>
+                        includeElements.Contains(c.Assets!.Element));
                 }
 
-                if (weapons.Count > 0)
+                if (excludeElements.Count > 0)
                 {
-                    query = query.Where(c => weapons.Contains(c.Assets!.Weapon));
+                    query = query.Where(c =>
+                        !excludeElements.Contains(c.Assets!.Element));
+                }
+
+                if (includeWeapons.Count > 0)
+                {
+                    query = query.Where(c =>
+                        includeWeapons.Contains(c.Assets!.Weapon));
+                }
+
+                if (excludeWeapons.Count > 0)
+                {
+                    query = query.Where(c =>
+                        !excludeWeapons.Contains(c.Assets!.Weapon));
                 }
 
                 if (rarities.Count > 0)
@@ -179,17 +204,6 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private async Task ToggleWeaponAsync(WeaponType e)
-    {
-        if (!this.SelectedWeapons.Remove(e))
-        {
-            this.SelectedWeapons.Add(e);
-        }
-
-        await this.ApplyFilterAsync();
-    }
-
-    [RelayCommand]
     private async Task ToggleRarityAsync(MaterialRarity e)
     {
         if (!this.SelectedCharactersRarities.Remove(e))
@@ -198,17 +212,6 @@ public partial class CharacterSelectorViewModel : ObservableObject, IDisposable
         }
 
         this.NotifyRaritySelectionChanged();
-        await this.ApplyFilterAsync();
-    }
-
-    [RelayCommand]
-    private async Task ToggleElementAsync(Element e)
-    {
-        if (!this.SelectedElements.Remove(e))
-        {
-            this.SelectedElements.Add(e);
-        }
-
         await this.ApplyFilterAsync();
     }
 

@@ -3,74 +3,90 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:сomponents="clr-namespace:Genshin_Calculator.Presentation.Features.Characters.Components"
-    x:Name="root"
-    d:DataContext="{d:DesignInstance Type=сomponents:FilterToggleList}"
+    x:Name="Root"
+    d:DataContext="{d:DesignInstance Type=local:FilterToggleList}"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <Style x:Key="FilterToggleButtonStyle" TargetType="ToggleButton">
+        <Style x:Key="FilterItemButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="4" />
             <Setter Property="Width" Value="36" />
             <Setter Property="Height" Value="36" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
+                    <ControlTemplate TargetType="{x:Type Button}">
                         <Border
-                            x:Name="bd"
+                            x:Name="Bd"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             BorderThickness="1.5"
                             CornerRadius="6">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock
+                                    x:Name="ExcludedMark"
+                                    Margin="0,-2,-2,0"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Foreground="#FFEF5350"
+                                    Text="✕"
+                                    Visibility="Collapsed" />
+                            </Grid>
                         </Border>
 
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#20FFFFFF" />
+                                <Setter TargetName="Bd" Property="Background" Value="#20FFFFFF" />
                             </Trigger>
 
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#25C8A865" />
-                                <Setter TargetName="bd" Property="BorderBrush" Value="#90C8A865" />
+                            <Trigger Property="local:FilterToggleList.SelectionState" Value="{x:Static local:FilterSelectionState.Selected}">
+                                <Setter TargetName="Bd" Property="Background" Value="#25C8A865" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#90C8A865" />
+                            </Trigger>
+
+                            <Trigger Property="local:FilterToggleList.SelectionState" Value="{x:Static local:FilterSelectionState.Excluded}">
+                                <Setter TargetName="Bd" Property="Background" Value="#25EF5350" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#90EF5350" />
+                                <Setter TargetName="ExcludedMark" Property="Visibility" Value="Visible" />
                             </Trigger>
 
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
-                                    <Condition Property="IsChecked" Value="True" />
+                                    <Condition Property="local:FilterToggleList.SelectionState" Value="{x:Static local:FilterSelectionState.Selected}" />
                                     <Condition Property="IsMouseOver" Value="True" />
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="bd" Property="Background" Value="#40C8A865" />
-                                <Setter TargetName="bd" Property="BorderBrush" Value="#BCC8A865" />
+                                <Setter TargetName="Bd" Property="Background" Value="#40C8A865" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#BCC8A865" />
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="local:FilterToggleList.SelectionState" Value="{x:Static local:FilterSelectionState.Excluded}" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="#40EF5350" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#BCEF5350" />
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style TargetType="Image">
-            <Setter Property="Width" Value="32" />
-            <Setter Property="Height" Value="32" />
-            <Setter Property="Opacity">
-                <Setter.Value>
-                    <MultiBinding Converter="{StaticResource DimElementConverter}">
-                        <Binding Path="IsChecked" RelativeSource="{RelativeSource AncestorType=ToggleButton}" />
-                        <Binding ElementName="root" Path="SelectedItems.Count" />
-                    </MultiBinding>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
 
-    <ItemsControl ItemsSource="{Binding Items, ElementName=root}">
+    <ItemsControl x:Name="ItemsHost" ItemsSource="{Binding Items, ElementName=Root}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal" />
@@ -79,26 +95,22 @@
 
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <ToggleButton
-                    Command="{Binding ToggleCommand, ElementName=root}"
-                    CommandParameter="{Binding}"
-                    Style="{StaticResource FilterToggleButtonStyle}">
-                    <ToggleButton.IsChecked>
-                        <MultiBinding Converter="{StaticResource ContainsConverter}" Mode="OneWay">
-                            <Binding ElementName="root" Path="SelectedItems" />
-                            <Binding Path="." />
-                        </MultiBinding>
-                    </ToggleButton.IsChecked>
-
-                    <Image>
+                <Button
+                    PreviewMouseLeftButtonDown="OnLeftClick"
+                    PreviewMouseRightButtonDown="OnRightClick"
+                    Style="{StaticResource FilterItemButtonStyle}">
+                    <Image
+                        Width="32"
+                        Height="32"
+                        Stretch="Uniform">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource IconProxyConverter}">
                                 <Binding Path="." />
-                                <Binding ElementName="root" Path="IconConverter" />
+                                <Binding ElementName="Root" Path="IconConverter" />
                             </MultiBinding>
                         </Image.Source>
                     </Image>
-                </ToggleButton>
+                </Button>
             </DataTemplate>
         </ItemsControl.ItemTemplate>
     </ItemsControl>
